@@ -2,41 +2,84 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-
+	
+     <LinearLayout 
+        android:id="@+id/prop_dropdown_labels"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        >
+		<TextView
+       		android:id="@+id/prop_poi_label"
+       		android:text="@string/prop_poi_text"
+        	style="@style/ListItem">
+   		</TextView>
+   		<TextView
+       		android:id="@+id/prop_hand_label"
+       		android:text="@string/prop_hand_text"
+        	style="@style/ListItem">
+   		</TextView>
+    </LinearLayout>
     
-
+    <LinearLayout 
+        android:id="@+id/prop_dropdown_layout"
+        android:layout_below="@id/prop_dropdown_labels"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        >
+	<Spinner
+        android:id="@+id/prop_poi_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/poi_dropdown"
+        android:prompt="@string/prop_poi_text"
+		android:layout_weight="1"/>
+    <Spinner
+        android:id="@+id/prop_hand_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/hand_dropdown"
+        android:prompt="@string/prop_poi_text" 
+        android:layout_weight="1"/>
+	</LinearLayout>
    
-<Button
-        android:id="@+id/prop_ss_button"
-        style="@style/ButtonText"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-		android:layout_margin="10dp"
-        android:background="@drawable/orange_button"
-        android:text="@string/prop_ss_button" />
- <Button
-        android:id="@+id/prop_sc_button"
-        style="@style/ButtonText"
-        android:layout_above="@id/prop_ss_button"
-        android:layout_centerHorizontal="true"
-		android:layout_margin="10dp"
-        android:background="@drawable/orange_button"
-        android:text="@string/prop_sc_button" />
-<Button
-        android:id="@+id/prop_to_button"
-        style="@style/ButtonText"
-        android:layout_above="@id/prop_sc_button"
-        android:layout_centerHorizontal="true"
-		android:layout_margin="10dp"
-        android:background="@drawable/orange_button"
-        android:text="@string/prop_to_button" />
-    <Button
-        android:id="@+id/prop_ts_button"
-        style="@style/ButtonText"
-        android:layout_above="@id/prop_to_button"
-        android:layout_centerHorizontal="true"
-		android:layout_margin="10dp"
-        android:background="@drawable/orange_button"
-        android:text="@string/prop_ts_button" />
+   <LinearLayout
+        android:id="@+id/prop_combo_frames"
+        android:layout_below="@id/prop_dropdown_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        >
+        
+        <ImageView
+		    android:id="@+id/prop_pos_0"
+		    android:contentDescription="This is an image"
+		    android:background="@color/orange_light"
+		    />
+        <ImageView
+		    android:id="@+id/prop_pos_1"
+		    android:contentDescription="This is an image"
+		    android:background="@color/orange_light"
+		    />
+        <ImageView
+		    android:id="@+id/prop_pos_2"
+		    android:contentDescription="This is an image"
+		    android:background="@color/orange_light"
+		    />
+        <ImageView
+		    android:id="@+id/prop_pos_3"
+		    android:contentDescription="This is an image"
+		    android:background="@color/orange_light"
+		    />
+
+    </LinearLayout>
+   		
+	
+	
 
 </RelativeLayout>

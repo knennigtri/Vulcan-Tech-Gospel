@@ -8,6 +8,10 @@
 package com.nennig.vulcan.tech.gospel;
 
 public final class R {
+    public static final class array {
+        public static final int hand_dropdown=0x7f070001;
+        public static final int poi_dropdown=0x7f070000;
+    }
     public static final class attr {
     }
     public static final class color {
@@ -42,27 +46,76 @@ public final class R {
         public static final int red_button=0x7f020007;
     }
     public static final class id {
-        public static final int main_3113_button=0x7f090000;
-        public static final int menu_about=0x7f090005;
-        public static final int prop_sc_button=0x7f090002;
-        public static final int prop_ss_button=0x7f090001;
-        public static final int prop_to_button=0x7f090003;
-        public static final int prop_ts_button=0x7f090004;
+        public static final int main_3113_button=0x7f0a0000;
+        public static final int menu_about=0x7f0a000c;
+        public static final int prop_combo_frames=0x7f0a0007;
+        public static final int prop_dropdown_labels=0x7f0a0001;
+        public static final int prop_dropdown_layout=0x7f0a0004;
+        public static final int prop_hand_label=0x7f0a0003;
+        public static final int prop_hand_spinner=0x7f0a0006;
+        public static final int prop_poi_label=0x7f0a0002;
+        public static final int prop_poi_spinner=0x7f0a0005;
+        public static final int prop_pos_0=0x7f0a0008;
+        public static final int prop_pos_1=0x7f0a0009;
+        public static final int prop_pos_2=0x7f0a000a;
+        public static final int prop_pos_3=0x7f0a000b;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int activity_prop=0x7f030001;
     }
     public static final class menu {
-        public static final int activity_main=0x7f080000;
-        public static final int general=0x7f080001;
+        public static final int activity_main=0x7f090000;
+        public static final int general=0x7f090001;
     }
     public static final class string {
         public static final int app_name=0x7f060000;
+        public static final int m0x0x0=0x7f06000d;
+        public static final int m0x0x1=0x7f06000e;
+        public static final int m0x0x2=0x7f06000f;
+        public static final int m0x0x3=0x7f060010;
+        public static final int m0x1x0=0x7f060011;
+        public static final int m0x1x1=0x7f060012;
+        public static final int m0x2x0=0x7f060013;
+        public static final int m0x2x1=0x7f060014;
+        public static final int m0x3x0=0x7f060015;
+        public static final int m0x3x1=0x7f060016;
+        public static final int m1x0x0=0x7f060017;
+        public static final int m1x0x1=0x7f060018;
+        public static final int m1x1x0=0x7f060019;
+        public static final int m1x1x1=0x7f06001a;
+        public static final int m1x1x2=0x7f06001b;
+        public static final int m1x1x3=0x7f06001c;
+        public static final int m1x2x0=0x7f06001d;
+        public static final int m1x2x1=0x7f06001e;
+        public static final int m1x3x0=0x7f06001f;
+        public static final int m1x3x1=0x7f060020;
+        public static final int m2x0x0=0x7f060021;
+        public static final int m2x0x1=0x7f060022;
+        public static final int m2x1x0=0x7f060023;
+        public static final int m2x1x1=0x7f060024;
+        public static final int m2x2x0=0x7f060025;
+        public static final int m2x2x1=0x7f060026;
+        public static final int m2x2x2=0x7f060027;
+        public static final int m2x2x3=0x7f060028;
+        public static final int m2x3x0=0x7f060029;
+        public static final int m2x3x1=0x7f06002a;
+        public static final int m3x0x0=0x7f06002b;
+        public static final int m3x0x1=0x7f06002c;
+        public static final int m3x1x0=0x7f06002d;
+        public static final int m3x1x1=0x7f06002e;
+        public static final int m3x2x0=0x7f06002f;
+        public static final int m3x2x1=0x7f060030;
+        public static final int m3x3x0=0x7f060031;
+        public static final int m3x3x1=0x7f060032;
+        public static final int m3x3x2=0x7f060033;
+        public static final int m3x3x3=0x7f060034;
         public static final int main_3113_button=0x7f060002;
         public static final int main_about_app=0x7f060004;
         public static final int main_vtg_website=0x7f060003;
         public static final int menu_about=0x7f060005;
+        public static final int prop_hand_text=0x7f06000c;
+        public static final int prop_poi_text=0x7f06000b;
         public static final int prop_sc_button=0x7f060009;
         public static final int prop_ss_button=0x7f06000a;
         public static final int prop_to_button=0x7f060008;
@@ -71,8 +124,9 @@ public final class R {
         public static final int title_activity_prop=0x7f060006;
     }
     public static final class style {
-        public static final int AppTheme=0x7f070000;
-        public static final int ButtonText=0x7f070001;
-        public static final int ListItem=0x7f070002;
+        public static final int AppTheme=0x7f080000;
+        public static final int ButtonText=0x7f080001;
+        public static final int ListItem=0x7f080002;
+        public static final int PhotoLayout=0x7f080003;
     }
 }

@@ -1,0 +1,15 @@
+<resources>
+
+    <string name="app_name">Vulcan Tech Gospel</string>
+    <string name="title_activity_main">Vulcan Tech Gospel</string>
+    <string name="main_3113_button">3:1:3:1</string>
+    <string name="main_vtg_website">Visit Us Here</string>
+    <string name="main_about_app">Understanding</string>
+    <string name="menu_about">About</string>
+    <string name="title_activity_prop">Prop Series</string>
+    <string name="prop_ts_button">TS</string>
+    <string name="prop_to_button">TO</string>
+    <string name="prop_sc_button">SC</string>
+    <string name="prop_ss_button">SS</string>
+
+</resources>

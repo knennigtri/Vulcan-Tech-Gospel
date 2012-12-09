@@ -90,6 +90,8 @@ public class DetailViewActivity extends BaseActivity {
 		//Set the Image Name
 		String textName = infoDetails[0];
 		TextView detailTV = (TextView) findViewById(R.id.detail_photoName);
+		if(textName.length()>57)
+			detailTV.setTextSize(15);
 		detailTV.setText(textName);
 
 		final String url = infoDetails[1];

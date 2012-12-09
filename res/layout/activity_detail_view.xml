@@ -17,12 +17,14 @@
    	<TextView
         android:id="@+id/detail_poiText"
         android:text="description1"
+		android:layout_alignBaseline="@id/detail_poiLabel"
         android:layout_toRightOf="@id/detail_poiLabel"
         style="@style/DescText">
    		</TextView>
 	<TextView
         android:id="@+id/detail_handText"
         android:text="description2"
+        android:layout_alignBaseline="@id/detail_handLabel"
         android:layout_below="@id/detail_poiText"
         android:layout_toRightOf="@id/detail_handLabel"
         style="@style/DescText">
@@ -48,9 +50,13 @@
    		<TextView
 	       android:id="@+id/detail_photoName"
 	       android:layout_width="match_parent"
+	       android:layout_height="wrap_content"
+	       android:gravity="center"
+	       android:textSize="22sp"
 	       android:layout_below="@id/detail_image"
+	       android:textStyle="bold"
 	       android:text="Name"
-	       style="@style/ListItem">
+	       style="@style/DescText">
    		</TextView>
         <Button
             android:id="@+id/detail_youtTubeButton"

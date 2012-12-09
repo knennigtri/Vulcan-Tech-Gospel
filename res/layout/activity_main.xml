@@ -3,6 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
     
+    <ImageView
+		    android:id="@+id/main_image"
+		    android:layout_centerInParent="true"
+		    style="@style/IconView"
+		    />
+    
      <Button
         android:id="@+id/main_3113_button"
         style="@style/ButtonText"

@@ -1,0 +1,69 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	
+    <TextView
+        android:id="@+id/detail_poiLabel"
+        android:text="Poi: "
+        style="@style/ListItem">
+   		</TextView>
+	<TextView
+        android:id="@+id/detail_handLabel"
+        android:text="Hand: "
+        android:layout_below="@id/detail_poiLabel"
+        style="@style/ListItem">
+   		</TextView>
+   	<TextView
+        android:id="@+id/detail_poiText"
+        android:text="description1"
+        android:layout_toRightOf="@id/detail_poiLabel"
+        style="@style/DescText">
+   		</TextView>
+	<TextView
+        android:id="@+id/detail_handText"
+        android:text="description2"
+        android:layout_below="@id/detail_poiText"
+        android:layout_toRightOf="@id/detail_handLabel"
+        style="@style/DescText">
+   		</TextView>
+
+        
+        <!-- WebView
+		    android:id="@+id/detail_WebView"
+		    android:contentDescription="This is an image"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" 
+		    /-->
+	    <ImageView
+		    android:id="@+id/detail_image"
+		    android:layout_below="@id/detail_handLabel"
+		    android:layout_centerHorizontal="true"
+		    android:contentDescription="This is an image"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" 
+		    android:background="#000000"
+		    />
+        
+   		<TextView
+	       android:id="@+id/detail_photoName"
+	       android:layout_width="match_parent"
+	       android:layout_below="@id/detail_image"
+	       android:text="Name"
+	       style="@style/ListItem">
+   		</TextView>
+        <Button
+            android:id="@+id/detail_youtTubeButton"
+            android:background="@drawable/green_button"
+            android:layout_alignParentBottom="true"
+			android:layout_below="@id/detail_photoName"
+            android:layout_margin="10dp"
+            android:minHeight="30dp"
+            style="@style/ButtonText"
+            android:text="View on Youtube"/>
+   		
+
+
+    
+
+</RelativeLayout>

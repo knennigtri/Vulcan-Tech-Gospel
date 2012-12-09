@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+	<RelativeLayout
+        android:id="@+id/prop_combo_frames"
+        android:layout_below="@id/prop_dropdown_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="16dp"
+        android:weightSum="4"
+        >
+        
+        <ImageView
+		    android:id="@+id/prop_pos_0"
+		    style="@style/IconView"
+		    />
+        <ImageView
+		    android:id="@+id/prop_pos_1"
+		    android:layout_below="@id/prop_hand_spinner"
+		    android:layout_toRightOf="@id/prop_pos_0"
+			style="@style/IconView"
+		    />
+        <ImageView
+		    android:id="@+id/prop_pos_2"
+		    android:layout_below="@id/prop_pos_0"
+		    style="@style/IconView"
+		    />
+        <ImageView
+		    android:id="@+id/prop_pos_3"
+		    android:layout_below="@id/prop_pos_1"
+		    android:layout_toRightOf="@id/prop_pos_2"
+			style="@style/IconView"
+		    />
+
+    </RelativeLayout>
+    
+    
+</RelativeLayout>

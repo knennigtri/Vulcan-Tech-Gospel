@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ public class BaseActivity extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         
         Display display = getWindowManager().getDefaultDisplay();
         
@@ -55,27 +57,27 @@ public class BaseActivity extends Activity {
     
     
     public int getTimeDirectionInt(String str){
-    	if(str.equals("TS"))
+    	if(str.equals(getString(R.string.global_ts)))
     		return 0;
-    	if(str.equals("SS"))
+    	if(str.equals(getString(R.string.global_ss)))
     		return 1;
-    	if(str.equals("TO"))
+    	if(str.equals(getString(R.string.global_to)))
     		return 2;
-    	if(str.equals("SO"))
+    	if(str.equals(getString(R.string.global_so)))
     		return 3;
     	return 0;
     }
     
     public String getTimeDirectionString(int i){
     	if(i == 0)
-    		return "Together Time/ Same Direction";
+    		return getString(R.string.global_ts);
     	if(i == 1)
-    		return "Split Time/ Same Direction";
+    		return getString(R.string.global_ss);
     	if(i == 2)
-    		return "Together Time/ Opposite Direction";
+    		return getString(R.string.global_to);
     	if(i == 3)
-    		return "Split Time/ Opposite Direction";
-    	return "Together Time/ Same Direction";
+    		return getString(R.string.global_so);
+    	return getString(R.string.global_ts);
     }
     
     public static void aboutAlert(final Activity c){

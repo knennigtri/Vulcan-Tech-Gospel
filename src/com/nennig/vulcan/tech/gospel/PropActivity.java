@@ -50,7 +50,7 @@ public class PropActivity extends BaseActivity {
         handType = "TS";
         prevPoiType = "TS";
         prevHandType = "TS";
-        
+        poiSp.setSelection(0);
         
         refreshIcons();
         
@@ -132,7 +132,7 @@ public class PropActivity extends BaseActivity {
 			}
 			else
 			{
-				iconName = DEFAULT_ICON + "." + ext;
+				iconName = "";//DEFAULT_ICON + "." + ext;
 			}
 			try{
 				//Get Bitmap for position icon
@@ -140,31 +140,30 @@ public class PropActivity extends BaseActivity {
 	    		iStream = getAssets().open(ICON_VIEW_FOLDER + "/" + iconName);
 	    		Log.d(TAG, "Recieved iStream");
 	    		
-				posMatrix[i] = getBitmapImage(iStream, displayWidth);
-				
-				
-				//Set the position icon and listener
-				final int pos = i;
-				posIvMatrix[i].setImageBitmap(posMatrix[i]);
-				if(positionExists){
-			    	posIvMatrix[i].setOnTouchListener(new OnTouchListener() {
-			 			@Override
-			 			public boolean onTouch(View arg0, MotionEvent arg1) {
-			 				//TODO Create links to detailed view
-			 				SharedPreferences sP = getSharedPreferences(VTG_PREFS, MODE_PRIVATE);
-			 				Editor e = sP.edit();
-			 				e.putInt(CUR_POI, pTIndex);
-			 				e.putInt(CUR_HAND, hTIndex);
-			 				e.putInt(CUR_POS, pos);
-			 				e.commit();
-			 				startActivity(new Intent(PropActivity.this, DetailViewActivity.class));		 
-		 				return false;
-			 			}
-			         });
-				}
+				posMatrix[i] = getBitmapImage(iStream, (int) (displayWidth / 1.5));	
 			} catch (IOException e) {
 				Log.d(TAG, "PropActivity IOException");
 				Log.d(TAG, e.toString());
+			}
+			
+			//Set the position icon and listener
+			final int pos = i;
+			posIvMatrix[i].setImageBitmap(posMatrix[i]);
+			if(positionExists){
+		    	posIvMatrix[i].setOnTouchListener(new OnTouchListener() {
+		 			@Override
+		 			public boolean onTouch(View arg0, MotionEvent arg1) {
+		 				//TODO Create links to detailed view
+		 				SharedPreferences sP = getSharedPreferences(VTG_PREFS, MODE_PRIVATE);
+		 				Editor e = sP.edit();
+		 				e.putInt(CUR_POI, pTIndex);
+		 				e.putInt(CUR_HAND, hTIndex);
+		 				e.putInt(CUR_POS, pos);
+		 				e.commit();
+		 				startActivity(new Intent(PropActivity.this, DetailViewActivity.class));		 
+	 				return false;
+		 			}
+		         });
 			}
 	    }
 		
@@ -181,19 +180,6 @@ public class PropActivity extends BaseActivity {
         options.inJustDecodeBounds = false;
         Bitmap newBitmap = BitmapFactory.decodeStream(iStream, null, options);
         int iconSize = Math.round((float)(reqSize) / 2);
-        
-//        final int height = options.outHeight;
-//        final int width = options.outWidth;
-//        
-//        int newHeight = 0;
-//        if(width>reqSize){
-//        	newHeight = (int) Math.round(((float) reqSize / (float) width)*height);
-//        }
-//        else
-//        {
-//        	newHeight = (int) Math.round(((float) width / (float) reqSize)*reqSize);
-//        }
-//        int newWidth= reqWidth;
     	newBitmap = Bitmap.createScaledBitmap(newBitmap, iconSize, iconSize, true);
         
         return newBitmap;

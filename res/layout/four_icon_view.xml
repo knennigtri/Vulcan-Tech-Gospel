@@ -5,7 +5,7 @@
     
 	<RelativeLayout
         android:id="@+id/prop_combo_frames"
-        android:layout_below="@id/prop_dropdown_layout"
+        android:layout_below="@id/prop_hand_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

@@ -3,88 +3,84 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"  >   
 
-     <LinearLayout 
-        android:id="@+id/prop_dropdown_labels"
-        android:layout_alignParentTop="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        >
-		<TextView
-       		android:id="@+id/prop_poi_label"
-       		android:text="@string/prop_poi_text"
-        	style="@style/ListItem"
-        	android:layout_weight="1"
-        	>
-   		</TextView>
-   		<TextView
-       		android:id="@+id/prop_hand_label"
-       		android:text="@string/prop_hand_text"
-        	style="@style/ListItem"
-        	android:layout_weight="1"
-        	>
-   		</TextView>
-    </LinearLayout>
+
+	<TextView
+   		android:id="@+id/prop_poi_label"
+   		android:text="@string/text_prop"
+       	style="@style/ListItem"
+       	android:layout_marginRight="3dp"
+       	/>
+  	<TextView
+    	android:id="@+id/prop_hand_label"
+      	android:text="@string/text_hand"
+       	style="@style/ListItem"
+       	android:layout_below="@id/prop_poi_label"
+       	android:layout_marginRight="3dp"
+       	/>
     
-    <LinearLayout 
-        android:id="@+id/prop_dropdown_layout"
-        android:layout_below="@id/prop_dropdown_labels"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        >
 	<Spinner
         android:id="@+id/prop_poi_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:entries="@array/poi_dropdown"
-        android:prompt="@string/prop_poi_text"
-		android:layout_weight="1"/>
+        android:entries="@array/prop_dropdown"
+        android:dropDownWidth="wrap_content"
+		android:layout_alignBaseline="@id/prop_poi_label"
+		android:layout_toRightOf="@id/prop_poi_label"
+		
+		/>
     <Spinner
         android:id="@+id/prop_hand_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:dropDownWidth="wrap_content"
         android:entries="@array/hand_dropdown"
-        android:prompt="@string/prop_poi_text" 
-        android:layout_weight="1"/>
-	</LinearLayout>
+        android:layout_alignBaseline="@id/prop_hand_label"
+        android:layout_below="@id/prop_poi_spinner"
+        android:layout_toRightOf="@id/prop_hand_label"
+        />
    
     <RelativeLayout
         android:id="@+id/prop_combo_frames"
-        android:layout_below="@id/prop_dropdown_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:padding="16dp"
-        android:weightSum="4"
-        >
-        
-        <ImageView
-		    android:id="@+id/prop_pos_0"
-		    style="@style/IconView"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/prop_hand_label"
+        android:layout_centerHorizontal="true"
+        android:padding="16dp" >
+
+        <LinearLayout
+            android:id="@+id/prop_icon_lone"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <ImageView
+			    android:id="@+id/prop_pos_0"
+			    style="@style/IconView"
 		    />
-        <ImageView
-		    android:id="@+id/prop_pos_1"
-		    android:layout_below="@id/prop_hand_spinner"
-		    android:layout_toRightOf="@id/prop_pos_0"
-			style="@style/IconView"
+            <ImageView
+			    android:id="@+id/prop_pos_2"
+			    style="@style/IconView"
 		    />
-                <ImageView
-		    android:id="@+id/prop_pos_2"
-		    android:layout_below="@id/prop_pos_0"
-		    style="@style/IconView"
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/prop_icon_ltwo"
+            android:layout_toRightOf="@id/prop_icon_lone"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <ImageView
+			    android:id="@+id/prop_pos_1"
+				style="@style/IconView"
 		    />
-        <ImageView
-		    android:id="@+id/prop_pos_3"
-		    android:layout_below="@id/prop_pos_1"
-		    android:layout_toRightOf="@id/prop_pos_2"
-			style="@style/IconView"
+       		<ImageView
+			    android:id="@+id/prop_pos_3"
+				style="@style/IconView"
 		    />
+        </LinearLayout>
     </RelativeLayout>
 
 </RelativeLayout>

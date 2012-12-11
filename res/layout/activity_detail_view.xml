@@ -5,31 +5,36 @@
 	
     <TextView
         android:id="@+id/detail_poiLabel"
-        android:text="Poi: "
-        style="@style/ListItem">
-   		</TextView>
+        android:text="@string/text_prop"
+        style="@style/ListItem"
+        android:layout_marginRight="3dp"
+        />
+
 	<TextView
         android:id="@+id/detail_handLabel"
-        android:text="Hand: "
+        android:text="@string/text_hand"
         android:layout_below="@id/detail_poiLabel"
-        style="@style/ListItem">
-   		</TextView>
+        style="@style/ListItem"
+        android:layout_marginRight="3dp"
+        />
+   		
    	<TextView
         android:id="@+id/detail_poiText"
         android:text="description1"
 		android:layout_alignBaseline="@id/detail_poiLabel"
         android:layout_toRightOf="@id/detail_poiLabel"
-        style="@style/DescText">
-   		</TextView>
+        android:maxLines="2"
+        style="@style/DescText"
+   		/>
 	<TextView
         android:id="@+id/detail_handText"
         android:text="description2"
         android:layout_alignBaseline="@id/detail_handLabel"
         android:layout_below="@id/detail_poiText"
         android:layout_toRightOf="@id/detail_handLabel"
-        style="@style/DescText">
-   		</TextView>
-
+        android:maxLines="2"
+        style="@style/DescText"
+        />
         
         <!-- WebView
 		    android:id="@+id/detail_WebView"
@@ -60,7 +65,7 @@
    		</TextView>
         <Button
             android:id="@+id/detail_youtTubeButton"
-            android:background="@drawable/green_button"
+            android:background="@drawable/black_button"
             android:layout_alignParentBottom="true"
 			android:layout_below="@id/detail_photoName"
             android:layout_margin="10dp"

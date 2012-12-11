@@ -3,6 +3,7 @@ package com.nennig.vulcan.tech.gospel;
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -31,6 +32,41 @@ public class MainActivity extends BaseActivity {
 			}	
         });
         
+        //Facebook Button
+        final Button _button2 = (Button) findViewById(R.id.main_button2);
+        _button2.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				String url = "http://facebook.com";
+            	Intent i = new Intent(Intent.ACTION_VIEW);
+            	i.setData(Uri.parse(url));
+            	startActivity(i);
+			}	
+        });
+        
+        //Site Button
+        final Button _button3 = (Button) findViewById(R.id.main_button3);
+        _button3.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				String url = "http://noelyee.weebly.com/index.html";
+            	Intent i = new Intent(Intent.ACTION_VIEW);
+            	i.setData(Uri.parse(url));
+            	startActivity(i);
+			}	
+        });
+        
+        //About this App
+        final Button _button4 = (Button) findViewById(R.id.main_button4);
+        _button4.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				aboutAlert(MainActivity.this);
+			}	
+        });
+        
+        
+        
         ImageView mainImage = (ImageView) findViewById(R.id.main_image);
         
         InputStream iStream = null;
@@ -41,13 +77,13 @@ public class MainActivity extends BaseActivity {
 			Log.d(TAG, e.toString());
 		}
 		Log.d(TAG, "Recieved iStream");
-		Bitmap image = getBitmapImage(iStream, displayWidth-20, displayHeight-50);
+		Bitmap image = getBitmapImage(iStream, (int)((displayHeight) / 2.5));
 		
 		mainImage.setImageBitmap(image);
     }
     
     
-	public static Bitmap getBitmapImage(InputStream iStream, int reqWidth, int reqHeight) {
+	public static Bitmap getBitmapImage(InputStream iStream, int iconSize) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -61,15 +97,15 @@ public class MainActivity extends BaseActivity {
         final int height = options.outHeight;
         final int width = options.outWidth;
         
-        int newHeight = 0;
-        if(width>reqWidth){
-        	newHeight = (int) Math.round(((float) reqWidth / (float) width)*height);
+        int newWidth = 0;
+        if(height>iconSize){
+        	newWidth = (int) Math.round(((float) iconSize / (float) height)*width);
         }
         else
         {
-        	newHeight = (int) Math.round(((float) width / (float) reqWidth)*reqHeight);
+        	newWidth = (int) Math.round(((float) width / (float) iconSize)*iconSize);
         }
-        int newWidth= reqWidth;
+        int newHeight= iconSize;
     	newBitmap = Bitmap.createScaledBitmap(newBitmap, newWidth, newHeight, true);
         
         return newBitmap;

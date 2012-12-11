@@ -197,7 +197,7 @@ public class DetailViewActivity extends BaseActivity {
 	
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_detail_view, menu);
+        getMenuInflater().inflate(R.menu.general, menu);
         return true;
     }
     

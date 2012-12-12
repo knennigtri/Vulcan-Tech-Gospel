@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class MainActivity extends BaseActivity {
 	private static final String TAG = "MainActivity";
@@ -32,40 +33,26 @@ public class MainActivity extends BaseActivity {
 			}	
         });
         
-        //Facebook Button
+        //1:1::1:1 Button
         final Button _button2 = (Button) findViewById(R.id.main_button2);
         _button2.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				String url = "http://facebook.com";
-            	Intent i = new Intent(Intent.ACTION_VIEW);
-            	i.setData(Uri.parse(url));
-            	startActivity(i);
+				Toast.makeText(MainActivity.this, "1:1::1:1 will be implemented in V2 of this app.", Toast.LENGTH_LONG).show();
 			}	
         });
         
-        //Site Button
+        //View PDF Button
         final Button _button3 = (Button) findViewById(R.id.main_button3);
         _button3.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				String url = "http://noelyee.weebly.com/index.html";
-            	Intent i = new Intent(Intent.ACTION_VIEW);
-            	i.setData(Uri.parse(url));
-            	startActivity(i);
+//				String url = "http://noelyee.weebly.com/index.html";
+//            	Intent i = new Intent(Intent.ACTION_VIEW);
+//            	i.setData(Uri.parse(url));
+//            	startActivity(i);
 			}	
-        });
-        
-        //About this App
-        final Button _button4 = (Button) findViewById(R.id.main_button4);
-        _button4.setOnClickListener(new Button.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				aboutAlert(MainActivity.this);
-			}	
-        });
-        
-        
+        });      
         
         ImageView mainImage = (ImageView) findViewById(R.id.main_image);
         
@@ -77,14 +64,14 @@ public class MainActivity extends BaseActivity {
 			Log.d(TAG, e.toString());
 		}
 		Log.d(TAG, "Recieved iStream");
-		Bitmap image = getBitmapImage(iStream, (int)((displayHeight) / 2.5));
+		Bitmap image = getBitmapImage(iStream, (int)(displayHeight / 2));
 		
 		mainImage.setImageBitmap(image);
     }
     
     
 	public static Bitmap getBitmapImage(InputStream iStream, int iconSize) {
-
+		Log.d(TAG, "ReqSize: " + iconSize);
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -96,16 +83,19 @@ public class MainActivity extends BaseActivity {
         
         final int height = options.outHeight;
         final int width = options.outWidth;
-        
+        Log.d(TAG, "H: " + height + " W: " + width);
         int newWidth = 0;
-        if(height>iconSize){
+//        if(height>iconSize){//Requested size is smaller than Bitmap
         	newWidth = (int) Math.round(((float) iconSize / (float) height)*width);
-        }
-        else
-        {
-        	newWidth = (int) Math.round(((float) width / (float) iconSize)*iconSize);
-        }
+//        }
+//        else //Requested size is larger than Bitmap
+//        {
+//        	float val = ((float) height / (float) iconSize);
+//        	newWidth = (int) Math.round((float) val * width);
+//        	Log.d(TAG, "val: " + val);
+//        }
         int newHeight= iconSize;
+        Log.d(TAG, "nH: " + newHeight + " nW: " + newWidth);
     	newBitmap = Bitmap.createScaledBitmap(newBitmap, newWidth, newHeight, true);
         
         return newBitmap;

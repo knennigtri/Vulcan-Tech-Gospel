@@ -5,36 +5,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.DateFormat.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.crypto.spec.PSource;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
-import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -83,6 +66,16 @@ public class DetailViewActivity extends BaseActivity {
 			Log.d(TAG, e.toString());
 		}
 
+		//TODO Work on Image Zooming!
+//		iv.setOnTouchListener(new OnTouchListener() {
+//			@Override
+//			public boolean onTouch(View v, MotionEvent event) {
+//				Intent i = new Intent(DetailViewActivity.this, DetailZoomActivity.class);
+//		    	startActivity(i);
+//				return false;
+//			}
+//		});
+		
 		 
 //		String[] infoDetails = detailMap.get(detailName);
 		String[] infoDetails = getMoveDetails(detailName, DB_FILE);
@@ -193,83 +186,7 @@ public class DetailViewActivity extends BaseActivity {
 		if(i == 3)
 			return vtg2Index3Of3;
 		return vtg2Index1Of3;
-	}
-	
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.general, menu);
-        return true;
-    }
-    
-
-    public class Zoom extends View {
-
-	
-	    private Drawable image;
-	    ImageButton img,img1;
-	
-	    private int zoomControler=20;
-	
-	
-	    public Zoom(Context context, Bitmap b)
-	
-	    {
-	
-	            super(context);
-	
-	            image= new BitmapDrawable(getResources(),b);
-	            //image=context.getResources().getDrawable(R.drawable.icon);
-	
-	            setFocusable(true);
-	
-	
-	
-	    }
-	
-	    @Override
-	
-	    protected void onDraw(Canvas canvas) {
-	
-	            // TODO Auto-generated method stub
-	
-	            super.onDraw(canvas);
-	
-	    //here u can control the width and height of the images........ this line is very important
-	
-	    image.setBounds((getWidth()/2)-zoomControler, (getHeight()/2)-zoomControler, (getWidth()/2)+zoomControler, (getHeight()/2)+zoomControler);
-	
-	            image.draw(canvas);
-	
-	    }
-
-
-	    @Override
-	
-	    public boolean onKeyDown(int keyCode, KeyEvent event) {
-	
-	
-	
-	            if(keyCode==KeyEvent.KEYCODE_DPAD_UP)// zoom in
-	
-	                    zoomControler+=10;
-	
-	            if(keyCode==KeyEvent.KEYCODE_DPAD_DOWN) // zoom out
-	
-	                    zoomControler-=10;
-	
-	            if(zoomControler<10)
-	
-	                    zoomControler=10;
-	
-	
-	
-	            invalidate();
-	
-	            return true;
-	
-	    }
-    }
-    
+	}    
 }
 
 

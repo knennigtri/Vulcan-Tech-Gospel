@@ -22,10 +22,24 @@
         </activity>
         <activity
             android:name=".PropActivity"
-            android:label="@string/title_activity_prop" >
+            android:label="@string/title_activity_main" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nennig.vulcan.tech.gospel.MainActivity" />
+        </activity>
+        <activity
+            android:name=".DetailViewActivity"
+            android:label="@string/title_activity_main" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.nennig.vulcan.tech.gospel.PropActivity" />
+        </activity>
+        <activity
+            android:name=".DetailZoomActivity"
+            android:label="@string/title_activity_main" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.nennig.vulcan.tech.gospel.DetailViewActivity" />
         </activity>
     </application>
 

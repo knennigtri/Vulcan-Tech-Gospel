@@ -5,8 +5,7 @@
     
     <ImageView
 		    android:id="@+id/main_image"
-		    android:layout_alignParentTop="true"
-		    android:layout_centerInParent="true"
+		    android:layout_centerHorizontal="true"
 		    style="@style/IconView"
 		    />
     
@@ -17,7 +16,8 @@
         android:layout_centerHorizontal="true"
 		android:layout_margin="5dp"
         android:background="@drawable/black_button"
-        android:text="@string/main_3113_button" />
+        android:text="@string/main_3113_button" 
+        android:minHeight="35dp"/>
      <Button
         android:id="@+id/main_button2"
         style="@style/ButtonText"
@@ -25,7 +25,8 @@
         android:layout_centerHorizontal="true"
 		android:layout_margin="5dp"
         android:background="@drawable/black_button"
-        android:text="@string/main_facebook_button" />
+        android:text="@string/main_1111_button" 
+        android:minHeight="35dp"/>
      <Button
         android:id="@+id/main_button3"
         style="@style/ButtonText"
@@ -33,14 +34,7 @@
         android:layout_centerHorizontal="true"
 		android:layout_margin="5dp"
         android:background="@drawable/black_button"
-        android:text="@string/main_vtg_website" />
-     <Button
-        android:id="@+id/main_button4"
-        style="@style/ButtonText"
-        android:layout_below="@id/main_button3"
-        android:layout_centerHorizontal="true"
-		android:layout_margin="5dp"
-        android:background="@drawable/black_button"
-        android:text="@string/main_about_app" />
+        android:text="@string/main_download_button" 
+        android:minHeight="35dp"/>
 
 </RelativeLayout>

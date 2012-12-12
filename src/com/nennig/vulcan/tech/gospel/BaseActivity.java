@@ -84,7 +84,9 @@ public class BaseActivity extends Activity {
     	AlertDialog.Builder alert = new AlertDialog.Builder(c); 
 
         alert.setTitle("About"); 
-        alert.setMessage("Noel Yee and blah blah. Copywright @ 2012 Kevin Nennig");
+        alert.setMessage("Vulcan Tech Gospel #2 was created by David Cantor and Noel Yee." +
+        		"Vulcan Tech Gospel Writers:  " +
+        		"Brian Thompson, Lorq Nichols, Kevin Nennig, Davis Cantor and Noel Yee ");
         
         alert.setPositiveButton("View Site", new DialogInterface.OnClickListener() { 
             public void onClick(DialogInterface dialog, int whichButton) { 
@@ -103,20 +105,29 @@ public class BaseActivity extends Activity {
       alert.show();
     }    
     
+    public static void helpAlert(final Activity c){
+    	
+    }
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId()){
-//    	case R.id.menu_main_menu:
-//    		startActivity(new Intent(this, MainActivity.class));
-//    		finish();
-//    		return true;
-    	case R.id.menu_about: //TODO Settings page
+    	case R.id.menu_about:
     		aboutAlert(this);
     		return true;
-//    	case R.id.menu_rate_this:
-//    		String str ="https://play.google.com/store/apps/details?id=com.nennig.dma.truth.or.dare";
-//    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(str)));
-//    		return true;
+    	case R.id.menu_help:
+    		helpAlert(this);
+    		return true;
+    	case R.id.menu_facebook:
+    		String url = "https://www.facebook.com/groups/113059425470308/";
+        	Intent i = new Intent(Intent.ACTION_VIEW);
+        	i.setData(Uri.parse(url));
+        	startActivity(i);
+    		return true;
+    	case R.id.menu_rate_this:
+    		String str ="https://play.google.com/store/apps/details?id=com.nennig.vulcan.tech.gospel";
+    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(str)));
+    		return true;
     	default:
     		return super.onOptionsItemSelected(item);
     	}

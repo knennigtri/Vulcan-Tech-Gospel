@@ -69,7 +69,7 @@
             android:layout_alignParentBottom="true"
 			android:layout_below="@id/detail_photoName"
             android:layout_margin="10dp"
-            android:minHeight="30dp"
+            android:minHeight="35dp"
             style="@style/ButtonText"
             android:text="View on Youtube"/>
    		

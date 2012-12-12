@@ -1,20 +1,20 @@
 <resources>
 
-    <string name="app_name">Vulcan Tech Gospel</string>
+    <string name="app_name">VTC</string>
     <string name="title_activity_main">Vulcan Tech Gospel</string>
-    <string name="main_3113_button">3:1:3:1</string>
-    <string name="main_facebook_button">Facebook Group</string>
-    <string name="main_vtg_website">Visit Us Here</string>
-    <string name="main_about_app">Understanding</string>
+    <string name="main_3113_button">3:1::3:1</string>
+    <string name="main_1111_button">1:1::1:1</string>
+    <string name="main_download_button">View PDF</string>
     <string name="menu_about">About</string>
-
-    
+    <string name="menu_help">Help</string>
+    <string name="menu_facebook">Find Us On Facebook</string>
+    <string name="menu_rate_this">Rate This App</string>
     <string name="global_ts">Together Time/ Same Direction</string>
-    <string name="global_ss">Same Time/ Same Direction</string>
+    <string name="global_ss">Split Time/ Same Direction</string>
     <string name="global_to">Together Time/ Opposite Direction</string>
-    <string name="global_so">Same Time/ Opposite Direction</string>
-    
+    <string name="global_so">Split Time/ Opposite Direction</string>
     <string name="text_prop">Prop</string>
+
     <string-array name="prop_dropdown">
         <item>@string/global_ts</item>
         <item>@string/global_ss</item>
@@ -23,11 +23,16 @@
     </string-array>
 
     <string name="text_hand">Hand</string>
+
     <string-array name="hand_dropdown">
         <item>@string/global_ts</item>
         <item>@string/global_ss</item>
         <item>@string/global_to</item>
         <item>@string/global_so</item>
     </string-array>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_detail_zoom">DetailZoomActivity</string>
 
 </resources>

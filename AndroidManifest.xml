@@ -34,6 +34,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nennig.vulcan.tech.gospel.PropActivity" />
         </activity>
+        <activity
+            android:name=".DetailZoomActivity"
+            android:label="@string/title_activity_main" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.nennig.vulcan.tech.gospel.DetailViewActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -6,14 +6,26 @@ import java.io.InputStream;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class MainActivity extends BaseActivity {
@@ -47,10 +59,7 @@ public class MainActivity extends BaseActivity {
         _button3.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-//				String url = "http://noelyee.weebly.com/index.html";
-//            	Intent i = new Intent(Intent.ACTION_VIEW);
-//            	i.setData(Uri.parse(url));
-//            	startActivity(i);
+				viewPDFList();
 			}	
         });      
         
@@ -64,43 +73,61 @@ public class MainActivity extends BaseActivity {
 			Log.d(TAG, e.toString());
 		}
 		Log.d(TAG, "Recieved iStream");
-		Bitmap image = getBitmapImage(iStream, (int)(displayHeight / 2));
+		Bitmap image = getBitmapImage(iStream, Math.round((float)(displayWidth * .8)));
 		
 		mainImage.setImageBitmap(image);
     }
     
-    
-	public static Bitmap getBitmapImage(InputStream iStream, int iconSize) {
-		Log.d(TAG, "ReqSize: " + iconSize);
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(iStream, null, options);
-        
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        Bitmap newBitmap = BitmapFactory.decodeStream(iStream, null, options);
-        
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        Log.d(TAG, "H: " + height + " W: " + width);
-        int newWidth = 0;
-//        if(height>iconSize){//Requested size is smaller than Bitmap
-        	newWidth = (int) Math.round(((float) iconSize / (float) height)*width);
-//        }
-//        else //Requested size is larger than Bitmap
-//        {
-//        	float val = ((float) height / (float) iconSize);
-//        	newWidth = (int) Math.round((float) val * width);
-//        	Log.d(TAG, "val: " + val);
-//        }
-        int newHeight= iconSize;
-        Log.d(TAG, "nH: " + newHeight + " nW: " + newWidth);
-    	newBitmap = Bitmap.createScaledBitmap(newBitmap, newWidth, newHeight, true);
-        
-        return newBitmap;
-    }
-    
+	private void viewPDFList() { 
+		Dialog viewDialog = new Dialog(this); 
+		viewDialog.getWindow().setFlags( 
+							WindowManager.LayoutParams.FLAG_BLUR_BEHIND, 
+							WindowManager.LayoutParams.FLAG_BLUR_BEHIND); 
+		viewDialog.setTitle("VTG #2Index"); 
+
+		LayoutInflater li = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
+		final View dialogView = li.inflate(R.layout.view_pdfs, null); 
+		viewDialog.setContentView(dialogView); 
+		viewDialog.show(); 
+		ListView lv = (ListView) dialogView.findViewById(R.id.main_pdf_list);
+
+		dialogView.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				dialogView.setVisibility(View.INVISIBLE);
+				return false;
+			}
+		});
+		
+		lv.setOnItemClickListener(new ListView.OnItemClickListener() { 
+			public void onItemClick(AdapterView<?> parent, View arg1, int pos, long arg3) { 
+				int selItemPos = pos;
+				Log.d(TAG, "selectedItem: " + selItemPos);
+				String pdf = "";
+				if(selItemPos == 0)
+					pdf = "http://noelyee.weebly.com/uploads/7/2/9/6/7296674/vtg2index.pdf";
+				if(selItemPos == 1)
+					pdf = "http://noelyee.weebly.com/uploads/7/2/9/6/7296674/vtg2index2of3.pdf";
+				if(selItemPos == 2)
+					pdf = "http://noelyee.weebly.com/uploads/7/2/9/6/7296674/vtg2index30f3.pdf";
+				Log.d(TAG, "PDFItem: " + pdf);
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				Uri path = Uri.parse(pdf);
+				i.setDataAndType(path, "application/pdf");
+				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				try{
+					startActivity(i);
+				}catch(ActivityNotFoundException e)
+				{
+					i = new Intent(Intent.ACTION_VIEW);
+					i.setData(Uri.parse(pdf));
+					startActivity(i);
+				}
+			} 
+			public void onNothingSelected(AdapterView<?> arg0) { } 
+		}); 
+
+	}	
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

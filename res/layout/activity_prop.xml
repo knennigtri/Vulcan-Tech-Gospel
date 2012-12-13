@@ -16,6 +16,7 @@
        	style="@style/ListItem"
        	android:layout_below="@id/prop_poi_label"
        	android:layout_marginRight="3dp"
+       	android:layout_marginTop="3dp"
        	/>
     
 	<Spinner
@@ -39,6 +40,7 @@
         android:layout_alignBaseline="@id/prop_hand_label"
         android:layout_below="@id/prop_poi_spinner"
         android:layout_toRightOf="@id/prop_hand_label"
+        android:layout_marginTop="3dp"
         />
    
     <RelativeLayout

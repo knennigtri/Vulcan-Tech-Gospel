@@ -45,7 +45,6 @@ public class PropActivity extends BaseActivity {
         posIvMatrix[1] = (ImageView) findViewById(R.id.prop_pos_1);
         posIvMatrix[2] = (ImageView) findViewById(R.id.prop_pos_2);
         posIvMatrix[3] = (ImageView) findViewById(R.id.prop_pos_3);
-        setupExtraImageViews();
         poiType = "TS";
         handType = "TS";
         prevPoiType = "TS";
@@ -140,7 +139,7 @@ public class PropActivity extends BaseActivity {
 	    		iStream = getAssets().open(ICON_VIEW_FOLDER + "/" + iconName);
 	    		Log.d(TAG, "Recieved iStream");
 	    		
-				posMatrix[i] = getBitmapImage(iStream, (int) (displayWidth / 1.5));	
+	    		posMatrix[i] = getBitmapImage(iStream, Math.round((float)(displayWidth / 2.5)));
 			} catch (IOException e) {
 				Log.d(TAG, "PropActivity IOException");
 				Log.d(TAG, e.toString());
@@ -167,28 +166,6 @@ public class PropActivity extends BaseActivity {
 			}
 	    }
 		
-    }
-    
-    public static Bitmap getBitmapImage(InputStream iStream, int reqSize) {
-
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(iStream, null, options);
-        
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        Bitmap newBitmap = BitmapFactory.decodeStream(iStream, null, options);
-        int iconSize = Math.round((float)(reqSize) / 2);
-    	newBitmap = Bitmap.createScaledBitmap(newBitmap, iconSize, iconSize, true);
-        
-        return newBitmap;
-    }
-    
-    private void setupExtraImageViews(){
-    	//TODO four vs two images
-//    	RelativeLayout layoutPos2 = new RelativeLayout.LayoutParams()
-//    	posIvMatrix[1].setLayoutParams()
     }
     
 	@Override

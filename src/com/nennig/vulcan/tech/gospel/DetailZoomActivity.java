@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class DetailZoomActivity extends BaseActivity implements OnTouchListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_detail_zoom);
         
         SharedPreferences sP = getSharedPreferences(VTG_PREFS, MODE_PRIVATE);
         poiVal = sP.getInt(CUR_POI, 0);
@@ -34,11 +36,14 @@ public class DetailZoomActivity extends BaseActivity implements OnTouchListener{
         posVal = sP.getInt(CUR_POS, 0);
         String ext = "png";
         
+//        WebView view = (WebView)findViewById(R.id.zoom_webview);
+        
         ImageView view = (ImageView) findViewById(R.id.zoom_image);
         InputStream iStream = null;
         String detailName = poiVal + "x" + handVal + "x" + posVal;
         Log.d(TAG, "The file " + detailName + " is loading...");
         
+//        view.loadUrl("file:///android_asset/" + DETAIL_VIEW_FOLDER + "/"+ detailName + "." + ext);
         
         Bitmap bitmapImage = null;
 		try {

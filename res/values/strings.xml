@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">VTC</string>
-    <string name="title_activity_main">Vulcan Tech Gospel</string>
+    <string name="title_activity_main">VTC</string>
     <string name="main_3113_button">3:1::3:1</string>
     <string name="main_1111_button">1:1::1:1</string>
     <string name="main_download_button">View PDF</string>
@@ -13,8 +13,11 @@
     <string name="global_ss">Split Time/ Same Direction</string>
     <string name="global_to">Together Time/ Opposite Direction</string>
     <string name="global_so">Split Time/ Opposite Direction</string>
+    <string name="vtg_pdf1">VTG_1of3</string>
+    <string name="vtg_pdf2">VTG_2of3</string>
+    <string name="vtg_pdf3">VTG_3of3</string>
+    
     <string name="text_prop">Prop</string>
-
     <string-array name="prop_dropdown">
         <item>@string/global_ts</item>
         <item>@string/global_ss</item>
@@ -23,12 +26,17 @@
     </string-array>
 
     <string name="text_hand">Hand</string>
-
     <string-array name="hand_dropdown">
         <item>@string/global_ts</item>
         <item>@string/global_ss</item>
         <item>@string/global_to</item>
         <item>@string/global_so</item>
+    </string-array>
+    
+    <string-array name="pdf_list">
+        <item>@string/vtg_pdf1</item>
+        <item>@string/vtg_pdf2</item>
+        <item>@string/vtg_pdf3</item>
     </string-array>
 
     <string name="hello_world">Hello world!</string>

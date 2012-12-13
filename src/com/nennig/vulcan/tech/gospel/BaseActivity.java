@@ -1,5 +1,6 @@
 package com.nennig.vulcan.tech.gospel;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +10,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +34,10 @@ public class BaseActivity extends Activity {
 	// Physical display width and height.
     public static int displayWidth = 0;
     public static int displayHeight = 0;
+    
+    public static String vtg2Index1Of3 = "http://www.youtube.com/watch?v=gT6SKnBiZ1Q";
+    public static String vtg2Index2Of3 = "http://www.youtube.com/watch?v=evUnR4God6Q";
+    public static String vtg2Index3Of3 = "http://www.youtube.com/watch?v=fbdJOOkniF0";
 	
 	public static final String ROOT_FOLDER = Environment.getExternalStorageDirectory().toString();
 	private static final String TAG = "com.nennig.dma.truth.or.dare.Base";
@@ -104,9 +112,58 @@ public class BaseActivity extends Activity {
       }); 
       alert.show();
     }    
-    
+   
     public static void helpAlert(final Activity c){
     	
+    }
+    
+	public static Bitmap getBitmapImage(InputStream iStream, int reqWidth) {
+		Log.d(TAG, "ReqSize: " + reqWidth);
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(iStream, null, options);
+        
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        Bitmap newBitmap = BitmapFactory.decodeStream(iStream, null, options);
+        
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        Log.d(TAG, "H: " + height + " W: " + width);
+       
+        int newHeight = (int) Math.round(((float) reqWidth / (float) width)*height);
+        int newWidth= reqWidth;
+       
+        Log.d(TAG, "nH: " + newHeight + " nW: " + newWidth);
+    	newBitmap = Bitmap.createScaledBitmap(newBitmap, newWidth, newHeight, true);
+        
+        return newBitmap;
+    }
+	
+	public static Matrix getImageMatrix(InputStream iStream, int reqWidth) {
+		Log.d(TAG, "ReqSize: " + reqWidth);
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(iStream, null, options);
+        
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        Bitmap newBitmap = BitmapFactory.decodeStream(iStream, null, options);
+        
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        Log.d(TAG, "H: " + height + " W: " + width);
+       
+        int newHeight = (int) Math.round(((float) reqWidth / (float) width)*height);
+        int newWidth= reqWidth;
+       
+        Log.d(TAG, "nH: " + newHeight + " nW: " + newWidth);
+        Matrix matrix = new Matrix();
+        matrix.postScale(newWidth, newHeight);
+        
+        return matrix;
     }
     
     @Override
@@ -139,9 +196,6 @@ public class BaseActivity extends Activity {
     //[1] is the url
     //[2] is the start time
     //[3] is the end time
-    public static String vtg2Index1Of3 = "http://www.youtube.com/watch?v=gT6SKnBiZ1Q";
-    public static String vtg2Index2Of3 = "http://www.youtube.com/watch?v=evUnR4God6Q";
-    public static String vtg2Index3Of3 = "http://www.youtube.com/watch?v=fbdJOOkniF0";
     public static Map<String, String[]> detailMap = new HashMap<String, String[]>();
     static {
     	detailMap.put("m0x0x0", new String[] {"2 Petal Spin Flower Vertical Orientation", vtg2Index1Of3, "1:02","1:16"});

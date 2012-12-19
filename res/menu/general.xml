@@ -4,10 +4,14 @@
         android:title="@string/menu_about"
         android:orderInCategory="50"
         android:showAsAction="never"/>     
-    <item android:id="@+id/menu_help"
+    <!-- item android:id="@+id/menu_help"
         android:icon="@android:drawable/ic_menu_help"
         android:title="@string/menu_help"
         android:orderInCategory="100"
+        android:showAsAction="never"/-->  
+    <item android:id="@+id/menu_donate"
+        android:title="@string/menu_donate"
+        android:orderInCategory="50"
         android:showAsAction="never"/>    
     <item android:id="@+id/menu_facebook"
         android:title="@string/menu_facebook"
@@ -15,6 +19,7 @@
         android:showAsAction="never"/>  
     <item android:id="@+id/menu_rate_this"
         android:title="@string/menu_rate_this"
+        android:icon="@android:drawable/star_off"
         android:orderInCategory="400"
         android:showAsAction="never"/>  
 </menu>

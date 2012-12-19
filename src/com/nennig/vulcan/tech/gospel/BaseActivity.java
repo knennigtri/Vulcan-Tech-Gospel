@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
 
+
 public class BaseActivity extends Activity {
 	public static final String VTG_PREFS = "com.nennig.vulcan.tech.gospel.prefs";
 	public static final String CUR_POI = "com.nennig.vulcan.tech.gospel.cur.poi";
@@ -38,9 +39,19 @@ public class BaseActivity extends Activity {
     public static String vtg2Index1Of3 = "http://www.youtube.com/watch?v=gT6SKnBiZ1Q";
     public static String vtg2Index2Of3 = "http://www.youtube.com/watch?v=evUnR4God6Q";
     public static String vtg2Index3Of3 = "http://www.youtube.com/watch?v=fbdJOOkniF0";
-	
+    
+    //http://misha.beshkin.lv/android-add-paypal-donation-page-to-app/
+    private static String _link_paypal = "https://www.paypal.com/cgi-bin/webscr?" +
+    		"cmd=_donations&" +
+    		"business=kissena%40hotmail%2ecom&" +
+    		"lc=EE&" +
+    		"item_name=Mobile%20apps&currency_code=USD&" +
+    		"bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted";
+    private static String _link_facebook = "https://www.facebook.com/groups/113059425470308/";
+    private static String _link_rateApp = "https://play.google.com/store/apps/details?id=com.nennig.vulcan.tech.gospel";
+    
 	public static final String ROOT_FOLDER = Environment.getExternalStorageDirectory().toString();
-	private static final String TAG = "com.nennig.dma.truth.or.dare.Base";
+	private static final String TAG = "com.nennig.vtg.Base";
     @SuppressLint("NewApi")
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -168,22 +179,32 @@ public class BaseActivity extends Activity {
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+    	Intent i;
+    	String url;
     	switch(item.getItemId()){
     	case R.id.menu_about:
     		aboutAlert(this);
     		return true;
-    	case R.id.menu_help:
-    		helpAlert(this);
-    		return true;
+//    	case R.id.menu_help:
+//    		helpAlert(this);
+//    		return true;
     	case R.id.menu_facebook:
-    		String url = "https://www.facebook.com/groups/113059425470308/";
-        	Intent i = new Intent(Intent.ACTION_VIEW);
+    		url = _link_facebook;
+        	i = new Intent(Intent.ACTION_VIEW);
+        	i.setData(Uri.parse(url));
+        	startActivity(i);
+    		return true;
+    	case R.id.menu_donate:
+    		url = _link_paypal;
+        	i = new Intent(Intent.ACTION_VIEW);
         	i.setData(Uri.parse(url));
         	startActivity(i);
     		return true;
     	case R.id.menu_rate_this:
-    		String str ="https://play.google.com/store/apps/details?id=com.nennig.vulcan.tech.gospel";
-    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(str)));
+    		url = _link_rateApp;
+    		i = new Intent(Intent.ACTION_VIEW);
+        	i.setData(Uri.parse(url));
+        	startActivity(i);
     		return true;
     	default:
     		return super.onOptionsItemSelected(item);

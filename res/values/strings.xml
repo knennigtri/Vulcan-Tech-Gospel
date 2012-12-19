@@ -1,14 +1,15 @@
 <resources>
 
-    <string name="app_name">VTC</string>
-    <string name="title_activity_main">VTC</string>
+    <string name="app_name">VTG</string>
+    <string name="title_activity_main">Vulcan Tech Gospel</string>
     <string name="main_3113_button">3:1::3:1</string>
     <string name="main_1111_button">1:1::1:1</string>
-    <string name="main_download_button">View PDF</string>
+    <string name="main_download_button">Download</string>
     <string name="menu_about">About</string>
     <string name="menu_help">Help</string>
     <string name="menu_facebook">Find Us On Facebook</string>
     <string name="menu_rate_this">Rate This App</string>
+    <string name="menu_donate">Donate</string>
     <string name="global_ts">Together Time/ Same Direction</string>
     <string name="global_ss">Split Time/ Same Direction</string>
     <string name="global_to">Together Time/ Opposite Direction</string>

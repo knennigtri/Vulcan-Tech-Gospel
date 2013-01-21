@@ -72,7 +72,7 @@
             android:layout_margin="10dp"
             android:minHeight="35dp"
             style="@style/ButtonText"
-            android:text="View on Youtube"/>
+            android:text="View Poi Move"/>
    		
 
 

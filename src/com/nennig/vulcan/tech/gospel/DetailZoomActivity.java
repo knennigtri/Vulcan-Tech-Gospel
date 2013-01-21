@@ -3,6 +3,8 @@ package com.nennig.vulcan.tech.gospel;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.nennig.constants.AppConstants;
+
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,10 +32,10 @@ public class DetailZoomActivity extends BaseActivity implements OnTouchListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_zoom);
         
-        SharedPreferences sP = getSharedPreferences(VTG_PREFS, MODE_PRIVATE);
-        poiVal = sP.getInt(CUR_POI, 0);
-        handVal = sP.getInt(CUR_HAND, 0);
-        posVal = sP.getInt(CUR_POS, 0);
+        SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
+        poiVal = sP.getInt(AppConstants.CUR_POI, 0);
+        handVal = sP.getInt(AppConstants.CUR_HAND, 0);
+        posVal = sP.getInt(AppConstants.CUR_POS, 0);
         String ext = "png";
         
 //        WebView view = (WebView)findViewById(R.id.zoom_webview);
@@ -47,7 +49,7 @@ public class DetailZoomActivity extends BaseActivity implements OnTouchListener{
         
         Bitmap bitmapImage = null;
 		try {
-			iStream = getAssets().open(DETAIL_VIEW_FOLDER + "/" + detailName + "." + ext);
+			iStream = getAssets().open(AppConstants.DETAIL_VIEW_FOLDER + "/" + detailName + "." + ext);
 			bitmapImage = getBitmapImage(iStream, displayWidth-10, displayHeight );	
 			view.setImageBitmap(bitmapImage);
 		    view.setOnTouchListener(this);

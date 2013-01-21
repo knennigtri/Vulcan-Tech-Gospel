@@ -2,6 +2,9 @@ package com.nennig.vulcan.tech.gospel;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.nennig.constants.AppConstants;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -136,7 +139,7 @@ public class PropActivity extends BaseActivity {
 			try{
 				//Get Bitmap for position icon
     			Log.d(TAG, "iconName: " + iconName);
-	    		iStream = getAssets().open(ICON_VIEW_FOLDER + "/" + iconName);
+	    		iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + iconName);
 	    		Log.d(TAG, "Recieved iStream");
 	    		
 	    		posMatrix[i] = getBitmapImage(iStream, Math.round((float)(displayWidth / 2.5)));
@@ -153,11 +156,11 @@ public class PropActivity extends BaseActivity {
 		 			@Override
 		 			public boolean onTouch(View arg0, MotionEvent arg1) {
 		 				//TODO Create links to detailed view
-		 				SharedPreferences sP = getSharedPreferences(VTG_PREFS, MODE_PRIVATE);
+		 				SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
 		 				Editor e = sP.edit();
-		 				e.putInt(CUR_POI, pTIndex);
-		 				e.putInt(CUR_HAND, hTIndex);
-		 				e.putInt(CUR_POS, pos);
+		 				e.putInt(AppConstants.CUR_POI, pTIndex);
+		 				e.putInt(AppConstants.CUR_HAND, hTIndex);
+		 				e.putInt(AppConstants.CUR_POS, pos);
 		 				e.commit();
 		 				startActivity(new Intent(PropActivity.this, DetailViewActivity.class));		 
 	 				return false;

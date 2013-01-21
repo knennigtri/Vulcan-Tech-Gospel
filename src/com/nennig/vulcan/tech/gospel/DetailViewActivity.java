@@ -1,16 +1,13 @@
 package com.nennig.vulcan.tech.gospel;
 
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.net.Uri;
@@ -24,10 +21,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nennig.constants.AppConfig;
+import com.nennig.constants.AppConstants;
+import com.nennig.vulcan.tech.gospel.SingletonPoiObj.PoiMove;
+
 @SuppressLint("NewApi")
 public class DetailViewActivity extends BaseActivity implements OnTouchListener{
-	private static final String TAG = "DetialViewActivity";
-	private static final String DB_FILE = "db.csv";
+	private static final String TAG = AppConfig.APP_PNAME + ".DetialViewActivity";
+	private static final String accepted_ext = "png";
 
     
     private int poiVal = 0;
@@ -39,12 +40,11 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_view);
         
-        SharedPreferences sP = getSharedPreferences(VTG_PREFS, MODE_PRIVATE);
-        poiVal = sP.getInt(CUR_POI, 0);
-        handVal = sP.getInt(CUR_HAND, 0);
-        posVal = sP.getInt(CUR_POS, 0);
-        String ext = "png";
-        
+        SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
+        poiVal = sP.getInt(AppConstants.CUR_POI, 0);
+        handVal = sP.getInt(AppConstants.CUR_HAND, 0);
+        posVal = sP.getInt(AppConstants.CUR_POS, 0);
+
         TextView poiText = (TextView) findViewById(R.id.detail_poiText);
         TextView handText = (TextView)findViewById(R.id.detail_handText);
         
@@ -54,14 +54,12 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
 		//Set The Image
 		final ImageView iv = (ImageView) findViewById(R.id.detail_image);
 		InputStream iStream = null;
-		String detailName = poiVal + "x" + handVal + "x" + posVal;
-//		 wv.getSettings().setBuiltInZoomControls(true);
-//		 wv.loadUrl("file:///android_asset/" + DETAIL_VIEW_FOLDER + "/" + detailName + "." + ext);
-		
+		String detailName = poiVal + "x" + handVal + "x" + posVal;		
 
+		//Set the pdf view of the activity
 		Bitmap bitmapImage = null;
 		try {
-			iStream = getAssets().open(DETAIL_VIEW_FOLDER + "/" + detailName + "." + ext);
+			iStream = getAssets().open(AppConstants.DETAIL_VIEW_FOLDER + "/" + detailName + "." + accepted_ext);
 			bitmapImage = getBitmapImage(iStream, displayWidth );	
 			iv.setImageBitmap(bitmapImage);
 			iv.setOnTouchListener(this);
@@ -69,39 +67,27 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
 			Log.d(TAG, "The file " + detailName + " was not found...");
 			Log.d(TAG, e.toString());
 		}
-
-//		//TODO Work on Image Zooming!
-//		iv.setOnTouchListener(new OnTouchListener() {
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				Intent i = new Intent(DetailViewActivity.this, DetailZoomActivity.class);
-//		    	startActivity(i);
-//				return false;
-//			}
-//		});
 		
-		 
-//		String[] infoDetails = detailMap.get(detailName);
-		String[] infoDetails = getMoveDetails(detailName, DB_FILE);
+		//Create the singleton and get the information for the detail view
+		SingletonPoiObj sPoi = SingletonPoiObj.getSingletonPoiObj(this);
+		PoiMove pMove = sPoi.getPoiMove(detailName);
 		
 		//Set the Image Name
-		String textName = infoDetails[0];
+		String textName = pMove.name;
 		TextView detailTV = (TextView) findViewById(R.id.detail_photoName);
 		if(textName.length()>57)
 			detailTV.setTextSize(15);
 		detailTV.setText(textName);
 
-		final String url = infoDetails[1];
-		final String start = infoDetails[2];
-		final String end = infoDetails[3];
+		final String url = pMove.youtubeVideo;
+		final String start = pMove.sTime;
+		final String end = pMove.eTime;
 		
 		//Set the YouTube Video Button
 		Button youtubeB = (Button) findViewById(R.id.detail_youtTubeButton);
 		youtubeB.setOnTouchListener(new OnTouchListener() {
-			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				
 				String fullUrl = url + 
 						"&#t=" + start.split(":")[0] + "m" + start.split(":")[1] + "s" +
 						"&end=" + end.split(":")[0] + "m" + end.split(":")[1] + "s" +
@@ -109,63 +95,12 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
 				Log.d(TAG, " URL= "+fullUrl);
 		    	Intent i = new Intent(Intent.ACTION_VIEW);
 		    	i.setData(Uri.parse(fullUrl));
-		    	startActivity(i);
-					
+		    	startActivity(i);	
 				return false;
 			}
-		});
-		
+		});	
 	}
-    
-	//This static HashMap holds all the special details for all of the details of each move.
-    //The key is a identifier of where it is in the matirx
-    //[0] is the name
-    //[1] is the url
-    //[2] is the start time
-    //[3] is the end time
-	private String[] getMoveDetails(String key, String csvFile){
-		try {
-			InputStream iS = getAssets().open(csvFile);
-			InputStreamReader iSR = new InputStreamReader(iS);
-			BufferedReader bR = new BufferedReader(iSR);
-		      String nextLineStr;
-		      String[] nextLineParse;
-		      
-		      while ((nextLineStr = bR.readLine()) != null) {
-		    	  Log.d(TAG, "LINE: " + nextLineStr);
-		    	  nextLineParse = nextLineStr.split(",");
-		    	  if(key.equals(nextLineParse[0]))
-		    	  {
-		    		  String n, url, s, e;
-		    		  n = nextLineParse[1];
-		    		  url = getVideoUrl(Integer.valueOf(nextLineParse[2]));
-		    		  s = nextLineParse[3];
-		    		  e = nextLineParse[4];
-		    		  Log.d(TAG, "n="+n+" url="+url+" s="+s+" e="+e);
-		    		  return new String[] {n,url,s,e};
-		    	  }
-		      }
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally{
-			 Log.d("db","Finished Parse");
-		}
-		return null;
-	}
-	
-	public String getVideoUrl(int i){
-		if(i == 1)
-			return vtg2Index1Of3;
-		if(i == 2)
-			return vtg2Index2Of3;
-		if(i == 3)
-			return vtg2Index3Of3;
-		return vtg2Index1Of3;
-	} 
-	
-	
-	
+
 	// These matrices will be used to move and zoom image
 	Matrix matrix = new Matrix();
 	Matrix savedMatrix = new Matrix();

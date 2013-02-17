@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <Spinner
+        android:id="@+id/video_prop_selector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:entries="@array/prop_selector"
+        android:dropDownWidth="wrap_content"
+		android:layout_alignParentTop="true"
+		/>
+   <VideoView
+       android:id="@+id/videoView"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_centerInParent="true" />
+   <TextView
+	       android:id="@+id/video_moveName"
+	       android:layout_width="match_parent"
+	       android:layout_height="wrap_content"
+	       android:gravity="center"
+	       android:textSize="22sp"
+	       android:textStyle="bold"
+	       android:text="Name"
+	       android:layout_alignParentBottom="true"
+	       style="@style/DescText_white">
+   		</TextView>
+
+</RelativeLayout>

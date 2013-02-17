@@ -14,9 +14,9 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main" >
-            <intent-filter
-                android:label="@string/app_name">
+            <intent-filter android:label="@string/app_name" >
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -40,6 +40,9 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nennig.vulcan.tech.gospel.DetailViewActivity" />
+        </activity>
+        <activity
+            android:name=".VideoActivity">
         </activity>
     </application>
 

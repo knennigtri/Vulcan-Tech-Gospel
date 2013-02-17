@@ -12,6 +12,9 @@ public class AppConstants {
 	public static final String CUR_POI = AppConfig.APP_PNAME + ".cur.poi";
 	public static final String CUR_HAND = AppConfig.APP_PNAME + ".cur.hand";
 	public static final String CUR_POS = AppConfig.APP_PNAME + ".cur.pos";
+	public static final String MOVE_NAME = AppConfig.APP_PNAME + ".move.name";
+	public static final String MOVE_INDEX = AppConfig.APP_PNAME + ".move.index";
+	public static final String MOVE_PROP = AppConfig.APP_PNAME + ".move.Prop";	
 	
 	
 	/*

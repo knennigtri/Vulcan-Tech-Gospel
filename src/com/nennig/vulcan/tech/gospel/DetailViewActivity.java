@@ -5,21 +5,32 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
@@ -34,7 +45,7 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
     private int poiVal = 0;
     private int handVal = 0;
     private int posVal = 0;
-	
+    
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,10 +62,12 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
         poiText.setText(getTimeDirectionString(poiVal));
         handText.setText(getTimeDirectionString(handVal));
 		
+        final String detailName = poiVal + "x" + handVal + "x" + posVal;	
+        
 		//Set The Image
 		final ImageView iv = (ImageView) findViewById(R.id.detail_image);
 		InputStream iStream = null;
-		String detailName = poiVal + "x" + handVal + "x" + posVal;		
+			
 
 		//Set the pdf view of the activity
 		Bitmap bitmapImage = null;
@@ -73,33 +86,33 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
 		PoiMove pMove = sPoi.getPoiMove(detailName);
 		
 		//Set the Image Name
-		String textName = pMove.name;
+		final String textName = pMove.name;
 		TextView detailTV = (TextView) findViewById(R.id.detail_photoName);
 		if(textName.length()>57)
 			detailTV.setTextSize(15);
 		detailTV.setText(textName);
 
-		final String url = pMove.youtubeVideo;
-		final String start = pMove.sTime;
-		final String end = pMove.eTime;
+//		final String url = pMove.youtubeVideo;
+//		final String start = pMove.sTime;
+//		final String end = pMove.eTime;
 		
-		//Set the YouTube Video Button
-		Button youtubeB = (Button) findViewById(R.id.detail_youtTubeButton);
-		youtubeB.setOnTouchListener(new OnTouchListener() {
+		//Set the Button
+		Button videoButton = (Button) findViewById(R.id.detail_button);
+		videoButton.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				String fullUrl = url + 
-						"&#t=" + start.split(":")[0] + "m" + start.split(":")[1] + "s" +
-						"&end=" + end.split(":")[0] + "m" + end.split(":")[1] + "s" +
-						"&version=3";
-				Log.d(TAG, " URL= "+fullUrl);
-		    	Intent i = new Intent(Intent.ACTION_VIEW);
-		    	i.setData(Uri.parse(fullUrl));
-		    	startActivity(i);	
+				Intent i = new Intent(DetailViewActivity.this, VideoActivity.class);
+				i.putExtra(AppConstants.MOVE_INDEX, detailName);
+				i.putExtra(AppConstants.MOVE_NAME, textName);
+				startActivity(i);
 				return false;
 			}
 		});	
 	}
+	
+	
+
+	
 
 	// These matrices will be used to move and zoom image
 	Matrix matrix = new Matrix();

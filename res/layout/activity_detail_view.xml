@@ -59,13 +59,13 @@
 	       android:layout_height="wrap_content"
 	       android:gravity="center"
 	       android:textSize="22sp"
-	       android:layout_below="@id/detail_image"
 	       android:textStyle="bold"
 	       android:text="Name"
+	       android:layout_below="@id/detail_image"
 	       style="@style/DescText">
    		</TextView>
         <Button
-            android:id="@+id/detail_youtTubeButton"
+            android:id="@+id/detail_button"
             android:background="@drawable/black_button"
             android:layout_alignParentBottom="true"
 			android:layout_below="@id/detail_photoName"
@@ -73,9 +73,7 @@
             android:minHeight="35dp"
             style="@style/ButtonText"
             android:text="View Poi Move"/>
-   		
 
-
-    
+ 
 
 </RelativeLayout>

@@ -47,7 +47,7 @@ public class SingletonPoiObj {
 		      String[] nextLineParse;
 		      
 		      while ((nextLineStr = bR.readLine()) != null) {
-		    	  Log.d(TAG, "LINE: " + nextLineStr);
+//		    	  Log.d(TAG, "LINE: " + nextLineStr);
 		    	  nextLineParse = nextLineStr.split(",");
 	    		  
 		    	  PoiMove pM = new PoiMove();  

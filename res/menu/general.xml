@@ -19,7 +19,10 @@
         android:showAsAction="never"/>  
     <item android:id="@+id/menu_rate_this"
         android:title="@string/menu_rate_this"
-        android:icon="@android:drawable/star_off"
         android:orderInCategory="400"
+        android:showAsAction="never"/>  
+    <item android:id="@+id/menu_change_log"
+        android:title="@string/menu_change_log"
+        android:orderInCategory="500"
         android:showAsAction="never"/>  
 </menu>

@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PropActivity"
+            android:name=".SelectorActivity"
             android:label="@string/title_activity_main" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -41,8 +41,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nennig.vulcan.tech.gospel.DetailViewActivity" />
         </activity>
+        <activity android:name=".VideoActivity" >
+        </activity>
         <activity
-            android:name=".VideoActivity">
+            android:name=".SearchListActivity"
+            android:label="@string/title_activity_search_list" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

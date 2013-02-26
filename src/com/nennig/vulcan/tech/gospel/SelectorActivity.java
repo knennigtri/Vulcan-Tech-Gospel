@@ -27,8 +27,8 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Spinner;
 import android.support.v4.app.NavUtils;
 
-public class PropActivity extends BaseActivity {
-	private static final String TAG = "PropActivity";
+public class SelectorActivity extends BaseActivity {
+	private static final String TAG = "SelectorActivity";
 	Spinner poiSp, handSp;
 	ImageView[] posIvMatrix = new ImageView[4];
 	String[] iconList;
@@ -144,7 +144,7 @@ public class PropActivity extends BaseActivity {
 	    		
 	    		posMatrix[i] = getBitmapImage(iStream, Math.round((float)(displayWidth / 2.5)));
 			} catch (IOException e) {
-				Log.d(TAG, "PropActivity IOException");
+				Log.d(TAG, "SelectorActivity IOException");
 				Log.d(TAG, e.toString());
 			}
 			
@@ -162,7 +162,7 @@ public class PropActivity extends BaseActivity {
 		 				e.putInt(AppConstants.CUR_HAND, hTIndex);
 		 				e.putInt(AppConstants.CUR_POS, pos);
 		 				e.commit();
-		 				startActivity(new Intent(PropActivity.this, DetailViewActivity.class));		 
+		 				startActivity(new Intent(SelectorActivity.this, DetailViewActivity.class));		 
 	 				return false;
 		 			}
 		         });

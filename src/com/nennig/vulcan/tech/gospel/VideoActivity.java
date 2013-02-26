@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.nennig.constants.AppConfig;
@@ -35,31 +36,31 @@ public class VideoActivity extends Activity {
     	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
         
+        //Get video values from bundle and preferences
         videoIndex = getIntent().getExtras().getString(AppConstants.MOVE_INDEX);
         Log.d(TAG, "VideoIndex: " + videoIndex);
-        
-        TextView tv = (TextView) findViewById(R.id.video_moveName);
-        tv.setText(getIntent().getExtras().getString(AppConstants.MOVE_NAME));
         
         final SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
         videoPropIndex = sP.getInt(AppConstants.MOVE_PROP, 0);
         Log.d(TAG, "videoPropIndex: " + videoPropIndex);
         
+        //Set Video Name
+        TextView tv = (TextView) findViewById(R.id.video_moveName);
+        tv.setText(getIntent().getExtras().getString(AppConstants.MOVE_NAME));
+        
+        //Setup Video
 		vView = (VideoView)findViewById(R.id.videoView);		
-		
-		videoIndex = "0x0x0";
-		
 		setupNewVideo();
-		
 		vView.start();
-				
+		//Loops the video clip infinitely 		
 		vView.setOnPreparedListener(new OnPreparedListener() {
 		    @Override
 		    public void onPrepared(MediaPlayer mp) {
 		        mp.setLooping(true);
+		        
 		    }
 		});
-		
+		//Allows user to pause/play the move anytime
 		vView.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -77,6 +78,7 @@ public class VideoActivity extends Activity {
 			}
 		});
 		
+		//This sets up the spinner for changing different props. 
 		Spinner spinner = (Spinner) findViewById(R.id.video_prop_selector);
 		spinner.setSelection(videoPropIndex);
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() 
@@ -85,6 +87,10 @@ public class VideoActivity extends Activity {
          public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
         	 int newVideoPropIndex = i;
         	 Log.d(TAG,"Prop Changed to: " + newVideoPropIndex);
+        	 
+        	 //TODO Add Prop Videos
+        	 if(newVideoPropIndex != 0)
+        		 Toast.makeText(VideoActivity.this, "Currently only Poi Props are supported", Toast.LENGTH_SHORT).show();
         	 
         	 if(videoPropIndex != newVideoPropIndex){
         		 changeVideo(newVideoPropIndex, sP.edit());
@@ -98,14 +104,21 @@ public class VideoActivity extends Activity {
         });
     }
 
+    /**
+     * Updates the current prop used and then makes a call to swap the video
+     * @param prop index for new prop
+     * @param e editor to commit the preferences
+     */
     private void changeVideo(int prop, Editor e){
     	videoPropIndex = prop;
     	e.putInt(AppConstants.MOVE_PROP, videoPropIndex);
     	e.commit();
-    	//recreate activity
     	setupNewVideo();
     }
     
+    /**
+     * This retrieves the new video from the VideoManager and then runs the video
+     */
     public void setupNewVideo(){
     	int videoID = VideoManager.getVideoID(this, videoIndex, videoPropIndex);
 		
@@ -120,21 +133,4 @@ public class VideoActivity extends Activity {
         getMenuInflater().inflate(R.menu.general, menu);
         return true;
     }
-    
-//    @Override
-//    public void onBackPressed() {
-//    	startActivity(new Intent(VideoActivity.this, DetailViewActivity.class));
-//    	finish();
-//    }
-//    
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//        	startActivity(new Intent(VideoActivity.this, DetailViewActivity.class));
-//        	finish();    
-//        	// your code here
-//                return false;
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
 }

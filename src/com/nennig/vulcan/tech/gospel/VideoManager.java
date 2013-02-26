@@ -5,6 +5,8 @@ import com.nennig.constants.AppConfig;
 import android.content.Context;
 import android.util.Log;
 
+
+
 public class VideoManager {
 	private static final String TAG = AppConfig.APP_PNAME + ".VideoManager";
 	
@@ -15,18 +17,19 @@ public class VideoManager {
 	}
 	
 	private static String getVideoProp(Context c, int i){
-		switch(i){
-		case 0:
-			return c.getString(R.string.prop1);
-		case 1:
-			return c.getString(R.string.prop2);
-		case 2:
-			return c.getString(R.string.prop3);
-		case 3:
-			return c.getString(R.string.prop4);
-		default:
-			return c.getString(R.string.prop1);
-		}
+		return c.getString(R.string.ext_prop0);
+//		switch(i){
+//		case 0:
+//			return c.getString(R.string.ext_prop0);
+//		case 1:
+//			return c.getString(R.string.ext_prop1);
+//		case 2:
+//			return c.getString(R.string.ext_prop2);
+//		case 3:
+//			return c.getString(R.string.ext_prop3);
+//		default:
+//			return c.getString(R.string.ext_prop0);
+//		}
 	}
 	
 }

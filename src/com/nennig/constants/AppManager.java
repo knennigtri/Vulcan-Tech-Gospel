@@ -3,8 +3,9 @@
  * http://www.androidsnippets.com/prompt-engaged-users-to-rate-your-app-in-the-android-market-appirater
  * Much thanks to android snippets!
  * 
- * This class was created to be used my all of my apps so that I can implement an easy changelog and rating system for 
- * my apps. It uses the class AppConstants to get the unique variables about this class.
+ * This class was created to be used my all of my apps so that I can implement an easy changelog, rating, about page, and
+ * anything else that might need to be standard in apps It uses the class AppConfig to get the unique 
+ * variables about this class.
  */
 
 
@@ -16,10 +17,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -74,20 +72,25 @@ public class AppManager {
         /*
          * Checks if there was an update in the app. If there was the update message is displayed
          */
-    	PackageInfo pInfo;
-    	try {
-            pInfo = c.getPackageManager().getPackageInfo(c.getPackageName(), PackageManager.GET_META_DATA);
-            long vCode =  pInfo.versionCode;
-            if (prefs.getLong(PREV_VERSION_CODE, 0) < vCode) {
-                showVersionUpdateDialog(c,vCode);
-                editor = prefs.edit();
-                editor.putLong(PREV_VERSION_CODE, vCode);
-                editor.commit();
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG , "Error reading versionCode");
-            e.printStackTrace();
-        }
+//    	PackageInfo pInfo;
+//    	try {
+//            pInfo = c.getPackageManager().getPackageInfo(c.getPackageName(), PackageManager.GET_META_DATA);
+//            long vCode =  pInfo.versionCode;
+//            if (prefs.getLong(PREV_VERSION_CODE, 0) < vCode) {
+//                showVersionUpdateDialog(c,vCode);
+//                editor = prefs.edit();
+//                editor.putLong(PREV_VERSION_CODE, vCode);
+//                editor.commit();
+//            }
+//        } catch (PackageManager.NameNotFoundException e) {
+//            Log.e(TAG , "Error reading versionCode");
+//            e.printStackTrace();
+//        }
+        
+        ChangeLog cl = new ChangeLog(c);
+        if (cl.firstRun())
+            cl.getLogDialog().show();
+//        cl.getFullLogDialog().show();
         
         editor.commit();
     }   
@@ -174,7 +177,7 @@ public class AppManager {
     	AlertDialog.Builder alert = new AlertDialog.Builder(c); 
 
         alert.setTitle("About"); 
-        alert.setMessage(DevConstants.ABOUT_MESSAGE);
+        alert.setMessage(AppConfig.ABOUT_MESSAGE);
         
         alert.setPositiveButton("View Site", new DialogInterface.OnClickListener() { 
             public void onClick(DialogInterface dialog, int whichButton) { 

@@ -1,3 +1,8 @@
+/**
+ * @author Kevin Nennig
+ * This is all constants used in the app. Specifically for passing bundles and saving preferences
+ */
+
 package com.nennig.constants;
 
 import java.util.HashMap;

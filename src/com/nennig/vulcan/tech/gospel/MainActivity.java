@@ -1,19 +1,23 @@
+/**
+ * @author Kevin Nennig
+ * This is the main activity for this application. It allows users to interact with the application and choose what type
+ * of spinning they would like to view. Overall, this is an application to show different moves in poi spinning. It allows 
+ * users to search through the different moves and choose the move they would like to work on. These moves and how they are 
+ * organized is the work of Noel Yee and David Cantor. The actual development of the application is a complilation between
+ * myself (Kevin), Noel Yee, and David Jonathan. 
+ */
 package com.nennig.vulcan.tech.gospel;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.nennig.constants.AppConstants;
-
-import android.net.Uri;
-import android.os.Bundle;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,13 +26,13 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.nennig.constants.AppConstants;
+import com.nennig.constants.AppManager;
 
 public class MainActivity extends BaseActivity {
 	private static final String TAG = "MainActivity";
@@ -37,14 +41,17 @@ public class MainActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
+		AppManager.app_launched(MainActivity.this);
+		
 		final Button _3113Button = (Button) findViewById(R.id.main_3113_button);
 		_3113Button.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				Intent intent = new Intent(MainActivity.this,
-						PropActivity.class);
+						SelectorActivity.class);
 				startActivity(intent);
+//				AppManager.aboutAlert(MainActivity.this);
 			}
 		});
 

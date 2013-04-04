@@ -1,6 +1,8 @@
-package com.nennig.vulcan.tech.gospel;
+package com.nennig.vtglibrary;
 
 import java.util.ArrayList;
+
+import com.nennig.vtglibrary.R;
 
 import android.app.ListActivity;
 import android.os.Bundle;

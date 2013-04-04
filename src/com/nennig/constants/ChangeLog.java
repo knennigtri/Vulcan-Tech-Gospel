@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import com.nennig.vulcan.tech.gospel.R;
+import com.nennig.vtglibrary.R;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;

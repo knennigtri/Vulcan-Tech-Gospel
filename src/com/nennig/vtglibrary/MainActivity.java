@@ -6,7 +6,7 @@
  * organized is the work of Noel Yee and David Cantor. The actual development of the application is a complilation between
  * myself (Kevin), Noel Yee, and David Jonathan. 
  */
-package com.nennig.vulcan.tech.gospel;
+package com.nennig.vtglibrary;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
+import com.nennig.vtglibrary.R;
 
 public class MainActivity extends BaseActivity {
 	private static final String TAG = "MainActivity";
@@ -54,15 +55,22 @@ public class MainActivity extends BaseActivity {
 //				AppManager.aboutAlert(MainActivity.this);
 			}
 		});
-
+		
 		// 1:1::1:1 Button
 		final Button _button2 = (Button) findViewById(R.id.main_button2);
 		_button2.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				Toast.makeText(MainActivity.this,
-						"1:1::1:1 will be implemented in V2 of this app.",
-						Toast.LENGTH_LONG).show();
+				if(isLiteVersion())
+				{
+					AppManager.proVersionAlert(MainActivity.this);
+				}
+				else
+				{
+					Toast.makeText(MainActivity.this,
+							"This is a pro feature that will be added soon.",
+							Toast.LENGTH_LONG).show();
+				}
 			}
 		});
 

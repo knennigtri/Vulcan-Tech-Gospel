@@ -3,7 +3,7 @@
  * and then easily referencing for the detail view of each poi move.
  */
 
-package com.nennig.vulcan.tech.gospel;
+package com.nennig.vtglibrary;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

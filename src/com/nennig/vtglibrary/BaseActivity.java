@@ -4,7 +4,7 @@
  * the displays dimensions for calculating icons. There are a few other various methods needed by multiple extended classes 
  * to make code reuse minimal.
  */
-package com.nennig.vulcan.tech.gospel;
+package com.nennig.vtglibrary;
 
 import java.io.InputStream;
 
@@ -27,6 +27,7 @@ import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.constants.ChangeLog;
+import com.nennig.vtglibrary.R;
 
 
 public class BaseActivity extends Activity {
@@ -167,35 +168,48 @@ public class BaseActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
     	Intent i;
     	String url;
-    	switch(item.getItemId()){
-    	case R.id.menu_about:
+    	if(item.getItemId() == R.id.menu_about)
+    	{
     		AppManager.aboutAlert(this);
     		return true;
-    	case R.id.menu_facebook:
+    	}
+    	else if(item.getItemId() == R.id.menu_facebook)
+    	{
     		url =AppConstants.FACEBOOK;
         	i = new Intent(Intent.ACTION_VIEW);
         	i.setData(Uri.parse(url));
         	startActivity(i);
     		return true;
-    	case R.id.menu_donate:
+    	}
+		else if(item.getItemId() == R.id.menu_donate)
+		{
     		url = AppConstants.PAYPAL;
         	i = new Intent(Intent.ACTION_VIEW);
         	i.setData(Uri.parse(url));
         	startActivity(i);
     		return true;
-    	case R.id.menu_rate_this:
+		}
+		else if(item.getItemId() == R.id.menu_rate_this)
+		{
     		url = AppConstants.RATEAPP;
     		i = new Intent(Intent.ACTION_VIEW);
         	i.setData(Uri.parse(url));
         	startActivity(i);
     		return true;
-    	case R.id.menu_change_log:
+		}
+		else if(item.getItemId() == R.id.menu_change_log)
+		{
     		ChangeLog cl = new ChangeLog(this);
             cl.getFullLogDialog().show();
             return true;
-    	default:
+		}
+		else
+		{
     		return super.onOptionsItemSelected(item);
     	}
     }
 
+    public boolean isLiteVersion()  {
+    	return ((VTGLibraryApplication)getApplication()).isLiteVersion(); 
+    }
 }

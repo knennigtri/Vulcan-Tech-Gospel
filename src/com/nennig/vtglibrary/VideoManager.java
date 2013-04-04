@@ -1,6 +1,7 @@
-package com.nennig.vulcan.tech.gospel;
+package com.nennig.vtglibrary;
 
 import com.nennig.constants.AppConfig;
+import com.nennig.vtglibrary.R;
 
 import android.content.Context;
 import android.util.Log;

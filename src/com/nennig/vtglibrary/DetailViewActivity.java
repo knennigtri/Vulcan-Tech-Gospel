@@ -1,4 +1,4 @@
-package com.nennig.vulcan.tech.gospel;
+package com.nennig.vtglibrary;
 
 
 import java.io.IOException;
@@ -34,7 +34,8 @@ import android.widget.VideoView;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
-import com.nennig.vulcan.tech.gospel.SingletonPoiMoveMap.PoiMove;
+import com.nennig.vtglibrary.SingletonPoiMoveMap.PoiMove;
+import com.nennig.vtglibrary.R;
 
 @SuppressLint("NewApi")
 public class DetailViewActivity extends BaseActivity implements OnTouchListener{

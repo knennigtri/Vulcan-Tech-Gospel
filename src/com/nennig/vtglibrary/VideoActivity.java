@@ -1,4 +1,4 @@
-package com.nennig.vulcan.tech.gospel;
+package com.nennig.vtglibrary;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -21,6 +21,7 @@ import android.widget.VideoView;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
+import com.nennig.vtglibrary.R;
 
 public class VideoActivity extends Activity {
 	private static final String TAG = AppConfig.APP_PNAME + ".DetialViewActivity";

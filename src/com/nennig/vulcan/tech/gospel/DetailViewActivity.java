@@ -34,7 +34,7 @@ import android.widget.VideoView;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
-import com.nennig.vulcan.tech.gospel.SingletonPoiObj.PoiMove;
+import com.nennig.vulcan.tech.gospel.SingletonPoiMoveMap.PoiMove;
 
 @SuppressLint("NewApi")
 public class DetailViewActivity extends BaseActivity implements OnTouchListener{
@@ -82,11 +82,11 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
 		}
 		
 		//Create the singleton and get the information for the detail view
-		SingletonPoiObj sPoi = SingletonPoiObj.getSingletonPoiObj(this);
+		SingletonPoiMoveMap sPoi = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
 		PoiMove pMove = sPoi.getPoiMove(detailName);
 		
 		//Set the Image Name
-		final String textName = pMove.name;
+		final String textName = pMove.m13_name;
 		TextView detailTV = (TextView) findViewById(R.id.detail_photoName);
 		if(textName.length()>57)
 			detailTV.setTextSize(15);

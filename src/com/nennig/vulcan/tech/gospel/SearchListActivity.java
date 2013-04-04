@@ -17,30 +17,30 @@ public class SearchListActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_list);
-        ArrayList<String> listItems=new ArrayList<String>();
-        final ArrayAdapter<String> aa = new ArrayAdapter<String>(this, R.id.search_results_list, listItems);
-        setListAdapter(aa);
-        
-      //This creates a listener for the Files listed
-        getListView().setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                    int position, long id) {
-            	String memFolder = aa.getItem(position);
-              
-            }
-        });
-        
-        //This allows for an optional deletion of the folder
-        getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
-			@Override
-			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-					int position, long id) {
-				
-				return false;
-			}
-        	
-		});
+//        ArrayList<String> listItems=new ArrayList<String>();
+//        final ArrayAdapter<String> aa = new ArrayAdapter<String>(this, R.id.search_results_list, listItems);
+//        setListAdapter(aa);
+//        
+//      //This creates a listener for the Files listed
+//        getListView().setOnItemClickListener(new OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                    int position, long id) {
+//            	String move = aa.getItem(position);
+//              
+//            }
+//        });
+//        
+//        //This allows for an optional deletion of the folder
+//        getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+//			@Override
+//			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+//					int position, long id) {
+//				
+//				return false;
+//			}
+//        	
+//		});
     }
 
     @Override

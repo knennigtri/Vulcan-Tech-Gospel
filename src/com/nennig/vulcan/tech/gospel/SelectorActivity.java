@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.nennig.constants.AppConstants;
+import com.nennig.vulcan.tech.gospel.SingletonPoiMoveMap.PoiMove;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -35,12 +36,17 @@ public class SelectorActivity extends BaseActivity {
 	
 	String poiType, handType, prevPoiType, prevHandType;
 	RelativeLayout mainLayout;
+
+	SingletonPoiMoveMap sPoiMap;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prop);
         mainLayout = (RelativeLayout) findViewById(R.layout.activity_prop);
+        
+        //Create the singleton and get the information for the detail view
+		sPoiMap = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
         
         poiSp = (Spinner) findViewById(R.id.prop_poi_spinner);
         handSp = (Spinner) findViewById(R.id.prop_hand_spinner);
@@ -128,9 +134,11 @@ public class SelectorActivity extends BaseActivity {
 				//TODO Add two_icon_view
 			}
 			
+			PoiMove pm = sPoiMap.getPoiMove(pTIndex + "x" + hTIndex + "x" + i); //Get the PoiMove info from the PoiMap
+			
 			//If the position is real, then load the icon, else load the default icon
 			if(positionExists){
-	    		iconName = "i" + pTIndex + "x" + hTIndex + "x" + i +  "." + ext;
+				iconName = "i13_" + pm.m13_image + "." + pm.m13_imageExt;
 			}
 			else
 			{

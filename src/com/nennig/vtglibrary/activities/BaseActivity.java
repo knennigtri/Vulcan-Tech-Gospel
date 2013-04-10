@@ -4,7 +4,7 @@
  * the displays dimensions for calculating icons. There are a few other various methods needed by multiple extended classes 
  * to make code reuse minimal.
  */
-package com.nennig.vtglibrary;
+package com.nennig.vtglibrary.activities;
 
 import java.io.InputStream;
 
@@ -28,6 +28,7 @@ import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.constants.ChangeLog;
 import com.nennig.vtglibrary.R;
+import com.nennig.vtglibrary.managers.VTGLibraryApplication;
 
 
 public class BaseActivity extends Activity {
@@ -92,10 +93,6 @@ public class BaseActivity extends Activity {
     		return getString(R.string.global_so);
     	return getString(R.string.global_ts);
     }   
-   
-    public static void helpAlert(final Activity c){
-    	
-    }
     
     /**
      * This method is built for displaying an icon in this app. It takes in the dimensions of the phone and then resizes 

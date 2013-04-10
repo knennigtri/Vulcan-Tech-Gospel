@@ -1,51 +1,38 @@
-package com.nennig.vtglibrary;
+package com.nennig.vtglibrary.activities;
 
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.PointF;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnPreparedListener;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
-import com.nennig.vtglibrary.SingletonPoiMoveMap.PoiMove;
 import com.nennig.vtglibrary.R;
+import com.nennig.vtglibrary.managers.SingletonPoiMoveMap;
+import com.nennig.vtglibrary.managers.SingletonPoiMoveMap.PoiMove;
 
 @SuppressLint("NewApi")
 public class DetailViewActivity extends BaseActivity implements OnTouchListener{
 	private static final String TAG = AppConfig.APP_PNAME + ".DetialViewActivity";
 	private static final String accepted_ext = "png";
 
-    
-    private int poiVal = 0;
-    private int handVal = 0;
-    private int posVal = 0;
+	private String _curMatrixID = "";
+    private String _curSet = "";
     
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,49 +40,49 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
         setContentView(R.layout.activity_detail_view);
         
         SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
-        poiVal = sP.getInt(AppConstants.CUR_POI, 0);
-        handVal = sP.getInt(AppConstants.CUR_HAND, 0);
-        posVal = sP.getInt(AppConstants.CUR_POS, 0);
-
-        TextView poiText = (TextView) findViewById(R.id.detail_poiText);
+        _curMatrixID = sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0");
+        _curSet = sP.getString(AppConstants.CUR_SET, AppConstants.SET_1313);
+        Log.d(TAG, "Cur Matrix" + _curMatrixID);
+        
+        //Create the singleton and get the information for the detail view
+  		SingletonPoiMoveMap sPoi = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
+  		PoiMove pMove = sPoi.getPoiMove(_curMatrixID);
+        
+        TextView propText = (TextView) findViewById(R.id.detail_poiText);
         TextView handText = (TextView)findViewById(R.id.detail_handText);
         
-        poiText.setText(getTimeDirectionString(poiVal));
-        handText.setText(getTimeDirectionString(handVal));
-		
-        final String detailName = poiVal + "x" + handVal + "x" + posVal;	
+        String[] parsedMatrixID = _curMatrixID.split("[x]");
+        Log.d(TAG, "Matrix Slipt: " + parsedMatrixID.length);
+        int pInt = Integer.valueOf(parsedMatrixID[0]);
+        int hInt = Integer.valueOf(parsedMatrixID[0]);
+        String pText = getTimeDirectionString(pInt);
+        String hText = getTimeDirectionString(hInt);
+        propText.setText(pText);
+        handText.setText(hText);
         
 		//Set The Image
 		final ImageView iv = (ImageView) findViewById(R.id.detail_image);
 		InputStream iStream = null;
-			
 
 		//Set the pdf view of the activity
 		Bitmap bitmapImage = null;
 		try {
-			iStream = getAssets().open(AppConstants.DETAIL_VIEW_FOLDER + "/" + detailName + "." + accepted_ext);
+			iStream = getAssets().open(AppConstants.DETAIL_VIEW_FOLDER + "/" + _curMatrixID + "." + accepted_ext);
 			bitmapImage = getBitmapImage(iStream, displayWidth );	
 			iv.setImageBitmap(bitmapImage);
 			iv.setOnTouchListener(this);
 		} catch (IOException e) {
-			Log.d(TAG, "The file " + detailName + " was not found...");
+			Log.d(TAG, "The file " + _curMatrixID + " was not found...");
 			Log.d(TAG, e.toString());
 		}
 		
-		//Create the singleton and get the information for the detail view
-		SingletonPoiMoveMap sPoi = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
-		PoiMove pMove = sPoi.getPoiMove(detailName);
+//		setPoiMoveVars(pMove);
 		
 		//Set the Image Name
-		final String textName = pMove.m13_name;
 		TextView detailTV = (TextView) findViewById(R.id.detail_photoName);
-		if(textName.length()>57)
+		if(pMove.getName(_curSet).length()>57)
 			detailTV.setTextSize(15);
-		detailTV.setText(textName);
-
-//		final String url = pMove.youtubeVideo;
-//		final String start = pMove.sTime;
-//		final String end = pMove.eTime;
+		detailTV.setText(pMove.getName(_curSet));
 		
 		//Set the Button
 		Button videoButton = (Button) findViewById(R.id.detail_button);
@@ -103,8 +90,8 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				Intent i = new Intent(DetailViewActivity.this, VideoActivity.class);
-				i.putExtra(AppConstants.MOVE_INDEX, detailName);
-				i.putExtra(AppConstants.MOVE_NAME, textName);
+//				i.putExtra(AppConstants.CUR_MATRIX_ID, matrixID);
+//				i.putExtra(AppConstants.MOVE_NAME, textName);
 				startActivity(i);
 				return false;
 			}
@@ -112,8 +99,25 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
 	}
 	
 	
+//    String textName;
+//    /**
+//     * This sets up all the variables from the poi move depending on which poi set we are in
+//     * @param pMove
+//     */
+//	private void setPoiMoveVars(PoiMove pMove) {
+//		
+//		if(_curSet.equals(AppConstants.SET_1313)){
+//			textName = pMove.m13_name;
+//		}
+//		else if(_curSet.equals(AppConstants.SET_1111))
+//		{
+//			textName = pMove.m11_name;	
+//		}	
+//	}
 
-	
+
+
+
 
 	// These matrices will be used to move and zoom image
 	Matrix matrix = new Matrix();
@@ -132,8 +136,6 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
 	String savedItemClicked;
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-	    // TODO Auto-generated method stub
-
 	    ImageView view = (ImageView) v;
 	    dumpEvent(event);
 

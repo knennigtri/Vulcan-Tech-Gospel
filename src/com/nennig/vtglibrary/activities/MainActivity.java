@@ -6,7 +6,7 @@
  * organized is the work of Noel Yee and David Cantor. The actual development of the application is a complilation between
  * myself (Kevin), Noel Yee, and David Jonathan. 
  */
-package com.nennig.vtglibrary;
+package com.nennig.vtglibrary.activities;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +15,8 @@ import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,10 +36,12 @@ import android.widget.Toast;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
+import com.nennig.vtglibrary.managers.SingletonPoiMoveMap;
 
 public class MainActivity extends BaseActivity {
 	private static final String TAG = "MainActivity";
-
+	private static SingletonPoiMoveMap sPoiMap;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -45,20 +49,21 @@ public class MainActivity extends BaseActivity {
 		
 		AppManager.app_launched(MainActivity.this);
 		
-		final Button _3113Button = (Button) findViewById(R.id.main_3113_button);
-		_3113Button.setOnClickListener(new Button.OnClickListener() {
+		//3:1::1:3 Button
+		final Button _1313Button = (Button) findViewById(R.id.main_3113_button);
+		_1313Button.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				saveCurSet(AppConstants.SET_1313);
 				Intent intent = new Intent(MainActivity.this,
 						SelectorActivity.class);
 				startActivity(intent);
-//				AppManager.aboutAlert(MainActivity.this);
 			}
 		});
 		
-		// 1:1::1:1 Button
-		final Button _button2 = (Button) findViewById(R.id.main_button2);
-		_button2.setOnClickListener(new Button.OnClickListener() {
+		//1:1::1:1 Button
+		final Button _1111Button = (Button) findViewById(R.id.main_button2);
+		_1111Button.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				if(isLiteVersion())
@@ -67,6 +72,7 @@ public class MainActivity extends BaseActivity {
 				}
 				else
 				{
+					saveCurSet(AppConstants.SET_1111);
 					Toast.makeText(MainActivity.this,
 							"This is a pro feature that will be added soon.",
 							Toast.LENGTH_LONG).show();
@@ -83,8 +89,8 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 
+		//Sets up the Main Image
 		ImageView mainImage = (ImageView) findViewById(R.id.main_image);
-
 		InputStream iStream = null;
 		try {
 			iStream = getAssets().open(AppConstants.MAIN_IMAGE);
@@ -95,8 +101,12 @@ public class MainActivity extends BaseActivity {
 		Log.d(TAG, "Recieved iStream");
 		Bitmap image = getBitmapImage(iStream,
 				Math.round((float) (displayWidth * .8)));
-
 		mainImage.setImageBitmap(image);
+		
+		/*
+		 * Parse the db file so that the objects are ready when needed.
+		 */
+		sPoiMap = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
 	}
 
 	private void viewPDFList() {
@@ -150,6 +160,14 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 
+	}
+	
+	private void saveCurSet(String setNumber){
+		SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
+			Editor e = sP.edit();
+			e.putString(AppConstants.CUR_SET, setNumber);
+			e.commit();
+			Log.d(TAG, "Current Set: " + setNumber);
 	}
 
 	@Override

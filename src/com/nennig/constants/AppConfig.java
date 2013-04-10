@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class AppConfig {
 
 	public final static String APP_TITLE = "Vulcan Tech Gospel";
-    public final static String APP_PNAME = "com.nennig.vtglibrary";
+    public final static String APP_PNAME = "com.nennig.vtglibrary.activities";
 
     public static final String ABOUT_MESSAGE = "Vulcan Tech Gospel #2 was created by David Cantor and Noel Yee." +
     		"Vulcan Tech Gospel Writers:  " +

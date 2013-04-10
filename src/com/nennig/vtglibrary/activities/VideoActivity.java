@@ -1,4 +1,4 @@
-package com.nennig.vtglibrary;
+package com.nennig.vtglibrary.activities;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -22,14 +22,20 @@ import android.widget.VideoView;
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.vtglibrary.R;
+import com.nennig.vtglibrary.managers.SingletonPoiMoveMap;
+import com.nennig.vtglibrary.managers.VideoManager;
+import com.nennig.vtglibrary.managers.SingletonPoiMoveMap.PoiMove;
 
 public class VideoActivity extends Activity {
 	private static final String TAG = AppConfig.APP_PNAME + ".DetialViewActivity";
 	
     boolean play = true;
-    String videoIndex = "";
-    int videoPropIndex = 0;
+    String _curMatrixID = "";
+    String _curSet = "";
     VideoView vView;
+    
+    int videoPropIndex = 0;
+    
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,17 +43,25 @@ public class VideoActivity extends Activity {
     	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
         
-        //Get video values from bundle and preferences
-        videoIndex = getIntent().getExtras().getString(AppConstants.MOVE_INDEX);
-        Log.d(TAG, "VideoIndex: " + videoIndex);
-        
         final SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
-        videoPropIndex = sP.getInt(AppConstants.MOVE_PROP, 0);
+        _curMatrixID = sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0");
+		_curSet = sP.getString(AppConstants.CUR_SET, AppConstants.SET_1313);
+        
+        //Create the singleton and get the information for the detail view
+  		SingletonPoiMoveMap sPoi = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
+  		PoiMove pMove = sPoi.getPoiMove(_curMatrixID);
+        
         Log.d(TAG, "videoPropIndex: " + videoPropIndex);
         
         //Set Video Name
-        TextView tv = (TextView) findViewById(R.id.video_moveName);
-        tv.setText(getIntent().getExtras().getString(AppConstants.MOVE_NAME));
+        TextView tvName = (TextView) findViewById(R.id.video_moveName);
+        tvName.setText(pMove.getName(_curSet));
+        TextView tvMove = (TextView) findViewById(R.id.video_move_hand_prop);
+        String[] parsedMatrixID = pMove.moveID.split("[x]");
+        tvMove.setText("Hand: " + getTimeDirectionStringShort(Integer.valueOf(parsedMatrixID[0])) +
+        		"  Prop: " + getTimeDirectionStringShort(Integer.valueOf(parsedMatrixID[1]))
+        		);
+        
         
         //Setup Video
 		vView = (VideoView)findViewById(R.id.videoView);		
@@ -121,12 +135,23 @@ public class VideoActivity extends Activity {
      * This retrieves the new video from the VideoManager and then runs the video
      */
     public void setupNewVideo(){
-    	int videoID = VideoManager.getVideoID(this, videoIndex, videoPropIndex);
+    	int videoID = VideoManager.getVideoID(this, _curSet, _curMatrixID, videoPropIndex);
 		
-		String path = "android.resource://"+getPackageName()+"/" + videoID;  //R.raw.v0x0x0;
-//		String path = "android.resource://"+getPackageName()+"/raw/v0x0x0.mp4";
+		String path = "android.resource://"+getPackageName()+"/" + videoID;
 
 		vView.setVideoURI(Uri.parse(path));
+    }
+    
+    public String getTimeDirectionStringShort(int i){
+    	if(i == 0)
+    		return "T/S";
+    	if(i == 1)
+    		return "S/S";
+    	if(i == 2)
+    		return "T/O";
+    	if(i == 3)
+    		return "S/O";
+    	return "TS";
     }
     
     @Override

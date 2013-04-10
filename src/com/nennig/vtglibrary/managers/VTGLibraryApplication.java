@@ -1,4 +1,10 @@
-package com.nennig.vtglibrary;
+/**
+ * This is a class to create a custom class that helps the code base stay in the same branch of code.
+ * 
+ * @author Kevin Nennig
+ */
+
+package com.nennig.vtglibrary.managers;
 
 import android.app.Application;
 import android.util.Log;

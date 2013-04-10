@@ -3,7 +3,7 @@
  * and then easily referencing for the detail view of each poi move.
  */
 
-package com.nennig.vtglibrary;
+package com.nennig.vtglibrary.managers;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -161,7 +161,6 @@ public class SingletonPoiMoveMap {
 					String moveColumn = split1[1];
 					String columnName = moveSet.charAt(1) + ":" + moveSet.charAt(2) +
 							"<" + moveColumn.toLowerCase() + ">";
-					Log.d(TAG, columnName);
 					return columnName;
 				}
 			}
@@ -188,11 +187,22 @@ public class SingletonPoiMoveMap {
 		return poiMoveMap.get(moveID.toLowerCase());
 	}
 	
+	@Override
+	public String toString(){
+		String str = "{";
+		for(PoiMove pm : poiMoveMap.values()){
+			str = str + "; " + pm.moveID;
+		}
+		str = str + "}";
+		return str;
+	}
+	
 	public class PoiMove{
 		public String moveID;
 		public String m13_name;
 		public String m13_image;
 		public String m13_imageExt;
+		public String m13_imageFileName;
 		public String m13_type;
 		public String m13_drawX;
 		public String m13_drawY;
@@ -203,10 +213,87 @@ public class SingletonPoiMoveMap {
 		public String m11_name;
 		public String m11_image;
 		public String m11_imageExt;
+		public String m11_imageFileName;
 		public String m11_type;
 		public String m11_drawX;
 		public String m11_drawY;
 
+		public String getName(String curSet){
+			if(curSet.equals(AppConstants.SET_1313)){
+				return m13_name;
+			}
+			else if(curSet.equals(AppConstants.SET_1111))
+			{
+				return m11_name;
+			}
+			return m13_name;
+		}
+		public String getImage(String curSet){
+			if(curSet.equals(AppConstants.SET_1313)){
+				return m13_image;
+			}
+			else if(curSet.equals(AppConstants.SET_1111))
+			{
+				return m11_image;
+			}
+			return m13_image;
+		}
+		public String getImageExt(String curSet){
+			if(curSet.equals(AppConstants.SET_1313)){
+				return m13_imageExt;
+			}
+			else if(curSet.equals(AppConstants.SET_1111))
+			{
+				return m11_imageExt;
+			}
+			return m13_imageExt;
+		}
+		public String getImageFileName(String curSet){
+			if(curSet.equals(AppConstants.SET_1313)){
+				return m13_imageFileName;
+			}
+			else if(curSet.equals(AppConstants.SET_1111))
+			{
+				return m11_imageFileName;
+			}
+			return m13_imageFileName;
+		}
+		public String getType(String curSet){
+			if(curSet.equals(AppConstants.SET_1313)){
+				return m13_type;
+			}
+			else if(curSet.equals(AppConstants.SET_1111))
+			{
+				return m11_type;
+			}
+			return m13_type;
+		}
+		public String getDrawX(String curSet){
+			if(curSet.equals(AppConstants.SET_1313)){
+				return m13_drawX;
+			}
+			else if(curSet.equals(AppConstants.SET_1111))
+			{
+				return m11_drawX;
+			}
+			return m13_drawX;
+		}
+		public String getDrawY(String curSet){
+			if(curSet.equals(AppConstants.SET_1313)){
+				return m13_drawY;
+			}
+			else if(curSet.equals(AppConstants.SET_1111))
+			{
+				return m11_drawY;
+			}
+			return m13_drawY;
+		}
+		
+		/**
+		 * Huge adder that assigns the field value to the correct value.
+		 * @param name
+		 * @param fieldValue
+		 */
 		public void add(String name, String fieldValue) {
 			if(name.toLowerCase().equals("moveid".toLowerCase()))
 				moveID = fieldValue;
@@ -216,6 +303,8 @@ public class SingletonPoiMoveMap {
 				m13_image = fieldValue;
 			else if(name.toLowerCase().equals("m13_imageExt".toLowerCase()))
 				m13_imageExt = fieldValue;
+			else if(name.toLowerCase().equals("m13_imageFileName".toLowerCase()))
+				m13_imageFileName = fieldValue;
 			else if(name.toLowerCase().equals("m13_type".toLowerCase()))
 				m13_type = fieldValue;
 			else if(name.toLowerCase().equals("m13_drawX".toLowerCase()))
@@ -236,6 +325,8 @@ public class SingletonPoiMoveMap {
 				m11_image = fieldValue;
 			else if(name.toLowerCase().equals("m11_imageExt".toLowerCase()))
 				m11_imageExt = fieldValue;
+			else if(name.toLowerCase().equals("m11_imageFileName".toLowerCase()))
+				m11_imageFileName = fieldValue;
 			else if(name.toLowerCase().equals("m11_type".toLowerCase()))
 				m11_type = fieldValue;
 			else if(name.toLowerCase().equals("m11_drawX".toLowerCase()))

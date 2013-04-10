@@ -3,22 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"  >   
 
-
-	<TextView
-   		android:id="@+id/prop_poi_label"
-   		android:text="@string/text_prop"
-       	style="@style/ListItem"
-       	android:layout_marginRight="3dp"
-       	/>
   	<TextView
     	android:id="@+id/prop_hand_label"
       	android:text="@string/text_hand"
        	style="@style/ListItem"
-       	android:layout_below="@id/prop_poi_label"
        	android:layout_marginRight="3dp"
        	android:layout_marginTop="3dp"
        	/>
-    
+	<TextView
+   		android:id="@+id/prop_poi_label"
+   		android:text="@string/text_prop"
+       	style="@style/ListItem"
+       	android:layout_below="@id/prop_hand_label"
+       	android:layout_marginRight="3dp"
+       	android:layout_marginTop="3dp"
+       	/>
+  	<Spinner
+        android:id="@+id/prop_hand_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:dropDownWidth="wrap_content"
+        android:entries="@array/hand_dropdown"
+        android:layout_alignBaseline="@id/prop_hand_label"
+        android:layout_toRightOf="@id/prop_hand_label"
+        />
 	<Spinner
         android:id="@+id/prop_poi_spinner"
         android:layout_width="match_parent"
@@ -28,26 +37,15 @@
         android:dropDownWidth="wrap_content"
 		android:layout_alignBaseline="@id/prop_poi_label"
 		android:layout_toRightOf="@id/prop_poi_label"
-		
+		android:layout_below="@id/prop_hand_spinner"
+		android:layout_marginTop="3dp"
 		/>
-    <Spinner
-        android:id="@+id/prop_hand_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:dropDownWidth="wrap_content"
-        android:entries="@array/hand_dropdown"
-        android:layout_alignBaseline="@id/prop_hand_label"
-        android:layout_below="@id/prop_poi_spinner"
-        android:layout_toRightOf="@id/prop_hand_label"
-        android:layout_marginTop="3dp"
-        />
-   
+
     <RelativeLayout
         android:id="@+id/prop_combo_frames"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_below="@+id/prop_hand_label"
+        android:layout_below="@+id/prop_poi_label"
         android:layout_centerHorizontal="true"
         android:padding="16dp" >
 
@@ -55,6 +53,7 @@
             android:id="@+id/prop_icon_lone"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="vertical" >
 
             <ImageView
@@ -72,6 +71,7 @@
             android:layout_toRightOf="@id/prop_icon_lone"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="vertical" >
 
             <ImageView

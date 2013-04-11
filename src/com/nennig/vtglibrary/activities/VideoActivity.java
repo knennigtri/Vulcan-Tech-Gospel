@@ -58,8 +58,8 @@ public class VideoActivity extends Activity {
         tvName.setText(pMove.getName(_curSet));
         TextView tvMove = (TextView) findViewById(R.id.video_move_hand_prop);
         String[] parsedMatrixID = pMove.moveID.split("[x]");
-        tvMove.setText("Hand: " + getTimeDirectionStringShort(Integer.valueOf(parsedMatrixID[0])) +
-        		"  Prop: " + getTimeDirectionStringShort(Integer.valueOf(parsedMatrixID[1]))
+        tvMove.setText("Hand: " + getTimeDirectionStringShort(Integer.valueOf(parsedMatrixID[1])) +
+        		"  Prop: " + getTimeDirectionStringShort(Integer.valueOf(parsedMatrixID[0]))
         		);
         
         

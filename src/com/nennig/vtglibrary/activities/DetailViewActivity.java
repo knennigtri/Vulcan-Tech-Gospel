@@ -53,7 +53,7 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
         
         String[] parsedMatrixID = _curMatrixID.split("[x]");
         Log.d(TAG, "Matrix Slipt: " + parsedMatrixID.length);
-        int pInt = Integer.valueOf(parsedMatrixID[0]);
+        int pInt = Integer.valueOf(parsedMatrixID[1]);
         int hInt = Integer.valueOf(parsedMatrixID[0]);
         String pText = getTimeDirectionString(pInt);
         String hText = getTimeDirectionString(hInt);

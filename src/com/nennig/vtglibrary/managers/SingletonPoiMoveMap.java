@@ -200,19 +200,14 @@ public class SingletonPoiMoveMap {
 	public class PoiMove{
 		public String moveID;
 		public String m13_name;
-		public String m13_image;
-		public String m13_imageExt;
 		public String m13_imageFileName;
 		public String m13_type;
 		public String m13_drawX;
 		public String m13_drawY;
 		public String m13_pdf;
-		public String m13_youtubeStart;
-		public String m13_youtubeEnd;
+
 		
 		public String m11_name;
-		public String m11_image;
-		public String m11_imageExt;
 		public String m11_imageFileName;
 		public String m11_type;
 		public String m11_drawX;
@@ -227,26 +222,6 @@ public class SingletonPoiMoveMap {
 				return m11_name;
 			}
 			return m13_name;
-		}
-		public String getImage(String curSet){
-			if(curSet.equals(AppConstants.SET_1313)){
-				return m13_image;
-			}
-			else if(curSet.equals(AppConstants.SET_1111))
-			{
-				return m11_image;
-			}
-			return m13_image;
-		}
-		public String getImageExt(String curSet){
-			if(curSet.equals(AppConstants.SET_1313)){
-				return m13_imageExt;
-			}
-			else if(curSet.equals(AppConstants.SET_1111))
-			{
-				return m11_imageExt;
-			}
-			return m13_imageExt;
 		}
 		public String getImageFileName(String curSet){
 			if(curSet.equals(AppConstants.SET_1313)){
@@ -299,10 +274,6 @@ public class SingletonPoiMoveMap {
 				moveID = fieldValue;
 			else if(name.toLowerCase().equals("m13_name".toLowerCase()))
 				m13_name = fieldValue;
-			else if(name.toLowerCase().equals("m13_image".toLowerCase()))
-				m13_image = fieldValue;
-			else if(name.toLowerCase().equals("m13_imageExt".toLowerCase()))
-				m13_imageExt = fieldValue;
 			else if(name.toLowerCase().equals("m13_imageFileName".toLowerCase()))
 				m13_imageFileName = fieldValue;
 			else if(name.toLowerCase().equals("m13_type".toLowerCase()))
@@ -313,18 +284,10 @@ public class SingletonPoiMoveMap {
 				m13_drawY = fieldValue;
 			else if(name.toLowerCase().equals("m13_pdf".toLowerCase()))
 				m13_pdf = fieldValue;
-			else if(name.toLowerCase().equals("m13_youtubeStart".toLowerCase()))
-				m13_youtubeStart = fieldValue;
-			else if(name.toLowerCase().equals("m13_youtubeEnd".toLowerCase()))
-				m13_youtubeEnd = fieldValue;
 			
 			
 			else if(name.toLowerCase().equals("m11_name".toLowerCase()))
 				m11_name = fieldValue;
-			else if(name.toLowerCase().equals("m11_image".toLowerCase()))
-				m11_image = fieldValue;
-			else if(name.toLowerCase().equals("m11_imageExt".toLowerCase()))
-				m11_imageExt = fieldValue;
 			else if(name.toLowerCase().equals("m11_imageFileName".toLowerCase()))
 				m11_imageFileName = fieldValue;
 			else if(name.toLowerCase().equals("m11_type".toLowerCase()))

@@ -1,40 +1,48 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-	
-   	<TextView
-        android:id="@+id/detail_handLabel"
-        android:text="@string/text_hand"
-        style="@style/ListItem"
-        android:layout_marginRight="3dp"
-        />
-    <TextView
-        android:id="@+id/detail_poiLabel"
-        android:text="@string/text_prop"
-        style="@style/ListItem"
-        android:layout_marginRight="3dp"
-        android:layout_below="@id/detail_handLabel"
-        />
-   		
-    <TextView
-        android:id="@+id/detail_handText"
-        android:text="description2"
-        android:layout_alignBaseline="@id/detail_handLabel"
-        android:layout_toRightOf="@id/detail_handLabel"
-        android:maxLines="2"
-        style="@style/DescText"
-        />
-   	<TextView
-        android:id="@+id/detail_poiText"
-        android:text="description1"
-		android:layout_alignBaseline="@id/detail_poiLabel"
-        android:layout_toRightOf="@id/detail_poiLabel"
-        android:maxLines="2"
-        style="@style/DescText"
-        android:layout_below="@id/detail_handText"
-   		/>
-    <ImageView
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+	<RelativeLayout 
+	    android:id="@+id/detail_moveType"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+	   	<TextView
+	        android:id="@+id/detail_handLabel"
+	        android:text="@string/text_hand"
+	        style="@style/ListItem"
+	        android:layout_marginRight="3dp"
+	        />
+	    <TextView
+	        android:id="@+id/detail_poiLabel"
+	        android:text="@string/text_prop"
+	        style="@style/ListItem"
+	        android:layout_marginRight="3dp"
+	        android:layout_below="@id/detail_handLabel"
+	        />
+	   		
+	    <TextView
+	        android:id="@+id/detail_handText"
+	        android:text="description2"
+	        android:layout_alignBaseline="@id/detail_handLabel"
+	        android:layout_toRightOf="@id/detail_handLabel"
+	        android:maxLines="2"
+	        style="@style/DescText"
+	        />
+	   	<TextView
+	        android:id="@+id/detail_poiText"
+	        android:text="description1"
+			android:layout_alignBaseline="@id/detail_poiLabel"
+	        android:layout_toRightOf="@id/detail_poiLabel"
+	        android:maxLines="2"
+	        style="@style/DescText"
+	        android:layout_below="@id/detail_handText"
+	   		/>
+   	</RelativeLayout>
+   
+    <!-- ImageView
 	    android:id="@+id/detail_image"
 	    android:layout_below="@id/detail_poiLabel"
 	    android:layout_centerHorizontal="true"
@@ -55,17 +63,37 @@
 	       android:text="Name"
 	       android:layout_below="@id/detail_image"
 	       style="@style/DescText">
-   		</TextView>
-        <Button
+   		/-->
+   		
+        <!-- Button
             android:id="@+id/detail_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/black_button"
             android:layout_alignParentBottom="true"
-			android:layout_below="@id/detail_photoName"
             android:layout_margin="10dp"
             android:minHeight="35dp"
             style="@style/ButtonText"
-            android:text="View Poi Move"/>
-
- 
+            android:text="View Poi Move"/-->
+        
+		<com.nennig.vtglibrary.draw.VTGMove
+   		    android:id="@+id/detail_customMoveDraw"
+   		    android:layout_below="@id/detail_moveType"
+   		    android:layout_width="match_parent"
+   		    android:layout_height="wrap_content"
+   		    android:padding="10dp"
+   		    android:background="@android:color/white"
+   		    />
+ 	<TextView
+	       android:id="@+id/detail_moveName"
+	       android:layout_width="match_parent"
+	       android:layout_height="wrap_content"
+	       android:gravity="center"
+	       android:textSize="22sp"
+	       android:textStyle="bold"
+	       android:text="Name"
+	       android:layout_alignParentBottom="true"
+	       style="@style/DescText"
+   		/>
 
 </RelativeLayout>

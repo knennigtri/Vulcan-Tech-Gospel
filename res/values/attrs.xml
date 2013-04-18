@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="VTGMove">
+        <attr name="primaryColor" format="color"/>
+       	<attr name="secondaryColor" format="color"/>
+       	<attr name="pinEndShape" format="enum">
+       	    <enum name="circle" value="0"/>
+       	    <enum name="diamond" value="1"/>
+       	    <enum name="square" value="2"/>
+       	    <enum name="line" value="3"/>
+      	</attr>
+    </declare-styleable>
+</resources>

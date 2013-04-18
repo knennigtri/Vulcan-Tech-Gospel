@@ -1,13 +1,9 @@
 package com.nennig.vtglibrary.activities;
 
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.os.Bundle;
@@ -60,64 +56,50 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
         propText.setText(pText);
         handText.setText(hText);
         
-		//Set The Image
-		final ImageView iv = (ImageView) findViewById(R.id.detail_image);
-		InputStream iStream = null;
-
-		//Set the pdf view of the activity
-		Bitmap bitmapImage = null;
-		try {
-			iStream = getAssets().open(AppConstants.DETAIL_VIEW_FOLDER + "/" + _curMatrixID + "." + accepted_ext);
-			bitmapImage = getBitmapImage(iStream, displayWidth );	
-			iv.setImageBitmap(bitmapImage);
-			iv.setOnTouchListener(this);
-		} catch (IOException e) {
-			Log.d(TAG, "The file " + _curMatrixID + " was not found...");
-			Log.d(TAG, e.toString());
-		}
-		
-//		setPoiMoveVars(pMove);
-		
+        
+        //This code is for implementing the pdfs to the detail page
+//		//Set The Image
+//		final ImageView iv = (ImageView) findViewById(R.id.detail_image);
+//		InputStream iStream = null;
+//
+//		//Set the pdf view of the activity
+//		Bitmap bitmapImage = null;
+//		try {
+//			iStream = getAssets().open(AppConstants.DETAIL_VIEW_FOLDER + "/" + _curMatrixID + "." + accepted_ext);
+//			bitmapImage = getBitmapImage(iStream, displayWidth );	
+//			iv.setImageBitmap(bitmapImage);
+//			iv.setOnTouchListener(this);
+//		} catch (IOException e) {
+//			Log.d(TAG, "The file " + _curMatrixID + " was not found...");
+//			Log.d(TAG, e.toString());
+//		}
+				
 		//Set the Image Name
-		TextView detailTV = (TextView) findViewById(R.id.detail_photoName);
+		TextView detailTV = (TextView) findViewById(R.id.detail_moveName);
 		if(pMove.getName(_curSet).length()>57)
 			detailTV.setTextSize(15);
 		detailTV.setText(pMove.getName(_curSet));
 		
 		//Set the Button
-		Button videoButton = (Button) findViewById(R.id.detail_button);
-		videoButton.setOnTouchListener(new OnTouchListener() {
+//		Button videoButton = (Button) findViewById(R.id.detail_button);
+//		videoButton.setOnTouchListener(new OnTouchListener() {
+//			@Override
+//			public boolean onTouch(View v, MotionEvent event) {
+//				Intent i = new Intent(DetailViewActivity.this, VideoActivity.class);
+//				startActivity(i);
+//				return false;
+//			}
+//		});	
+		
+		((View) findViewById(R.id.detail_customMoveDraw)).setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				Intent i = new Intent(DetailViewActivity.this, VideoActivity.class);
-//				i.putExtra(AppConstants.CUR_MATRIX_ID, matrixID);
-//				i.putExtra(AppConstants.MOVE_NAME, textName);
 				startActivity(i);
 				return false;
 			}
 		});	
 	}
-	
-	
-//    String textName;
-//    /**
-//     * This sets up all the variables from the poi move depending on which poi set we are in
-//     * @param pMove
-//     */
-//	private void setPoiMoveVars(PoiMove pMove) {
-//		
-//		if(_curSet.equals(AppConstants.SET_1313)){
-//			textName = pMove.m13_name;
-//		}
-//		else if(_curSet.equals(AppConstants.SET_1111))
-//		{
-//			textName = pMove.m11_name;	
-//		}	
-//	}
-
-
-
-
 
 	// These matrices will be used to move and zoom image
 	Matrix matrix = new Matrix();

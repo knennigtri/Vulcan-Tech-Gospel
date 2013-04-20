@@ -19,16 +19,22 @@ import android.widget.TextView;
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.vtglibrary.R;
-import com.nennig.vtglibrary.managers.SingletonPoiMoveMap;
-import com.nennig.vtglibrary.managers.SingletonPoiMoveMap.PoiMove;
+import com.nennig.vtglibrary.managers.PropMove;
 
 @SuppressLint("NewApi")
 public class DetailViewActivity extends BaseActivity implements OnTouchListener{
 	private static final String TAG = AppConfig.APP_PNAME + ".DetialViewActivity";
-	private static final String accepted_ext = "png";
 
 	private String _curMatrixID = "";
     private String _curSet = "";
+    
+    static PropMove pMove = new PropMove();
+    
+    //For Testing Purposes ONLY
+    static {
+    	pMove.m13_name = "This is m13";
+    	pMove.m11_name = "this is m11";
+    }
     
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,19 +42,18 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
         setContentView(R.layout.activity_detail_view);
         
         SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
-        _curMatrixID = sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0");
+        _curMatrixID = "0x0x0"; //sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0");
         _curSet = sP.getString(AppConstants.CUR_SET, AppConstants.SET_1313);
-        Log.d(TAG, "Cur Matrix" + _curMatrixID);
+        Log.d(TAG, "Cur Matrix " + _curMatrixID);
         
         //Create the singleton and get the information for the detail view
-  		SingletonPoiMoveMap sPoi = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
-  		PoiMove pMove = sPoi.getPoiMove(_curMatrixID);
-        
+//  		SingletonPoiMoveMap sPoi = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
+//  		pMove = sPoi.getPoiMove(_curMatrixID);
+
         TextView propText = (TextView) findViewById(R.id.detail_poiText);
         TextView handText = (TextView)findViewById(R.id.detail_handText);
         
         String[] parsedMatrixID = _curMatrixID.split("[x]");
-        Log.d(TAG, "Matrix Slipt: " + parsedMatrixID.length);
         int pInt = Integer.valueOf(parsedMatrixID[1]);
         int hInt = Integer.valueOf(parsedMatrixID[0]);
         String pText = getTimeDirectionString(pInt);

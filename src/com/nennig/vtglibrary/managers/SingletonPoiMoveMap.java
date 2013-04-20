@@ -25,9 +25,9 @@ public class SingletonPoiMoveMap {
 	private static final String TAG = AppConfig.APP_PNAME + ".singleton";
 	private static SingletonPoiMoveMap ref;
 	/**
-	 * Holds all PoiMove objects that are parsed from the db file
+	 * Holds all PropMove objects that are parsed from the db file
 	 */
-	public static Map<String, PoiMove> poiMoveMap = new HashMap<String, PoiMove>();
+	public static Map<String, PropMove> poiMoveMap = new HashMap<String, PropMove>();
 	/**
 	 * Map of all the header indexes for the db file
 	 */
@@ -98,7 +98,7 @@ public class SingletonPoiMoveMap {
 		    	  }
 		    	  else
 		    	  {
-			    	  PoiMove pM = parsePoiMoveLine(nextLineParse);
+			    	  PropMove pM = parsePoiMoveLine(nextLineParse);
 		    		  poiMoveMap.put(pM.moveID, pM);
 		    	  }
 		      }
@@ -110,12 +110,12 @@ public class SingletonPoiMoveMap {
 	}
 	
 	/**
-	 * This parses each line of the db and then creates the PoiMove
+	 * This parses each line of the db and then creates the PropMove
 	 * @param nextLineParse - db Line to be parsed
-	 * @return - new PoiMove
+	 * @return - new PropMove
 	 */
-	private PoiMove parsePoiMoveLine(String[] nextLineParse) {
-		PoiMove pM = new PoiMove();  
+	private PropMove parsePoiMoveLine(String[] nextLineParse) {
+		PropMove pM = new PropMove();  
 		for(int i = 0; i < nextLineParse.length; i++)
 		{
 			for(Field field : pM.getClass().getFields()){
@@ -130,11 +130,11 @@ public class SingletonPoiMoveMap {
 	}
 
 	/**
-	 * This parses the fields in PoiMove according to the db standard and then puts the header names into the indexMap
+	 * This parses the fields in PropMove according to the db standard and then puts the header names into the indexMap
 	 */
 	private void createIndexMap(){
-		PoiMove pm = new PoiMove();
-		//iterates through all fields in the PoiMove class so that the indexes for each field can be found in the db file
+		PropMove pm = new PropMove();
+		//iterates through all fields in the PropMove class so that the indexes for each field can be found in the db file
 		for(Field field : pm.getClass().getFields()){
 			String columnName = getDBColumnName(field.getName());
 			if(!columnName.equals(""))
@@ -143,8 +143,8 @@ public class SingletonPoiMoveMap {
 	}
 	
 	/**
-	 * Simple String modifier to create the proper readable db headers from the PoiMove class fields
-	 * @param fieldName - field name from PoiMove class that will used to create the db header field
+	 * Simple String modifier to create the proper readable db headers from the PropMove class fields
+	 * @param fieldName - field name from PropMove class that will used to create the db header field
 	 * @return - db header field
 	 */
 	private String getDBColumnName(String fieldName){
@@ -171,7 +171,7 @@ public class SingletonPoiMoveMap {
 	}
 	
 	/**
-	 * Takes in the header line and then assigns all PoiMove fields to an associated index in the db file.
+	 * Takes in the header line and then assigns all PropMove fields to an associated index in the db file.
 	 * @param nextLineParse
 	 */
 	private void getheaderIndexes(String[] nextLineParse) {
@@ -183,119 +183,17 @@ public class SingletonPoiMoveMap {
 		Log.d(TAG,headerIndexMap.toString());
 	}
 
-	public PoiMove getPoiMove(String moveID){
+	public PropMove getPoiMove(String moveID){
 		return poiMoveMap.get(moveID.toLowerCase());
 	}
 	
 	@Override
 	public String toString(){
 		String str = "{";
-		for(PoiMove pm : poiMoveMap.values()){
+		for(PropMove pm : poiMoveMap.values()){
 			str = str + "; " + pm.moveID;
 		}
 		str = str + "}";
 		return str;
-	}
-	
-	public class PoiMove{
-		public String moveID;
-		public String m13_name;
-		public String m13_imageFileName;
-		public String m13_type;
-		public String m13_drawX;
-		public String m13_drawY;
-		public String m13_pdf;
-
-		
-		public String m11_name;
-		public String m11_imageFileName;
-		public String m11_type;
-		public String m11_drawX;
-		public String m11_drawY;
-
-		public String getName(String curSet){
-			if(curSet.equals(AppConstants.SET_1313)){
-				return m13_name;
-			}
-			else if(curSet.equals(AppConstants.SET_1111))
-			{
-				return m11_name;
-			}
-			return m13_name;
-		}
-		public String getImageFileName(String curSet){
-			if(curSet.equals(AppConstants.SET_1313)){
-				return m13_imageFileName;
-			}
-			else if(curSet.equals(AppConstants.SET_1111))
-			{
-				return m11_imageFileName;
-			}
-			return m13_imageFileName;
-		}
-		public String getType(String curSet){
-			if(curSet.equals(AppConstants.SET_1313)){
-				return m13_type;
-			}
-			else if(curSet.equals(AppConstants.SET_1111))
-			{
-				return m11_type;
-			}
-			return m13_type;
-		}
-		public String getDrawX(String curSet){
-			if(curSet.equals(AppConstants.SET_1313)){
-				return m13_drawX;
-			}
-			else if(curSet.equals(AppConstants.SET_1111))
-			{
-				return m11_drawX;
-			}
-			return m13_drawX;
-		}
-		public String getDrawY(String curSet){
-			if(curSet.equals(AppConstants.SET_1313)){
-				return m13_drawY;
-			}
-			else if(curSet.equals(AppConstants.SET_1111))
-			{
-				return m11_drawY;
-			}
-			return m13_drawY;
-		}
-		
-		/**
-		 * Huge adder that assigns the field value to the correct value.
-		 * @param name
-		 * @param fieldValue
-		 */
-		public void add(String name, String fieldValue) {
-			if(name.toLowerCase().equals("moveid".toLowerCase()))
-				moveID = fieldValue;
-			else if(name.toLowerCase().equals("m13_name".toLowerCase()))
-				m13_name = fieldValue;
-			else if(name.toLowerCase().equals("m13_imageFileName".toLowerCase()))
-				m13_imageFileName = fieldValue;
-			else if(name.toLowerCase().equals("m13_type".toLowerCase()))
-				m13_type = fieldValue;
-			else if(name.toLowerCase().equals("m13_drawX".toLowerCase()))
-				m13_drawX = fieldValue;
-			else if(name.toLowerCase().equals("m13_drawY".toLowerCase()))
-				m13_drawY = fieldValue;
-			else if(name.toLowerCase().equals("m13_pdf".toLowerCase()))
-				m13_pdf = fieldValue;
-			
-			
-			else if(name.toLowerCase().equals("m11_name".toLowerCase()))
-				m11_name = fieldValue;
-			else if(name.toLowerCase().equals("m11_imageFileName".toLowerCase()))
-				m11_imageFileName = fieldValue;
-			else if(name.toLowerCase().equals("m11_type".toLowerCase()))
-				m11_type = fieldValue;
-			else if(name.toLowerCase().equals("m11_drawX".toLowerCase()))
-				m11_drawX = fieldValue;
-			else if(name.toLowerCase().equals("m11_drawY".toLowerCase()))
-				m11_drawY = fieldValue;	
-		}	
 	}
 }

@@ -3,19 +3,12 @@ package com.nennig.vtglibrary.activities;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.nennig.constants.AppConstants;
-import com.nennig.vtglibrary.managers.SingletonPoiMoveMap;
-import com.nennig.vtglibrary.managers.SingletonPoiMoveMap.PoiMove;
-import com.nennig.vtglibrary.R;
-
-import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Region;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,9 +19,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Spinner;
-import android.support.v4.app.NavUtils;
+
+import com.nennig.constants.AppConstants;
+import com.nennig.vtglibrary.R;
+import com.nennig.vtglibrary.managers.PropMove;
+import com.nennig.vtglibrary.managers.SingletonPoiMoveMap;
 
 public class SelectorActivity extends BaseActivity {
 	private static final String TAG = "SelectorActivity";
@@ -139,7 +135,7 @@ public class SelectorActivity extends BaseActivity {
 					positionExists = true;
 			}
 			
-			PoiMove pm = sPoiMap.getPoiMove(pTIndex + "x" + hTIndex + "x" + i); //Get the PoiMove info from the PoiMap
+			PropMove pm = sPoiMap.getPoiMove(pTIndex + "x" + hTIndex + "x" + i); //Get the PropMove info from the PoiMap
 			
 			//If the position is real, then load the icon, else load the default icon
 			if(positionExists){
@@ -192,7 +188,7 @@ public class SelectorActivity extends BaseActivity {
 //     * @param pm poi move that will be displayed
 //     * @return the correct file name based on the current poi set
 //     */
-//	private String getIconName(PoiMove pm) {
+//	private String getIconName(PropMove pm) {
 //		SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
 //		String curSet = sP.getString(AppConstants.CUR_SET, AppConstants.SET_1313);
 //		if(curSet.equals(AppConstants.SET_1313)){

@@ -3,29 +3,28 @@
  */
 package com.nennig.vtglibrary.draw;
 
-import com.nennig.vtglibrary.R;
-import com.nennig.vtglibrary.managers.SingletonMovePinMap.MovePins;
-import com.nennig.vtglibrary.managers.SingletonMovePinMap.Pin;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.RectF;
-import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.MeasureSpec;
-import android.widget.Button;
-import android.widget.TextView;
+
+import com.nennig.constants.AppConfig;
+import com.nennig.vtglibrary.R;
+import com.nennig.vtglibrary.managers.MovePins;
+import com.nennig.vtglibrary.managers.Pin;
 
 /**
  * @author Kevin Nennig (knennig213@gmail.com)
  *
  */
 public class VTGMove extends View {
+	private static final String TAG = AppConfig.APP_PNAME + ".VTGMove";
 	private MovePins curMove;
 	
 	private float mTextWidth = 0.0f;
@@ -145,12 +144,27 @@ public class VTGMove extends View {
 		poxX, negX, posY, negY
 	}
 	
+	private static MovePins testMove = new MovePins();
+	static{
+		testMove.matrixID = "0x0x0";
+//		testMove.pin0 = new Pin("O", "B");
+		testMove.pin1 = new Pin("O", "B");
+//		testMove.pin2 = new Pin("I", "B");
+		testMove.pin3 = new Pin("O", "B");
+//		testMove.pin4 = new Pin("O", "B");
+		testMove.pin5 = new Pin("I", "B");
+//		testMove.pin6 = new Pin("I", "B");
+		testMove.pin7 = new Pin("O", "B");
+	}
+	
 	@Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         
+        curMove = testMove;
+        
         RectF rec = new RectF(0,0,getMeasuredWidth(),getMeasuredHeight());
-        canvas.drawRect(rec, primPaint);
+//        canvas.drawRect(rec, primPaint);
         
         if(curMove != null){
 	        //This checks to see if one of two pins should be drawn
@@ -190,32 +204,46 @@ public class VTGMove extends View {
 	 * @param pin1
 	 */
 	private void drawOnePin(Canvas canvas, Pin pin, Pos pos) {
+		
 		int w = getWidth();
 		int h = getHeight();
-		int startX = 0, startY = 0, stopX = 0, stopY = 0;
+		Log.d(TAG, "Drawing ONE Pin. w=" + w + " h=" + h);
+		Point propBoxOrigin;
+		float boxX=0, boxY=0;
+		
+		RectF box = null;
+		
+		int oLength; //holds the w/h of the outer side
+		int iLength;	//hold the w/h of the in
 		Paint paint = null;
 		
 		switch(pos){
 			case poxX:
-				startX = w - (w / 4);
-				startY = 0;
-				stopX = w - 10;
-				stopY = 0;
+				boxX = (float) (w * (3.0 / 4.0));
+				boxY = (float) (h * (3.0 / 8.0));
+				Log.d(TAG, "Updating posX: " + boxX + " " + boxY);
 				break;
 			case posY:
-				
+				boxX = (float) (w * (3.0 / 8.0f));
+				boxY = 0;
 				break;
 			case negX:
-				
+				boxX = 0;
+				boxY = (float) (h * (3.0 / 8.0f));
 				break;
 			case negY:
-			
+				boxX = (float) (w * (3.0 / 8.0f));
+				boxY = (float) (h * (3.0 / 4.0f));
 				break;
 			default:
-				
+				break;
 		}
 		
-		canvas.drawLine(startX, startY, stopX, stopY, paint);
+		Log.d(TAG, pos + " x=" + boxX + " y=" + boxY);
+		
+		box = new RectF(boxX, boxY, boxX + (w / 4), boxY - (h / 4));
+//		propBoxOrigin = new Point(boxX, boxY);
+		canvas.drawRect(box, primPaint);
 		
 	}
 	

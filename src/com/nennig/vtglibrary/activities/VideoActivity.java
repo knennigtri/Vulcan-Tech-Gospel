@@ -24,7 +24,7 @@ import com.nennig.constants.AppConstants;
 import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.managers.SingletonPoiMoveMap;
 import com.nennig.vtglibrary.managers.VideoManager;
-import com.nennig.vtglibrary.managers.SingletonPoiMoveMap.PoiMove;
+import com.nennig.vtglibrary.managers.PropMove;
 
 public class VideoActivity extends Activity {
 	private static final String TAG = AppConfig.APP_PNAME + ".DetialViewActivity";
@@ -49,7 +49,7 @@ public class VideoActivity extends Activity {
         
         //Create the singleton and get the information for the detail view
   		SingletonPoiMoveMap sPoi = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
-  		PoiMove pMove = sPoi.getPoiMove(_curMatrixID);
+  		PropMove pMove = sPoi.getPoiMove(_curMatrixID);
         
         Log.d(TAG, "videoPropIndex: " + videoPropIndex);
         

@@ -30,7 +30,7 @@ public class SingletonMovePinMap {
 		"Pin4","Pin5","Pin6","Pin7"};
 	
 	/**
-	 * Holds all PoiMove objects that are parsed from the db file
+	 * Holds all PropMove objects that are parsed from the db file
 	 */
 	public static Map<String, MovePins> movePinMap = new HashMap<String, MovePins>();
 	/**
@@ -194,7 +194,7 @@ public class SingletonMovePinMap {
 	}
 
 	/**
-	 * Takes in the header line and then assigns all PoiMove fields to an associated index in the db file.
+	 * Takes in the header line and then assigns all PropMove fields to an associated index in the db file.
 	 * @param nextLineParse
 	 */
 	private void getheaderIndexes(String[] nextLineParse) {
@@ -217,88 +217,5 @@ public class SingletonMovePinMap {
 		}
 		str = str + "}";
 		return str;
-	}
-	
-	public class MovePins{
-		public String matrixID="";
-		public Pin pin0;
-		public Pin pin1;
-		public Pin pin2;
-		public Pin pin3;
-		public Pin pin4;
-		public Pin pin5;
-		public Pin pin6;
-		public Pin pin7;
-		
-		@Override
-		public String toString(){
-			String str = "<"+matrixID+">:";
-			if(pin0 != null)
-				str = str + " 0=" + pin0.toString();
-			if(pin1 != null)
-				str = str + " 1=" + pin1.toString();
-			if(pin2 != null)
-				str = str + " 2=" + pin2.toString();
-			if(pin3 != null)
-				str = str + " 3=" + pin3.toString();
-			if(pin4 != null)
-				str = str + " 4=" + pin4.toString();
-			if(pin5 != null)
-				str = str + " 5=" + pin5.toString();
-			if(pin6 != null)
-				str = str + " 6=" + pin6.toString();
-			if(pin7 != null)
-				str = str + " 7=" + pin7.toString();
-			return str;
-		}
-	}
-	
-	
-	public class Pin{
-		private String direction;
-		private String color;
-		
-		public Pin(String dir, String col){
-			setDirection(dir);
-			setColor(col);
-		}
-
-		public Pin(){
-			direction = "";
-			color = "";
-		}
-		
-		/**
-		 * @return the direction
-		 */
-		public String getDirection() {
-			return direction;
-		}
-
-		/**
-		 * @param direction the direction to set
-		 */
-		public void setDirection(String direction) {
-			this.direction = direction;
-		}
-
-		/**
-		 * @return the color
-		 */
-		public String getColor() {
-			return color;
-		}
-
-		/**
-		 * @param color the color to set
-		 */
-		public void setColor(String color) {
-			this.color = color;
-		}
-		 
-		@Override
-		public String toString(){
-			return direction + "." + color;
-		}
 	}
 }

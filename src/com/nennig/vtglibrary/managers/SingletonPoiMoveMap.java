@@ -39,9 +39,13 @@ public class SingletonPoiMoveMap {
 		final SingletonPoiMoveMap obj = SingletonPoiMoveMap.getSingletonPoiMoveMap(location);
 	}
 	
-	public static SingletonPoiMoveMap getSingletonPoiMoveMap(Object obj){
+	public static SingletonPoiMoveMap getSingletonPoiMoveMap(final Object obj){
 		if(ref == null){
-			ref = new SingletonPoiMoveMap(obj);
+			new Thread(new Runnable() {
+		        public void run() {
+		        	ref = new SingletonPoiMoveMap(obj);
+		        }
+		    }).start();
 		}
 		return ref;
 	}

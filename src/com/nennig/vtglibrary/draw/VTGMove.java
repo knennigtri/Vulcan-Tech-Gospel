@@ -18,24 +18,70 @@ import com.nennig.constants.AppConfig;
 import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.managers.MovePins;
 import com.nennig.vtglibrary.managers.Pin;
+import com.nennig.vtglibrary.managers.Pin.pinDirection;
 
 /**
  * @author Kevin Nennig (knennig213@gmail.com)
- *
+ * This class is a view class that takes in a MovePins object and then draws the move's pins within the view.
+ * The class follows a simple convention of code reuse to create each of the 4 regions of drawable space for the
+ * pins and then draws the pins in that area according to color, direction, and the view's size.
  */
 public class VTGMove extends View {
 	private static final String TAG = AppConfig.APP_PNAME + ".VTGMove";
-	private MovePins curMove;
-	
-	private float mTextWidth = 0.0f;
-    private float mTextHeight = 0.0f;
     
     private int primColor;
     private int secColor;
     private int pinEndShape;
     
-    private Paint primPaint;
-    private Paint secPaint;
+    private Paint primCirclePaint;
+    private Paint secCirclePaint;
+    private Paint primLinePaint;
+    private Paint secLinePaint;
+    
+    RectF drawAreaBounds = new RectF();
+    
+	int drawAreaPadding = 0;
+	int pinBoxPadding = 20; //simple padding for each pin box
+	
+	/*
+	 * These are all precalculated values that are used in this app to assure that fractions are not mixed up
+	 */
+	float oneHalf = 1.0f/2.0f;
+	
+	float oneFourth = 1.0f/4.0f;
+	float threeFourths = 3.0f/4.0f;
+	
+	float oneEigth = 1.0f/8.0f;
+	float twoEigths = 2.0f/8.0f;
+	float threeEigths = 3.0f/8.0f;
+	float sevenEigths = 7.0f/8.0f;
+	
+	/*
+	 * Enum to determine which box we are calculating
+	 */
+	private enum PinBoxPos{
+		RIGHT, LEFT, TOP, BOTTOM
+	}	
+	
+	/*
+	 * This is Test Data
+	 */
+//	private static MovePins testMove = new MovePins();
+//	static{
+//		testMove.matrixID = "0x0x0";
+//		testMove.pin0 = new Pin("O", "B");
+//		testMove.pin1 = new Pin("I", "B");
+//		testMove.pin2 = new Pin("I", "B");
+//		testMove.pin3 = new Pin("I", "W");
+//		testMove.pin4 = new Pin("I", "W");
+//		testMove.pin5 = new Pin("I", "B");
+//		testMove.pin6 = new Pin("I", "B");
+//		testMove.pin7 = new Pin("O", "B");
+//	}
+//	static MovePins curMove = testMove;
+//	
+	
+	private MovePins curMove; 	//holds the current move pins to create the view
 	
 	/**
 	 * @param context
@@ -57,7 +103,7 @@ public class VTGMove extends View {
         
         try {
         	primColor = a.getColor(R.styleable.VTGMove_primaryColor, Color.BLACK);
-        	secColor = a.getColor(R.styleable.VTGMove_secondaryColor, Color.DKGRAY);
+        	secColor = a.getColor(R.styleable.VTGMove_secondaryColor, Color.BLUE);
         	pinEndShape = a.getInt(R.styleable.VTGMove_pinEndShape, 0);
         } finally {
         	a.recycle();
@@ -65,16 +111,6 @@ public class VTGMove extends View {
         
         init();
 	}
-	
-//    @Override
-//    protected int getSuggestedMinimumWidth() {
-//        return (int) mTextWidth * 2;
-//    }
-//
-//    @Override
-//    protected int getSuggestedMinimumHeight() {
-//        return (int) mTextWidth;
-//    }
 	
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -87,185 +123,374 @@ public class VTGMove extends View {
         // get as big as it can
         int minh = w + getPaddingBottom() + getPaddingTop();
         int h = Math.min(MeasureSpec.getSize(heightMeasureSpec), minh);
-
-
-        
         setMeasuredDimension(w, h);
     }
-
-	/* (non-Javadoc)
-	 * @see android.view.ViewGroup#onLayout(boolean, int, int, int, int)
-	 */
-	@Override
-	protected void onLayout(boolean changed, int l, int t, int r, int b) {
-		// TODO Auto-generated method stub
-		
-	}
 	
-	public void addPins(MovePins pm){
-		curMove = pm;
-		invalidate();
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		drawAreaBounds = new RectF(0+drawAreaPadding, 0+drawAreaPadding, w-drawAreaPadding, h-drawAreaPadding);
 	}
-	
-
+    
 	/**
-	 * @param pm
+	 * THis initiates the class. It sets up the primary and secondary paints and gets the initial
+	 * drawing area bounds.
 	 */
 	private void init() {
         // Force the background to software rendering because otherwise the Blur
         // filter won't work.
 //        setLayerToSW(this);
+        int lineWidth = 5;
+		
+        primCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        primCirclePaint.setStyle(Paint.Style.FILL);
+        primCirclePaint.setColor(primColor);
         
-        primPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        primPaint.setStyle(Paint.Style.FILL);
-        primPaint.setColor(primColor);
+        primLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        primLinePaint.setStyle(Paint.Style.STROKE);
+        primLinePaint.setColor(primColor);
+        primLinePaint.setStrokeWidth(lineWidth);
         
-        secPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        secPaint.setStyle(Paint.Style.FILL);
-        secPaint.setColor(secColor);
+        secCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        secCirclePaint.setStyle(Paint.Style.FILL);
+        secCirclePaint.setColor(secColor);
         
+        secLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        secLinePaint.setStyle(Paint.Style.STROKE);
+        secLinePaint.setColor(secColor);
+        secLinePaint.setStrokeWidth(lineWidth);
         
-//		curMove = pm;
+        drawAreaBounds = new RectF(0.0f +drawAreaPadding,0.0f +drawAreaPadding,
+        		getMeasuredWidth()-drawAreaPadding,getMeasuredHeight()-drawAreaPadding);
+        drawAreaBounds.offsetTo(getPaddingLeft(), getPaddingTop());
 	}
 	
-//    private void setLayerToSW(View v) {
-//        if (!v.isInEditMode() && Build.VERSION.SDK_INT >= 11) {
-//            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-//        }
-//    }
-//	
-//	private void setLayerToHW(View v) {
-//        if (!v.isInEditMode() && Build.VERSION.SDK_INT >= 11) {
-//            setLayerType(View.LAYER_TYPE_HARDWARE, null);
-//        }
-//    }
-	
-	private enum Pos{
-		poxX, negX, posY, negY
+	/**
+	 * This adds the move pins to the view so that they can be drawn
+	 * @param mp
+	 */
+	public void addPins(MovePins mp){
+		curMove = mp;
+		invalidate();
 	}
 	
-	private static MovePins testMove = new MovePins();
-	static{
-		testMove.matrixID = "0x0x0";
-//		testMove.pin0 = new Pin("O", "B");
-		testMove.pin1 = new Pin("O", "B");
-//		testMove.pin2 = new Pin("I", "B");
-		testMove.pin3 = new Pin("O", "B");
-//		testMove.pin4 = new Pin("O", "B");
-		testMove.pin5 = new Pin("I", "B");
-//		testMove.pin6 = new Pin("I", "B");
-		testMove.pin7 = new Pin("O", "B");
-	}
-	
+	/**
+	 * The overridden onDraw method takes the MovePins object and draws each of the pins according to the object.
+	 * depending on which pins are valid, the view will be draw accordingly.
+	 */
 	@Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+        super.onDraw(canvas);  
         
-        curMove = testMove;
-        
-        RectF rec = new RectF(0,0,getMeasuredWidth(),getMeasuredHeight());
-//        canvas.drawRect(rec, primPaint);
+        RectF primRec, secRec;
         
         if(curMove != null){
 	        //This checks to see if one of two pins should be drawn
-	        if(curMove.pin0 == null)
-	        	drawOnePin(canvas, curMove.pin7, Pos.poxX);
-	        else 
-	        	drawTwoPins(canvas, curMove.pin7, curMove.pin0, Pos.poxX);
+	        if(curMove.pin0 == null){
+	        	primRec = makePinBox(PinBoxPos.RIGHT);
+	        	drawOnePin(canvas, PinBoxPos.RIGHT, curMove.pin7, primRec);
+	        }
+	        else
+	        {
+	        	RectF[] arr = makeHalfPinBoxes(PinBoxPos.RIGHT, makePinBox(PinBoxPos.RIGHT));
+	        	primRec = arr[0];
+	        	secRec = arr[1];
+	        	drawTwoPins(canvas, PinBoxPos.RIGHT, curMove.pin7, primRec, curMove.pin0, secRec);
+	        }
 	        
 	        if (curMove.pin2 == null)
-	        	drawOnePin(canvas, curMove.pin1, Pos.posY);
-	        else 
-	        	drawTwoPins(canvas, curMove.pin1, curMove.pin2, Pos.posY);
+	        {
+	        	primRec = makePinBox(PinBoxPos.TOP);
+	        	drawOnePin(canvas, PinBoxPos.TOP, curMove.pin1, primRec);
+	        }
+	        else
+	        {
+	        	RectF[] arr = makeHalfPinBoxes(PinBoxPos.TOP, makePinBox(PinBoxPos.TOP));
+	        	primRec = arr[0];
+	        	secRec = arr[1];
+	        	drawTwoPins(canvas, PinBoxPos.TOP, curMove.pin1, primRec, curMove.pin2, secRec);
+	        }
 	        
 	        if(curMove.pin4 == null)
-	        	drawOnePin(canvas, curMove.pin3, Pos.negX);
-	        else 
-	        	drawTwoPins(canvas, curMove.pin3, curMove.pin4, Pos.negX);
+	        {
+	        	primRec = makePinBox(PinBoxPos.LEFT);
+	        	drawOnePin(canvas, PinBoxPos.LEFT, curMove.pin3, primRec);
+	        }
+	        else
+	        {
+	        	RectF[] arr = makeHalfPinBoxes(PinBoxPos.LEFT, makePinBox(PinBoxPos.LEFT));
+	        	primRec = arr[0];
+	        	secRec = arr[1];
+	        	drawTwoPins(canvas, PinBoxPos.LEFT, curMove.pin3, primRec, curMove.pin4, secRec);
+	        }
 	        
 	        if(curMove.pin6 == null)
-	        	drawOnePin(canvas, curMove.pin5, Pos.negY);
+	        {
+	        	primRec = makePinBox(PinBoxPos.BOTTOM);
+	        	drawOnePin(canvas, PinBoxPos.BOTTOM, curMove.pin5, primRec);
+	        }
 	        else
-	        	drawTwoPins(canvas, curMove.pin5, curMove.pin6, Pos.negY);
+	        {
+	        	RectF[] arr = makeHalfPinBoxes(PinBoxPos.BOTTOM, makePinBox(PinBoxPos.BOTTOM));
+	        	primRec = arr[0];
+	        	secRec = arr[1];
+	        	drawTwoPins(canvas, PinBoxPos.BOTTOM, curMove.pin5, primRec, curMove.pin6, secRec);
+	        }
         }
 	}
 	
-	
-
 	/**
-	 * @param fPIn
-	 * @param pin7
+	 * This method takes in the PinBoxPos enum and then calculates the box in that position. The box returned will
+	 * be the drawable area for the pins
+	 * @param boxPos - enum to determine what area box is being created
+	 * @return - box that will contain the pin(s) in that area
 	 */
-	private void drawTwoPins(Canvas canvas, Pin fPin, Pin sPin, Pos pos) {
-		//canvas.drawCircle(cx, cy, radius, paint);
-	}
-
-	/**
-	 * @param pin1
-	 */
-	private void drawOnePin(Canvas canvas, Pin pin, Pos pos) {
+	private RectF makePinBox(PinBoxPos boxPos){
+		Log.d(TAG, "Drawing single Pin. w=" + drawAreaBounds.width() + " h=" + drawAreaBounds.height());
 		
-		int w = getWidth();
-		int h = getHeight();
-		Log.d(TAG, "Drawing ONE Pin. w=" + w + " h=" + h);
-		Point propBoxOrigin;
-		float boxX=0, boxY=0;
-		
-		RectF box = null;
-		
-		int oLength; //holds the w/h of the outer side
-		int iLength;	//hold the w/h of the in
-		Paint paint = null;
-		
-		switch(pos){
-			case poxX:
-				boxX = (float) (w * (3.0 / 4.0));
-				boxY = (float) (h * (3.0 / 8.0));
-				Log.d(TAG, "Updating posX: " + boxX + " " + boxY);
+		//Get the origin for each box
+		float boxX=0, boxY=0;		
+		switch(boxPos){
+			case RIGHT:
+				boxX = (float) (drawAreaBounds.width() * threeFourths);
+				boxY = (float) (drawAreaBounds.height() * threeEigths);
 				break;
-			case posY:
-				boxX = (float) (w * (3.0 / 8.0f));
+			case TOP:
+				boxX = (float) (drawAreaBounds.width() * threeEigths);
 				boxY = 0;
 				break;
-			case negX:
+			case LEFT:
 				boxX = 0;
-				boxY = (float) (h * (3.0 / 8.0f));
+				boxY = (float) (drawAreaBounds.height() * threeEigths);
 				break;
-			case negY:
-				boxX = (float) (w * (3.0 / 8.0f));
-				boxY = (float) (h * (3.0 / 4.0f));
+			case BOTTOM:
+				boxX = (float) (drawAreaBounds.width() * threeEigths);
+				boxY = (float) (drawAreaBounds.height() * threeFourths);
 				break;
 			default:
 				break;
 		}
 		
-		Log.d(TAG, pos + " x=" + boxX + " y=" + boxY);
+		Log.d(TAG, boxPos + " boxX=" + boxX + " boxY=" + boxY);
 		
-		box = new RectF(boxX, boxY, boxX + (w / 4), boxY - (h / 4));
-//		propBoxOrigin = new Point(boxX, boxY);
-		canvas.drawRect(box, primPaint);
+		RectF pinBox = new RectF(boxX + pinBoxPadding, 
+				boxY + pinBoxPadding,
+				boxX + (drawAreaBounds.width() / 4) - pinBoxPadding,
+				boxY + (drawAreaBounds.height() / 4) - pinBoxPadding
+				);
+		Log.d(TAG, "Box is: " + pinBox);
+
+		return pinBox;
+	}
+	
+	/**
+	 * This method takes the pin box parameter and splits it into two primary and secondary boxes
+	 * @param boxPos - The area which the pin box is located
+	 * @param pinBox - the box that will be split into two smaller boxes
+	 * @return - 2 item array with the primary box in 0 and the secondary box in 1
+	 */
+	private RectF[] makeHalfPinBoxes(PinBoxPos boxPos, RectF pinBox){
+		RectF primBox = null;
+		RectF secBox = null;
+		
+		float pLeft=0,pTop=0,pRight=0,pBottom=0;
+		float sLeft=0,sTop=0,sRight=0,sBottom=0;
+		switch(boxPos){
+			case RIGHT:
+				pLeft = pinBox.left;
+				pTop = pinBox.top + pinBox.height() * oneHalf;
+				pRight = pinBox.right;
+				pBottom = pinBox.bottom;
+				sLeft = pinBox.left;
+				sTop = pinBox.top;
+				sRight = pinBox.right;
+				sBottom = pinBox.top + pinBox.height() * oneHalf;
+				break;
+			case TOP:
+				pLeft = pinBox.left + pinBox.width() * oneHalf;
+				pTop = pinBox.top;
+				pRight = pinBox.right;
+				pBottom = pinBox.bottom;
+				sLeft = pinBox.left;
+				sTop = pinBox.top;
+				sRight = pinBox.left + pinBox.width() * oneHalf;
+				sBottom = pinBox.bottom;
+				break;
+			case LEFT:
+				pLeft = pinBox.left;
+				pTop = pinBox.top;
+				pRight = pinBox.right;
+				pBottom = pinBox.top + pinBox.height() * oneHalf;
+				sLeft = pinBox.left;
+				sTop = pinBox.top + pinBox.height() * oneHalf;
+				sRight = pinBox.right;
+				sBottom = pinBox.bottom;
+				break;
+			case BOTTOM:
+				pLeft = pinBox.left;
+				pTop = pinBox.top;
+				pRight = pinBox.left + pinBox.width() * oneHalf;
+				pBottom = pinBox.bottom;
+				sLeft = pinBox.left + pinBox.width() * oneHalf;
+				sTop = pinBox.top;
+				sRight = pinBox.right;
+				sBottom = pinBox.bottom;
+				break;
+			default:
+				break;
+		}
+		primBox = new RectF(pLeft, pTop, pRight, pBottom);
+		secBox = new RectF(sLeft, sTop, sRight, sBottom);
+		return new RectF[] {primBox,secBox};
+	}
+	
+	/**
+	 * This method takes in the parameters for two pins and then draws each pin according the the parameters
+	 * @param canvas - the drawable area
+	 * @param boxPos - The area which the pin box is located
+	 * @param primPin - the primary pin that will be drawn
+	 * @param primPinBox - the primary box where the primary pin will be drawn
+	 * @param secPin - the secondary pin that will be drawn
+	 * @param secPinBox - the secondary box where the secondary pin will be drawn
+	 */
+	private void drawTwoPins(Canvas canvas, PinBoxPos boxPos, Pin primPin, RectF primPinBox, Pin secPin, RectF secPinBox ) {
+		drawOnePin(canvas, boxPos, primPin, primPinBox);
+		drawOnePin(canvas, boxPos, secPin, secPinBox);
+	}
+	
+	/**
+	 * This is the main method for drawing the pins. This takes the position pf the pin box, the box size, and the 
+	 * details of the pin and draws it onto the view.
+	 * @param canvas - the drawable area
+	 * @param boxPos - The area which the pin box is located
+	 * @param pin - the pin that will be drawn
+	 * @param pinBox - the box where the pin will be drawn
+	 */
+	private void drawOnePin(Canvas canvas, PinBoxPos boxPos, Pin pin, RectF pinBox) {
+		//Setup the Paint for the current pin
+		Paint curCirclePaint = null;
+		Paint curLinePaint = null;
+		if(pin.getColor().equals(Pin.pinColor.PRIMARY)){
+			curCirclePaint = primCirclePaint;
+			curLinePaint = primLinePaint;
+		}else if(pin.getColor().equals(Pin.pinColor.SECONDARY)){
+			curCirclePaint = secCirclePaint;
+			curLinePaint = secLinePaint;
+		}
+	
+		//calculates the points for the line of the pin
+		float lStartX=0,lStartY=0,lStopX=0,lStopY=0;
+		switch(boxPos){
+		case RIGHT:
+			lStartY = pinBox.top + (pinBox.height() * oneHalf);
+			lStopY =  lStartY;
+			lStartX = pinBox.left;
+			lStopX = pinBox.right;
+			break;
+		case TOP:
+			lStartX = pinBox.left + (pinBox.width() * oneHalf);
+			lStopX = lStartX;
+			lStartY = pinBox.top;
+			lStopY = pinBox.bottom;
+			break;
+		case LEFT:
+			lStartY = pinBox.top + (pinBox.height() * oneHalf);
+			lStopY =  lStartY;
+			lStartX = pinBox.left;
+			lStopX = pinBox.right;
+			break;
+		case BOTTOM:
+			lStartX = pinBox.left + (pinBox.width() * oneHalf);
+			lStopX = lStartX;
+			lStartY = pinBox.top;
+			lStopY = pinBox.bottom;
+			break;
+		default:
+			break;
+		}
+		
+		Log.d(TAG, "LINE: " + lStartX +" "+lStartY+" "+lStopX+" "+lStopY);
+		canvas.drawLine(lStartX,lStartY,lStopX,lStopY, curLinePaint);
+			
+		//calculates the center and radius for the pin head
+		float cx=0, cy=0, cRad=0;
+		switch(boxPos){
+		case RIGHT:
+			cx = boxRightCX(pin.getDirection(), pinBox);
+			cy = pinBox.top + pinBox.height() * oneHalf;
+			cRad = pinBox.width() * twoEigths;
+			break;
+		case TOP:
+			cx = pinBox.left + pinBox.width() * oneHalf;
+			cy = boxTopCY(pin.getDirection(), pinBox);
+			cRad = pinBox.height() * twoEigths;
+			break;
+		case LEFT:
+			cx = boxLeftCX(pin.getDirection(), pinBox);
+			cy = pinBox.top + pinBox.height() * oneHalf;
+			cRad = pinBox.width() * twoEigths;
+			break;
+		case BOTTOM:
+			cx = pinBox.left + pinBox.width() * oneHalf;
+			cy = boxBottomCY(pin.getDirection(), pinBox);
+			cRad = pinBox.height() * twoEigths;
+			break;
+		default:
+			break;
+		}
+
+		canvas.drawCircle(cx, cy, cRad, curCirclePaint);
 		
 	}
 	
-//	private class MoveView extends View {
-//
-//		/**
-//		 * @param context
-//		 */
-//		public MoveView(Context context) {
-//			super(context);
-//		}
-//		
-//		@Override
-//        protected void onDraw(Canvas canvas) {
-//            super.onDraw(canvas);
-//		
-//		
-//		}
-//		
-//		@Override
-//        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-//			
-//		}
-//	}
+	/**
+	 * Calculates the y coordinate for the bottom pin box according to the pin direction
+	 * @param direction - direction of the pin
+	 * @param pinBox - the box where the pin is being drawn
+	 * @return - the y coordinate for the bottom pin box
+	 */
+	private float boxBottomCY(pinDirection direction, RectF pinBox) {
+		if(direction.equals(pinDirection.INSIDE))
+			return pinBox.top + pinBox.height() * oneEigth;
+		else
+			return pinBox.top + pinBox.height() * sevenEigths;
+	}
+
+	/**
+	 * Calculates the y coordinate for the top pin box according to the pin direction
+	 * @param direction - direction of the pin
+	 * @param pinBox - the box where the pin is being drawn
+	 * @return - the y coordinate for the top pin box
+	 */
+	private float boxTopCY(pinDirection direction, RectF pinBox) {
+		if(direction.equals(pinDirection.INSIDE))
+			return pinBox.top + pinBox.height() * sevenEigths;
+		else
+			return pinBox.top + pinBox.height() * oneEigth;
+	}
+
+	/**
+	 * Calculates the x coordinate for the right pin box according to the pin direction
+	 * @param direction - direction of the pin
+	 * @param pinBox - the box where the pin is being drawn
+	 * @return - the x coordinate for the right pin box
+	 */
+	private float boxRightCX(pinDirection direction, RectF pinBox) {
+		if(direction.equals(pinDirection.INSIDE))
+			return pinBox.left + pinBox.width() * oneEigth;
+		else
+			return pinBox.left + pinBox.width() * sevenEigths;
+	}
+	
+	/**
+	 * Calculates the x coordinate for the left pin box according to the pin direction
+	 * @param direction - direction of the pin
+	 * @param pinBox - the box where the pin is being drawn
+	 * @return - the x coordinate for the left pin box
+	 */
+	private float boxLeftCX(pinDirection direction, RectF pinBox) {
+		if(direction.equals(pinDirection.INSIDE))
+			return pinBox.left + pinBox.width() * sevenEigths;
+		else
+			return pinBox.left + pinBox.width() * oneEigth;
+	}
 }

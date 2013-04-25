@@ -12,14 +12,17 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.vtglibrary.R;
+import com.nennig.vtglibrary.draw.VTGMove;
+import com.nennig.vtglibrary.managers.MovePins;
 import com.nennig.vtglibrary.managers.PropMove;
+import com.nennig.vtglibrary.managers.SingletonMovePinMap;
+import com.nennig.vtglibrary.managers.SingletonPoiMoveMap;
 
 @SuppressLint("NewApi")
 public class DetailViewActivity extends BaseActivity implements OnTouchListener{
@@ -31,25 +34,34 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
     static PropMove pMove = new PropMove();
     
     //For Testing Purposes ONLY
-    static {
-    	pMove.m13_name = "This is m13";
-    	pMove.m11_name = "this is m11";
-    }
+//    static {
+//    	pMove.m13_name = "This is m13";
+//    	pMove.m11_name = "this is m11";
+//    }
     
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_view);
         
+        //Get the current set and matrixID for this detail view
         SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
-        _curMatrixID = "0x0x0"; //sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0");
+        _curMatrixID = sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0");
         _curSet = sP.getString(AppConstants.CUR_SET, AppConstants.SET_1313);
         Log.d(TAG, "Cur Matrix " + _curMatrixID);
         
-        //Create the singleton and get the information for the detail view
-//  		SingletonPoiMoveMap sPoi = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
-//  		pMove = sPoi.getPoiMove(_curMatrixID);
-
+        //Get the singleton and get the information for the detail view
+  		SingletonPoiMoveMap sPoi = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
+  		pMove = sPoi.getPoiMove(_curMatrixID);
+  		
+  		//Get the singleton to create the move view for this matrixID
+  		SingletonMovePinMap sMovePins = SingletonMovePinMap.getSingletonMovePinMap(this, _curSet);
+  		MovePins mp = sMovePins.getMovePins(_curMatrixID);
+  		
+  		//Set the move pins to the move view
+  		VTGMove drawnMove = (VTGMove) findViewById(R.id.detail_customMoveDraw);
+  		drawnMove.addPins(mp);
+  		
         TextView propText = (TextView) findViewById(R.id.detail_poiText);
         TextView handText = (TextView)findViewById(R.id.detail_handText);
         

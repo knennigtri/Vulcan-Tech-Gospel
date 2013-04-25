@@ -21,12 +21,13 @@ import android.widget.VideoView;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
+import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.managers.SingletonPoiMoveMap;
 import com.nennig.vtglibrary.managers.VideoManager;
 import com.nennig.vtglibrary.managers.PropMove;
 
-public class VideoActivity extends Activity {
+public class VideoActivity extends BaseActivity {
 	private static final String TAG = AppConfig.APP_PNAME + ".DetialViewActivity";
 	
     boolean play = true;
@@ -94,7 +95,7 @@ public class VideoActivity extends Activity {
 		});
 		
 		//This sets up the spinner for changing different props. 
-		Spinner spinner = (Spinner) findViewById(R.id.video_prop_selector);
+		final Spinner spinner = (Spinner) findViewById(R.id.video_prop_selector);
 		spinner.setSelection(videoPropIndex);
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() 
         {    
@@ -102,14 +103,24 @@ public class VideoActivity extends Activity {
          public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
         	 int newVideoPropIndex = i;
         	 Log.d(TAG,"Prop Changed to: " + newVideoPropIndex);
-        	 
-        	 //TODO Add Prop Videos
         	 if(newVideoPropIndex != 0)
-        		 Toast.makeText(VideoActivity.this, "Currently only Poi Props are supported", Toast.LENGTH_SHORT).show();
-        	 
-        	 if(videoPropIndex != newVideoPropIndex){
-        		 changeVideo(newVideoPropIndex, sP.edit());
-        	 }	
+        	 {
+	        	 if(isLiteVersion())
+	        	 {
+	        		 AppManager.proVersionAlert(VideoActivity.this);
+	        		 spinner.setSelection(0);
+	        	 }
+	        	 else
+	        	 {
+	        		 Toast.makeText(VideoActivity.this,
+							"This pro feature will be added soon.",
+							Toast.LENGTH_LONG).show();
+					
+	        		 if(videoPropIndex != newVideoPropIndex){
+	        			 changeVideo(newVideoPropIndex, sP.edit());
+	        		 }
+	        	 }
+        	 }
         } 
           @Override     
           public void onNothingSelected(AdapterView<?> parentView) 

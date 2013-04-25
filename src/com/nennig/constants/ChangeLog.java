@@ -179,7 +179,8 @@ public class ChangeLog {
                 return builder;
         }
 
-        private void updateVersionInPreferences() {
+        @SuppressLint("NewApi")
+		private void updateVersionInPreferences() {
                 // save new version number to preferences
                 SharedPreferences sp = PreferenceManager
                                 .getDefaultSharedPreferences(context);

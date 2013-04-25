@@ -33,7 +33,7 @@ public class StatsManager {
 			case DETAILS_PAGE:
 				return "details.page";
 			case VIDEOS_PAGE:
-				return "videoss.page";
+				return "videos.page";
 			default:
 				return "error";
 		}

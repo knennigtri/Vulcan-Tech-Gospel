@@ -19,11 +19,14 @@
     </style>
   </head>
   <body>
-$ 1.1
-  % Version 1.1
-  _ 02-22-2013
-    * Poi Prop videos integrated with every move
-    * All Youtube links have been removed
+$ 2.0
+  % Version 2.0
+  _ 05-01-2013
+    * VTG Lite released!
+    * Poi Prop video integrated to each move! More videos to come in the Pro version.
+    * New details page
+    * Statistics module integrated
+    * All Youtube links removed
 $ 1.0
   % Version 1.0
   _ 12-26-2013

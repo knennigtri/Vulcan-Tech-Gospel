@@ -209,6 +209,10 @@ public class SingletonMovePinMap {
 		Log.d(TAG,headerIndexMap.toString());
 	}
 	
+	public MovePins getMovePins(String matrixID){
+		return movePinMap.get(matrixID.toLowerCase());
+	}
+	
 	@Override
 	public String toString(){
 		String str = "{";

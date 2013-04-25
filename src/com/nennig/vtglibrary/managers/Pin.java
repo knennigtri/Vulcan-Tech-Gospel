@@ -8,44 +8,60 @@ package com.nennig.vtglibrary.managers;
  *
  */
 public class Pin{
-	private String direction;
-	private String color;
+	private pinDirection direction;
+	private pinColor color;
+	
+	public enum pinColor{
+		PRIMARY, SECONDARY
+	}
+	
+	public enum pinDirection{
+		INSIDE, OUTSIDE
+	}
 	
 	public Pin(String dir, String col){
-		setDirection(dir);
-		setColor(col);
+		if(dir.equals("I"))
+			setDirection(pinDirection.INSIDE);
+		else if(dir.equals("O"))
+			setDirection(pinDirection.OUTSIDE);
+		
+		if(col.equals("B"))
+			setColor(pinColor.PRIMARY);
+		else if(col.equals("W"))
+			setColor(pinColor.SECONDARY);
+	
 	}
 
-	public Pin(){
-		direction = "";
-		color = "";
-	}
+//	public Pin(){
+//		direction = "";
+//		color = "";
+//	}
 	
 	/**
 	 * @return the direction
 	 */
-	public String getDirection() {
+	public pinDirection getDirection() {
 		return direction;
 	}
 
 	/**
 	 * @param direction the direction to set
 	 */
-	public void setDirection(String direction) {
+	public void setDirection(pinDirection direction) {
 		this.direction = direction;
 	}
 
 	/**
 	 * @return the color
 	 */
-	public String getColor() {
+	public pinColor getColor() {
 		return color;
 	}
 
 	/**
 	 * @param color the color to set
 	 */
-	public void setColor(String color) {
+	public void setColor(pinColor color) {
 		this.color = color;
 	}
 	 

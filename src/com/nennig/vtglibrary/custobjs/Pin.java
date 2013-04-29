@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.nennig.vtglibrary.managers;
+package com.nennig.vtglibrary.custobjs;
 
 /**
  * @author Kevin Nennig (knennig213@gmail.com)

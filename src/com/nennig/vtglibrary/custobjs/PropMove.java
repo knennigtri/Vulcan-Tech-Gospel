@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.nennig.vtglibrary.managers;
+package com.nennig.vtglibrary.custobjs;
 
 import com.nennig.constants.AppConstants;
 

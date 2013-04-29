@@ -3,12 +3,15 @@
  */
 package com.nennig.vtglibrary.draw;
 
+import java.io.InputStream;
+
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -16,9 +19,9 @@ import android.view.View;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.vtglibrary.R;
-import com.nennig.vtglibrary.managers.MovePins;
-import com.nennig.vtglibrary.managers.Pin;
-import com.nennig.vtglibrary.managers.Pin.pinDirection;
+import com.nennig.vtglibrary.custobjs.MovePins;
+import com.nennig.vtglibrary.custobjs.Pin;
+import com.nennig.vtglibrary.custobjs.Pin.pinDirection;
 
 /**
  * @author Kevin Nennig (knennig213@gmail.com)
@@ -62,6 +65,12 @@ public class VTGMove extends View {
 	private enum PinBoxPos{
 		RIGHT, LEFT, TOP, BOTTOM
 	}	
+	
+	private InputStream moveIcon;
+    float iconL=0;
+    float iconT=0;
+    float iconB=0;
+    float iconR=0;
 	
 	/*
 	 * This is Test Data
@@ -170,6 +179,16 @@ public class VTGMove extends View {
 	 */
 	public void addPins(MovePins mp){
 		curMove = mp;
+		moveIcon = null;
+		invalidate();
+	}
+	/**
+	 * This adds the move pins to the view so that they can be drawn
+	 * @param mp
+	 */
+	public void addPinsAndIcon(MovePins mp, InputStream isIcon){
+		curMove = mp;
+		moveIcon = isIcon;
 		invalidate();
 	}
 	
@@ -188,6 +207,7 @@ public class VTGMove extends View {
 	        if(curMove.pin0 == null){
 	        	primRec = makePinBox(PinBoxPos.RIGHT);
 	        	drawOnePin(canvas, PinBoxPos.RIGHT, curMove.pin7, primRec);
+	        	iconR = primRec.left;
 	        }
 	        else
 	        {
@@ -195,12 +215,14 @@ public class VTGMove extends View {
 	        	primRec = arr[0];
 	        	secRec = arr[1];
 	        	drawTwoPins(canvas, PinBoxPos.RIGHT, curMove.pin7, primRec, curMove.pin0, secRec);
+	        	iconR = primRec.left;
 	        }
 	        
 	        if (curMove.pin2 == null)
 	        {
 	        	primRec = makePinBox(PinBoxPos.TOP);
 	        	drawOnePin(canvas, PinBoxPos.TOP, curMove.pin1, primRec);
+	        	iconT = primRec.bottom;
 	        }
 	        else
 	        {
@@ -208,12 +230,15 @@ public class VTGMove extends View {
 	        	primRec = arr[0];
 	        	secRec = arr[1];
 	        	drawTwoPins(canvas, PinBoxPos.TOP, curMove.pin1, primRec, curMove.pin2, secRec);
+	        	iconT = primRec.bottom;
 	        }
+	        
 	        
 	        if(curMove.pin4 == null)
 	        {
 	        	primRec = makePinBox(PinBoxPos.LEFT);
 	        	drawOnePin(canvas, PinBoxPos.LEFT, curMove.pin3, primRec);
+	        	iconL = primRec.right;
 	        }
 	        else
 	        {
@@ -221,12 +246,14 @@ public class VTGMove extends View {
 	        	primRec = arr[0];
 	        	secRec = arr[1];
 	        	drawTwoPins(canvas, PinBoxPos.LEFT, curMove.pin3, primRec, curMove.pin4, secRec);
+	        	iconL = primRec.right;
 	        }
 	        
 	        if(curMove.pin6 == null)
 	        {
 	        	primRec = makePinBox(PinBoxPos.BOTTOM);
 	        	drawOnePin(canvas, PinBoxPos.BOTTOM, curMove.pin5, primRec);
+	        	iconB = primRec.top;
 	        }
 	        else
 	        {
@@ -234,6 +261,15 @@ public class VTGMove extends View {
 	        	primRec = arr[0];
 	        	secRec = arr[1];
 	        	drawTwoPins(canvas, PinBoxPos.BOTTOM, curMove.pin5, primRec, curMove.pin6, secRec);
+	        	iconB = primRec.top;
+	        }
+	        
+	        if(moveIcon != null){
+	        	float size = Math.min(Math.abs(iconL-iconR), Math.abs(iconT-iconB)) * (9.0f/10.0f);
+	        	Bitmap bm = getBitmapImage(moveIcon, size);
+	        	float left = (getWidth() / 2.0f) - (size / 2.0f);
+	        	float top =  (getHeight() / 2.0f) - (size / 2.0f);
+	        	canvas.drawBitmap(bm, left, top, null);
 	        }
         }
 	}
@@ -492,5 +528,40 @@ public class VTGMove extends View {
 			return pinBox.left + pinBox.width() * sevenEigths;
 		else
 			return pinBox.left + pinBox.width() * oneEigth;
+	}
+	
+	private static Bitmap getBitmapImage(InputStream iStream, float reqWidth) {
+		Log.d(TAG, "ReqSize: " + reqWidth);
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(iStream, null, options);
+        
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        Bitmap newBitmap = BitmapFactory.decodeStream(iStream, null, options);
+        
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        Log.d(TAG, "H: " + height + " W: " + width);
+       
+        int newHeight = (int) Math.round((reqWidth / (float) width)*height);
+        int newWidth= Math.round(reqWidth);
+       
+        Log.d(TAG, "nH: " + newHeight + " nW: " + newWidth);
+    	newBitmap = Bitmap.createScaledBitmap(newBitmap, newWidth, newHeight, true);
+        
+        return newBitmap;
+    }
+
+	/**
+	 * @param x
+	 * @param y
+	 */
+	public boolean iconIsTouched(float x, float y) {
+		if((x > iconL) && (x < iconR) && (y > iconT) && (y < iconB))
+			return true;
+		return false;
+		
 	}
 }

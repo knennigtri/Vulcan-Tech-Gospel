@@ -22,9 +22,10 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.nennig.constants.AppConstants;
+import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
-import com.nennig.vtglibrary.managers.PropMove;
-import com.nennig.vtglibrary.managers.SingletonPoiMoveMap;
+import com.nennig.vtglibrary.custobjs.PropMove;
+import com.nennig.vtglibrary.custobjs.SingletonPoiMoveMap;
 
 public class SelectorActivity extends BaseActivity {
 	private static final String TAG = "SelectorActivity";
@@ -51,6 +52,8 @@ public class SelectorActivity extends BaseActivity {
 		SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
 		_curSet = sP.getString(AppConstants.CUR_SET, AppConstants.SET_1313);
         
+		setTitle(AppConstants.setTitleString(isLiteVersion(), _curSet));
+		
         _propSinner = (Spinner) findViewById(R.id.prop_poi_spinner);
         _handSpinner = (Spinner) findViewById(R.id.prop_hand_spinner);
         _posIvMatrix[0] = (ImageView) findViewById(R.id.prop_pos_0);

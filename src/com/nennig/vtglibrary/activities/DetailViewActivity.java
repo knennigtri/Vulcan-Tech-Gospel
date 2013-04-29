@@ -1,6 +1,9 @@
 package com.nennig.vtglibrary.activities;
 
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,23 +12,31 @@ import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.FloatMath;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
+import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
+import com.nennig.vtglibrary.custobjs.MovePins;
+import com.nennig.vtglibrary.custobjs.PropMove;
+import com.nennig.vtglibrary.custobjs.SingletonMovePinMap;
+import com.nennig.vtglibrary.custobjs.SingletonPoiMoveMap;
 import com.nennig.vtglibrary.draw.VTGMove;
-import com.nennig.vtglibrary.managers.MovePins;
-import com.nennig.vtglibrary.managers.PropMove;
-import com.nennig.vtglibrary.managers.SingletonMovePinMap;
-import com.nennig.vtglibrary.managers.SingletonPoiMoveMap;
 
 @SuppressLint("NewApi")
-public class DetailViewActivity extends BaseActivity implements OnTouchListener{
+public class DetailViewActivity extends BaseActivity{
 	private static final String TAG = AppConfig.APP_PNAME + ".DetialViewActivity";
 
 	private String _curMatrixID = "";
@@ -54,14 +65,52 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
   		SingletonPoiMoveMap sPoi = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
   		pMove = sPoi.getPoiMove(_curMatrixID);
   		
-  		//Get the singleton to create the move view for this matrixID
+  		setupMove();
+	}
+	
+	private void setupMove(){
+        setTitle(AppConstants.setTitleString(isLiteVersion(), _curSet));
+		
+		//Get the singleton to create the move view for this matrixID
   		SingletonMovePinMap sMovePins = SingletonMovePinMap.getSingletonMovePinMap(this, _curSet);
-  		MovePins mp = sMovePins.getMovePins(_curMatrixID);
-  		
-  		//Set the move pins to the move view
+  		MovePins pMovePins = sMovePins.getMovePins(_curMatrixID);
+		
+		//Set the move pins to the move view
   		VTGMove drawnMove = (VTGMove) findViewById(R.id.detail_customMoveDraw);
-  		drawnMove.addPins(mp);
   		
+  		InputStream iStream;
+		try {
+			iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet));
+			drawnMove.addPinsAndIcon(pMovePins, iStream);
+		} catch (IOException e) {
+			drawnMove.addPins(pMovePins);
+		}
+  		
+		drawnMove.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if(((VTGMove) v).iconIsTouched(event.getX(), event.getY())){
+					if(_curSet.equals(AppConstants.SET_1313)){
+						Intent i = new Intent(DetailViewActivity.this, VideoActivity.class);
+						i.putExtra("SET", _curSet);
+						startActivity(i);
+					}
+					else {
+						//TODO Insert the videos for 1111
+						Toast.makeText(DetailViewActivity.this, "Videos will be available soon!", Toast.LENGTH_SHORT).show();
+					}
+				}
+				return false;
+			}
+		});	
+		
+		final GestureDetector gestureDetector;
+        gestureDetector = new GestureDetector(new MyGestureDetector());
+        
+        mViewFlipper = (ViewFlipper) findViewById(R.id.view_flipper);
+        initAnimations();
+  		
+  		//The following code sets up all of the text details for the move
         TextView propText = (TextView) findViewById(R.id.detail_poiText);
         TextView handText = (TextView)findViewById(R.id.detail_handText);
         
@@ -73,154 +122,108 @@ public class DetailViewActivity extends BaseActivity implements OnTouchListener{
         propText.setText(pText);
         handText.setText(hText);
         
-        
-        //This code is for implementing the pdfs to the detail page
-//		//Set The Image
-//		final ImageView iv = (ImageView) findViewById(R.id.detail_image);
-//		InputStream iStream = null;
-//
-//		//Set the pdf view of the activity
-//		Bitmap bitmapImage = null;
-//		try {
-//			iStream = getAssets().open(AppConstants.DETAIL_VIEW_FOLDER + "/" + _curMatrixID + "." + accepted_ext);
-//			bitmapImage = getBitmapImage(iStream, displayWidth );	
-//			iv.setImageBitmap(bitmapImage);
-//			iv.setOnTouchListener(this);
-//		} catch (IOException e) {
-//			Log.d(TAG, "The file " + _curMatrixID + " was not found...");
-//			Log.d(TAG, e.toString());
-//		}
 				
 		//Set the Image Name
 		TextView detailTV = (TextView) findViewById(R.id.detail_moveName);
 		if(pMove.getName(_curSet).length()>57)
 			detailTV.setTextSize(15);
 		detailTV.setText(pMove.getName(_curSet));
-		
-		//Set the Button
-//		Button videoButton = (Button) findViewById(R.id.detail_button);
-//		videoButton.setOnTouchListener(new OnTouchListener() {
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				Intent i = new Intent(DetailViewActivity.this, VideoActivity.class);
-//				startActivity(i);
-//				return false;
-//			}
-//		});	
-		
-		((View) findViewById(R.id.detail_customMoveDraw)).setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				Intent i = new Intent(DetailViewActivity.this, VideoActivity.class);
-				startActivity(i);
-				return false;
-			}
-		});	
 	}
+	
+	private Animation mInFromRight;
+    private Animation mOutToLeft;
+    private Animation mInFromLeft;
+    private Animation mOutToRight;
+    private ViewFlipper mViewFlipper;
+	   private void initAnimations() {
+	        mInFromRight = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
+	                +1.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
+	                Animation.RELATIVE_TO_PARENT, 0.0f,
+	                Animation.RELATIVE_TO_PARENT, 0.0f);
+	        mInFromRight.setDuration(500);
+	        AccelerateInterpolator accelerateInterpolator = new AccelerateInterpolator();
+	        mInFromRight.setInterpolator(accelerateInterpolator);
 
-	// These matrices will be used to move and zoom image
-	Matrix matrix = new Matrix();
-	Matrix savedMatrix = new Matrix();
+	        mInFromLeft = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
+	                -1.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
+	                Animation.RELATIVE_TO_PARENT, 0.0f,
+	                Animation.RELATIVE_TO_PARENT, 0.0f);
+	        mInFromLeft.setDuration(500);
+	        mInFromLeft.setInterpolator(accelerateInterpolator);
 
-	// We can be in one of these 3 states
-	static final int NONE = 0;
-	static final int DRAG = 1;
-	static final int ZOOM = 2;
-	int mode = NONE;
+	        mOutToRight = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
+	                0.0f, Animation.RELATIVE_TO_PARENT, +1.0f,
+	                Animation.RELATIVE_TO_PARENT, 0.0f,
+	                Animation.RELATIVE_TO_PARENT, 0.0f);
+	        mOutToRight.setDuration(500);
+	        mOutToRight.setInterpolator(accelerateInterpolator);
 
-	// Remember some things for zooming
-	PointF start = new PointF();
-	PointF mid = new PointF();
-	float oldDist = 1f;
-	String savedItemClicked;
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-	    ImageView view = (ImageView) v;
-	    dumpEvent(event);
+	        mOutToLeft = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f,
+	                Animation.RELATIVE_TO_PARENT, -1.0f,
+	                Animation.RELATIVE_TO_PARENT, 0.0f,
+	                Animation.RELATIVE_TO_PARENT, 0.0f);
+	        mOutToLeft.setDuration(500);
+	        mOutToLeft.setInterpolator(accelerateInterpolator);
 
-	    // Handle touch events here...
-	    switch (event.getAction() & MotionEvent.ACTION_MASK) {
-	    case MotionEvent.ACTION_DOWN:
-	        savedMatrix.set(matrix);
-	        start.set(event.getX(), event.getY());
-	        Log.d(TAG, "mode=DRAG");
-	        mode = DRAG;
-	        break;
-	    case MotionEvent.ACTION_POINTER_DOWN:
-	        oldDist = spacing(event);
-	        Log.d(TAG, "oldDist=" + oldDist);
-	        if (oldDist > 10f) {
-	            savedMatrix.set(matrix);
-	            midPoint(mid, event);
-	            mode = ZOOM;
-	            Log.d(TAG, "mode=ZOOM");
-	        }
-	        break;
-	    case MotionEvent.ACTION_UP:
-	    case MotionEvent.ACTION_POINTER_UP:
-	        mode = NONE;
-	        Log.d(TAG, "mode=NONE");
-	        break;
-	    case MotionEvent.ACTION_MOVE:
-	        if (mode == DRAG) {
-	            // ...
-	            matrix.set(savedMatrix);
-	            matrix.postTranslate(event.getX() - start.x, event.getY()
-	                    - start.y);
-	        } else if (mode == ZOOM) {
-	            float newDist = spacing(event);
-	            Log.d(TAG, "newDist=" + newDist);
-	            if (newDist > 10f) {
-	                matrix.set(savedMatrix);
-	                float scale = newDist / oldDist;
-	                matrix.postScale(scale, scale, mid.x, mid.y);
+	        final GestureDetector gestureDetector;
+	        gestureDetector = new GestureDetector(new MyGestureDetector());
+
+	        mViewFlipper.setOnTouchListener(new OnTouchListener() {
+
+	            public boolean onTouch(View v, MotionEvent event) {
+	                if (gestureDetector.onTouchEvent(event)) {
+	                    return false;
+	                } else {
+	                    return true;
+	                }
 	            }
-	        }
-	        break;
+	        });
 	    }
+	
+	private class MyGestureDetector extends SimpleOnGestureListener {
 
-	    view.setImageMatrix(matrix);
-	    return true;
+        private static final int SWIPE_MIN_DISTANCE = 120;
+        private static final int SWIPE_MAX_OFF_PATH = 250;
+        private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                float velocityY) {
+            System.out.println(" in onFling() :: ");
+            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                return false;
+            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
+                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                mViewFlipper.setInAnimation(mInFromRight);
+                mViewFlipper.setOutAnimation(mOutToLeft);
+                _curSet = getNextSet();
+                setupMove();
+                mViewFlipper.showNext();
+                
+            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
+                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                mViewFlipper.setInAnimation(mInFromLeft);
+                mViewFlipper.setOutAnimation(mOutToRight);
+                _curSet = getPreviousSet();
+                setupMove();
+                mViewFlipper.showPrevious();
+            }
+            return super.onFling(e1, e2, velocityX, velocityY);
+        }
+    }
+	
+	public String getNextSet(){
+		if(_curSet.equals(AppConstants.SET_1111))
+			return AppConstants.SET_1313;
+		if(_curSet.equals(AppConstants.SET_1313))
+			return AppConstants.SET_1111;
+		return AppConstants.SET_1313;
 	}
-
-	private void dumpEvent(MotionEvent event) {
-	    String names[] = { "DOWN", "UP", "MOVE", "CANCEL", "OUTSIDE",
-	            "POINTER_DOWN", "POINTER_UP", "7?", "8?", "9?" };
-	    StringBuilder sb = new StringBuilder();
-	    int action = event.getAction();
-	    int actionCode = action & MotionEvent.ACTION_MASK;
-	    sb.append("event ACTION_").append(names[actionCode]);
-	    if (actionCode == MotionEvent.ACTION_POINTER_DOWN
-	            || actionCode == MotionEvent.ACTION_POINTER_UP) {
-	        sb.append("(pid ").append(
-	                action >> MotionEvent.ACTION_POINTER_ID_SHIFT);
-	        sb.append(")");
-	    }
-	    sb.append("[");
-	    for (int i = 0; i < event.getPointerCount(); i++) {
-	        sb.append("#").append(i);
-	        sb.append("(pid ").append(event.getPointerId(i));
-	        sb.append(")=").append((int) event.getX(i));
-	        sb.append(",").append((int) event.getY(i));
-	        if (i + 1 < event.getPointerCount())
-	            sb.append(";");
-	    }
-	    sb.append("]");
-	    Log.d(TAG, sb.toString());
-	}
-
-	/** Determine the space between the first two fingers */
-	private float spacing(MotionEvent event) {
-	    float x = event.getX(0) - event.getX(1);
-	    float y = event.getY(0) - event.getY(1);
-	    return FloatMath.sqrt(x * x + y * y);
-	}
-
-	/** Calculate the mid point of the first two fingers */
-	private void midPoint(PointF point, MotionEvent event) {
-	    float x = event.getX(0) + event.getX(1);
-	    float y = event.getY(0) + event.getY(1);
-	    point.set(x / 2, y / 2);
+	public String getPreviousSet(){
+		if(_curSet.equals(AppConstants.SET_1111))
+			return AppConstants.SET_1313;
+		if(_curSet.equals(AppConstants.SET_1313))
+			return AppConstants.SET_1111;
+		return AppConstants.SET_1313;
 	}
 }
 

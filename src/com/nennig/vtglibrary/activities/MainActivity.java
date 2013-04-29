@@ -36,7 +36,7 @@ import android.widget.Toast;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
-import com.nennig.vtglibrary.managers.SingletonPoiMoveMap;
+import com.nennig.vtglibrary.custobjs.SingletonPoiMoveMap;
 
 public class MainActivity extends BaseActivity {
 	private static final String TAG = "MainActivity";

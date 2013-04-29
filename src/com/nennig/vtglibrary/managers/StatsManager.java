@@ -2,7 +2,8 @@ package com.nennig.vtglibrary.managers;
 
 import java.sql.SQLException;
 
-import logging.Log;
+import android.util.Log;
+
 
 /**
  * @author Kevin Nennig (knennig213@gmail.com)

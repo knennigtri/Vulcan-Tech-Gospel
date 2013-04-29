@@ -1,6 +1,5 @@
 package com.nennig.vtglibrary.activities;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.media.MediaPlayer;
@@ -23,9 +22,9 @@ import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
-import com.nennig.vtglibrary.managers.SingletonPoiMoveMap;
+import com.nennig.vtglibrary.custobjs.PropMove;
+import com.nennig.vtglibrary.custobjs.SingletonPoiMoveMap;
 import com.nennig.vtglibrary.managers.VideoManager;
-import com.nennig.vtglibrary.managers.PropMove;
 
 public class VideoActivity extends BaseActivity {
 	private static final String TAG = AppConfig.APP_PNAME + ".DetialViewActivity";
@@ -46,7 +45,9 @@ public class VideoActivity extends BaseActivity {
         
         final SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
         _curMatrixID = sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0");
-		_curSet = sP.getString(AppConstants.CUR_SET, AppConstants.SET_1313);
+		_curSet = getIntent().getExtras().getString("SET");
+		if(_curSet == null)
+			_curSet = AppConstants.SET_1313;
         
         //Create the singleton and get the information for the detail view
   		SingletonPoiMoveMap sPoi = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
@@ -59,8 +60,8 @@ public class VideoActivity extends BaseActivity {
         tvName.setText(pMove.getName(_curSet));
         TextView tvMove = (TextView) findViewById(R.id.video_move_hand_prop);
         String[] parsedMatrixID = pMove.moveID.split("[x]");
-        tvMove.setText("Hand: " + getTimeDirectionStringShort(Integer.valueOf(parsedMatrixID[1])) +
-        		"  Prop: " + getTimeDirectionStringShort(Integer.valueOf(parsedMatrixID[0]))
+        tvMove.setText("Hand: " + getTimeDirectionStringShort(Integer.valueOf(parsedMatrixID[0])) +
+        		"  Prop: " + getTimeDirectionStringShort(Integer.valueOf(parsedMatrixID[1]))
         		);
         
         

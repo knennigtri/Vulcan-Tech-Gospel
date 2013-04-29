@@ -49,6 +49,23 @@ public class AppConstants {
     		"bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted";
     public static String FACEBOOK = "https://www.facebook.com/groups/113059425470308/";
     public static String RATEAPP = DevConstants.GOOGLE_PLAY + AppConfig.APP_PNAME;
+    
+    public static String setTitleString(boolean isLite, String curSet){
+	   if(isLite){
+		   if(curSet.equals(AppConstants.SET_1313))
+			   return AppConfig.APP_TITLE_SHORT + " Lite - 1:3::1:3";
+		   if(curSet.equals(AppConstants.SET_1111))
+			   return AppConfig.APP_TITLE_SHORT + " Lite - 1:1::1:1";
+	   }
+	   if(curSet.equals(AppConstants.SET_1313))
+		   return AppConfig.APP_TITLE_SHORT + " Pro - 1:3::1:3";
+	   if(curSet.equals(AppConstants.SET_1111))
+		   return AppConfig.APP_TITLE_SHORT + " Pro - 1:1::1:1";
+	   return AppConfig.APP_TITLE_SHORT;
+   }
+    
+    
+    
 }
 
 

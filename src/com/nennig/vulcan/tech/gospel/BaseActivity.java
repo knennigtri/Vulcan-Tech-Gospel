@@ -9,6 +9,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -260,4 +262,4 @@ public class BaseActivity extends Activity {
 	    detailMap.put("m3x3x2", new String[] {"4 Petal Antispin Flower Diamond Orientation", "", "",""});
 	    detailMap.put("m3x3x3", new String[] {"4 Petal Antispin Flower Box Orientation", "", "",""});
     }
-}
+ }

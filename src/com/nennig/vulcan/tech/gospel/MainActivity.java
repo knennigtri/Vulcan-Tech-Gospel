@@ -6,9 +6,11 @@ import java.io.InputStream;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -134,4 +136,45 @@ public class MainActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.general, menu);
         return true;
     }
+  
+  /**
+   * The Code below is for the hotfix to redirect users to the new app.
+   * Since the new structure of the Lite/Pro apps require new packaging,
+   * users need to download the new app in order to get the updates. This
+   * is a simple inflater to notify the users of this. But this app stays
+   * completely active and usable. 
+   */
+  @Override
+  public void onResume(){
+  	super.onResume();
+  	newVersionAvailable();
+  }
+
+	/**
+	 * 
+	 */
+	private void newVersionAvailable() {
+		AlertDialog.Builder alert = new AlertDialog.Builder(this); 
+
+        alert.setTitle("New Version available!"); 
+        alert.setMessage("Great News: This VTG app has been updated and has big plans ahead! Unfortunately with this " +
+        		"major update, you will need to redownload the app. Would you like to download the new app now?");
+        
+        alert.setPositiveButton("Download", new DialogInterface.OnClickListener() { 
+            public void onClick(DialogInterface dialog, int whichButton) { 
+            	String url = "https://play.google.com/store/apps/details?id=com.nennig.vtglibrary.lite";
+            	Intent i = new Intent(Intent.ACTION_VIEW);
+            	i.setData(Uri.parse(url));
+            	MainActivity.this.startActivity(i);
+            } 
+        }); 
+        
+        alert.setNegativeButton("Not Now", new DialogInterface.OnClickListener() { 
+            public void onClick(DialogInterface dialog, int whichButton) { 
+              // Canceled. 
+            } 
+      }); 
+      alert.show();
+	}
+
 }

@@ -21,7 +21,6 @@ public class AppConstants {
 	/*
 	 * App Constants
 	 */
-	public static final String DETAIL_VIEW_FOLDER = "detailView";
 	public static final String ICON_VIEW_FOLDER = "iconView";
 	public static final String DEFAULT_ICON = "default_icon";
 	public static final String MAIN_IMAGE = "main_image.jpg";
@@ -63,9 +62,6 @@ public class AppConstants {
 		   return AppConfig.APP_TITLE_SHORT + " Pro - 1:1::1:1";
 	   return AppConfig.APP_TITLE_SHORT;
    }
-    
-    
-    
 }
 
 

@@ -21,18 +21,18 @@ import com.nennig.constants.AppConstants;
  *
  */
 public class SingletonMovePinMap {
-	private static String db13 = "1313_move_db.csv";
-	private static String db11 = "1111_move_db.csv";
+	private static String move_db = "move_pins_db.csv";
 	
 	private static final String TAG = AppConfig.APP_PNAME + ".singleton.pin";
 	private static SingletonMovePinMap ref;
 	private static String[] headers = new String[]{"Prop","Hand","Position","Pin0","Pin1","Pin2","Pin3",
 		"Pin4","Pin5","Pin6","Pin7"};
+	private static Thread parserThread;
 	
 	/**
 	 * Holds all PropMove objects that are parsed from the db file
 	 */
-	public static Map<String, MovePins> movePinMap = new HashMap<String, MovePins>();
+	public Map<String, MovePins> movePinMap = new HashMap<String, MovePins>();
 	/**
 	 * Map of all the header indexes for the db file
 	 */
@@ -47,9 +47,14 @@ public class SingletonMovePinMap {
 		}
 	}
 	
-	public static SingletonMovePinMap getSingletonMovePinMap(Object obj, String set){
+	public static SingletonMovePinMap getSingletonMovePinMap(final Object obj, final String set){
 		if(ref == null){
-			ref = new SingletonMovePinMap(obj, set);
+			parserThread = new Thread(new Runnable() {
+		        public void run() {
+		        	ref = new SingletonMovePinMap(obj, set);
+		        }
+		    });
+			parserThread.start();
 		}
 		return ref;
 	}
@@ -77,7 +82,7 @@ public class SingletonMovePinMap {
 	}
 	private void createSingleton(Context c, String set){
 		try{
-			InputStream iS = c.getAssets().open(getdbFile(set));
+			InputStream iS = c.getAssets().open(move_db);
 			InputStreamReader iSR = new InputStreamReader(iS);
 			BufferedReader bR = new BufferedReader(iSR);
 			parseDBInfo(bR);
@@ -86,19 +91,19 @@ public class SingletonMovePinMap {
 		}
 	}
 	
-	/**
-	 * @return
-	 */
-	private String getdbFile(String curSet) {
-		if(curSet.equals(AppConstants.SET_1313)){
-			return db13;
-		}
-		else if(curSet.equals(AppConstants.SET_1111))
-		{
-			return db11;
-		}
-		return db13;
-	}
+//	/**
+//	 * @return
+//	 */
+//	private String getdbFile(String curSet) {
+//		if(curSet.equals(AppConstants.SET_1313)){
+//			return move_db;
+//		}
+//		else if(curSet.equals(AppConstants.SET_1111))
+//		{
+//			return db11;
+//		}
+//		return move_db;
+//	}
 
 	/**
 	 * This method parses the csv file and puts it into a hashmap of PoiMoves Objects

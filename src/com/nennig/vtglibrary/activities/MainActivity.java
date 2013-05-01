@@ -36,11 +36,11 @@ import android.widget.Toast;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
-import com.nennig.vtglibrary.custobjs.SingletonPoiMoveMap;
+import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
+import com.nennig.vtglibrary.custobjs.SingletonMovePinMap;
 
 public class MainActivity extends BaseActivity {
 	private static final String TAG = "MainActivity";
-	private static SingletonPoiMoveMap sPoiMap;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -98,7 +98,7 @@ public class MainActivity extends BaseActivity {
 			Log.d(TAG, "MainActivity IOException");
 			Log.d(TAG, e.toString());
 		}
-		Log.d(TAG, "Recieved iStream");
+
 		Bitmap image = getBitmapImage(iStream,
 				Math.round((float) (displayWidth * .8)));
 		mainImage.setImageBitmap(image);
@@ -106,7 +106,9 @@ public class MainActivity extends BaseActivity {
 		/*
 		 * Parse the db file so that the objects are ready when needed.
 		 */
-		sPoiMap = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
+		SingletonMatrixMap.getSingletonPoiMoveMap(this);
+		SingletonMovePinMap.getSingletonMovePinMap(this, AppConstants.SET_1313);
+
 	}
 
 	private void viewPDFList() {

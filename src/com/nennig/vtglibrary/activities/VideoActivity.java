@@ -22,8 +22,9 @@ import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
+import com.nennig.vtglibrary.custobjs.MatrixID;
 import com.nennig.vtglibrary.custobjs.PropMove;
-import com.nennig.vtglibrary.custobjs.SingletonPoiMoveMap;
+import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
 import com.nennig.vtglibrary.managers.VideoManager;
 
 public class VideoActivity extends BaseActivity {
@@ -45,12 +46,12 @@ public class VideoActivity extends BaseActivity {
         
         final SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
         _curMatrixID = sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0");
-		_curSet = getIntent().getExtras().getString("SET");
+		_curSet = getIntent().getExtras().getString(AppConstants.CUR_SET);
 		if(_curSet == null)
 			_curSet = AppConstants.SET_1313;
         
         //Create the singleton and get the information for the detail view
-  		SingletonPoiMoveMap sPoi = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
+  		SingletonMatrixMap sPoi = SingletonMatrixMap.getSingletonPoiMoveMap(this);
   		PropMove pMove = sPoi.getPoiMove(_curMatrixID);
         
         Log.d(TAG, "videoPropIndex: " + videoPropIndex);
@@ -59,9 +60,9 @@ public class VideoActivity extends BaseActivity {
         TextView tvName = (TextView) findViewById(R.id.video_moveName);
         tvName.setText(pMove.getName(_curSet));
         TextView tvMove = (TextView) findViewById(R.id.video_move_hand_prop);
-        String[] parsedMatrixID = pMove.moveID.split("[x]");
-        tvMove.setText("Hand: " + getTimeDirectionStringShort(Integer.valueOf(parsedMatrixID[0])) +
-        		"  Prop: " + getTimeDirectionStringShort(Integer.valueOf(parsedMatrixID[1]))
+        MatrixID matrixID = new MatrixID(_curMatrixID);
+        tvMove.setText("Hand: " + MatrixID.MCategory.getStringAbbrFromIndex(matrixID.getHandID()) +
+        		"  Prop: " + MatrixID.MCategory.getStringAbbrFromIndex(matrixID.getPropID())
         		);
         
         

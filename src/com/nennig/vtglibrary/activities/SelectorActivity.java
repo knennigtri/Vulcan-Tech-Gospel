@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -24,8 +25,9 @@ import android.widget.Spinner;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
+import com.nennig.vtglibrary.custobjs.MatrixID;
 import com.nennig.vtglibrary.custobjs.PropMove;
-import com.nennig.vtglibrary.custobjs.SingletonPoiMoveMap;
+import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
 
 public class SelectorActivity extends BaseActivity {
 	private static final String TAG = "SelectorActivity";
@@ -33,10 +35,10 @@ public class SelectorActivity extends BaseActivity {
 	ImageView[] _posIvMatrix = new ImageView[4];
 	String[] iconList;
 	
-	String _poiType, _handType, _prevPoiType, _prevHandType;
+	String _propType, _handType, _prevPoiType, _prevHandType;
 	RelativeLayout mainLayout;
 
-	private static SingletonPoiMoveMap sPoiMap;
+	private static SingletonMatrixMap sPoiMap;
 	private String _curSet = "";
 	
     @Override
@@ -46,8 +48,8 @@ public class SelectorActivity extends BaseActivity {
         mainLayout = (RelativeLayout) findViewById(R.layout.activity_selector);
         
         //Create the singleton and get the information for the detail view
-		sPoiMap = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
-		Log.d(TAG,sPoiMap.toString());
+		sPoiMap = SingletonMatrixMap.getSingletonPoiMoveMap(this);
+		Log.d(TAG, "sPropMap: " + sPoiMap.toString());
 		
 		SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
 		_curSet = sP.getString(AppConstants.CUR_SET, AppConstants.SET_1313);
@@ -60,7 +62,7 @@ public class SelectorActivity extends BaseActivity {
         _posIvMatrix[1] = (ImageView) findViewById(R.id.prop_pos_1);
         _posIvMatrix[2] = (ImageView) findViewById(R.id.prop_pos_2);
         _posIvMatrix[3] = (ImageView) findViewById(R.id.prop_pos_3);
-        _poiType = "";
+        _propType = "";
         _handType = "";
         _prevPoiType = "";
         _prevHandType = "";
@@ -68,16 +70,22 @@ public class SelectorActivity extends BaseActivity {
         
         refreshIcons();
         
+        ArrayAdapter<String> adp = new ArrayAdapter<String>(this,
+        		R.layout.spinner_item,
+        		MatrixID.MCategory.getSpinnerArrayList());
+        adp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        
         //Selects the Spinner for Prop
+        _propSinner.setAdapter(adp);
         _propSinner.setOnItemSelectedListener(new OnItemSelectedListener() 
         {    
          @Override
          public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
-        	 _prevPoiType = _poiType;
-        	 _poiType = adapter.getItemAtPosition(i).toString();
-        	 Log.d(TAG,"Poi Changed to "+ _poiType);
+        	 _prevPoiType = _propType;
+        	 _propType = adapter.getItemAtPosition(i).toString();
+        	 Log.d(TAG,"Poi Changed to "+ _propType);
         	 
-        	 if(!_prevPoiType.equals(_poiType)){
+        	 if(!_prevPoiType.equals(_propType)){
         		 refreshIcons();
         	 }	 
         } 
@@ -89,6 +97,7 @@ public class SelectorActivity extends BaseActivity {
         });
         
         //Selects the Spinner for Hand
+        _handSpinner.setAdapter(adp);
         _handSpinner.setOnItemSelectedListener(new OnItemSelectedListener() 
         {    
          @Override
@@ -114,16 +123,16 @@ public class SelectorActivity extends BaseActivity {
      * This refreshes the icons on the screen in correlation with the identifiers selected.
      */
     public void refreshIcons(){
-    	Log.d(TAG, "Refreshing icons with Poi: '" + _poiType + "' Hand: '" + _handType + "'");
-    	
-    	String ext = "png";
+    	Log.d(TAG, "Refreshing icons with Poi: '" + _propType + "' Hand: '" + _handType + "'");
+
     	Bitmap[] posMatrix = new Bitmap[4];
     	String iconName = "";
     	InputStream iStream = null;
-    	final int pTIndex = getTimeDirectionInt(_poiType);
-    	final int hTIndex = getTimeDirectionInt(_handType);
-		for(int i = 0; i<posMatrix.length;i++){
-			_posIvMatrix[i].setOnTouchListener(null); //removes previous listener for icon
+    	MatrixID matrixID;
+    	final int pTIndex = MatrixID.MCategory.getIndex(_propType);
+    	final int hTIndex = MatrixID.MCategory.getIndex(_handType);
+		for(int posIndex = 0; posIndex<posMatrix.length;posIndex++){
+			_posIvMatrix[posIndex].setOnTouchListener(null); //removes previous listener for icon
 			
 			boolean positionExists = false;
 			
@@ -134,11 +143,11 @@ public class SelectorActivity extends BaseActivity {
 			}
 			else 
 			{
-				if((i == 0) || (i == 1))
+				if((posIndex == 0) || (posIndex == 1))
 					positionExists = true;
 			}
-			
-			PropMove pm = sPoiMap.getPoiMove(pTIndex + "x" + hTIndex + "x" + i); //Get the PropMove info from the PoiMap
+			matrixID = new MatrixID(hTIndex, pTIndex, posIndex);
+			PropMove pm = sPoiMap.getPoiMove(matrixID.getMatrixID()); //Get the PropMove info from the PoiMap
 			
 			//If the position is real, then load the icon, else load the default icon
 			if(positionExists){
@@ -147,7 +156,7 @@ public class SelectorActivity extends BaseActivity {
 			}
 			else
 			{
-				iconName = "";//DEFAULT_ICON + "." + ext;
+				iconName = "";
 			}
 			try{
 				//Get Bitmap for position icon
@@ -155,27 +164,22 @@ public class SelectorActivity extends BaseActivity {
 	    		iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + iconName);
 	    		Log.d(TAG, "Recieved iStream");
 	    		
-	    		posMatrix[i] = getBitmapImage(iStream, Math.round((float)(displayWidth / 2.5)));
+	    		posMatrix[posIndex] = getBitmapImage(iStream, Math.round((float)(displayWidth / 2.5)));
 			} catch (IOException e) {
 				Log.d(TAG, "SelectorActivity IOException");
 				Log.d(TAG, e.toString());
 			}
 			
 			//Set the position icon and listener
-			final int pos = i;
-			_posIvMatrix[i].setImageBitmap(posMatrix[i]);
+			final String curMatrixID = matrixID.getMatrixID();
+			_posIvMatrix[posIndex].setImageBitmap(posMatrix[posIndex]);
 			if(positionExists){
-		    	_posIvMatrix[i].setOnTouchListener(new OnTouchListener() {
+		    	_posIvMatrix[posIndex].setOnTouchListener(new OnTouchListener() {
 		 			@Override
 		 			public boolean onTouch(View arg0, MotionEvent arg1) {
-		 				String curMatixID = pTIndex + "x" + hTIndex + "x" + pos;
-		 				
 		 				SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
 		 				Editor e = sP.edit();
-		 				e.putString(AppConstants.CUR_MATRIX_ID, curMatixID);
-//		 				e.putInt(AppConstants.CUR_POI, pTIndex);
-//		 				e.putInt(AppConstants.CUR_HAND, hTIndex);
-//		 				e.putInt(AppConstants.CUR_POS, pos);
+		 				e.putString(AppConstants.CUR_MATRIX_ID, curMatrixID);
 		 				e.commit();
 		 				startActivity(new Intent(SelectorActivity.this, DetailViewActivity.class));		 
 	 				return false;
@@ -185,24 +189,6 @@ public class SelectorActivity extends BaseActivity {
 	    }
 		
     }
-    
-//    /**
-//     * This gets the icon name depending on the current set that is selected
-//     * @param pm poi move that will be displayed
-//     * @return the correct file name based on the current poi set
-//     */
-//	private String getIconName(PropMove pm) {
-//		SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
-//		String curSet = sP.getString(AppConstants.CUR_SET, AppConstants.SET_1313);
-//		if(curSet.equals(AppConstants.SET_1313)){
-//			return "i13_" + pm.m13_image + "." + pm.m13_imageExt;
-//		}
-//		else if(curSet.equals(AppConstants.SET_1111))
-//		{
-//			return "i11_" + pm.m11_image + "." + pm.m11_imageExt;
-//		}
-//		return "";
-//	}
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {

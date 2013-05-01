@@ -9,10 +9,8 @@ package com.nennig.vtglibrary;
 
 public final class R {
     public static final class array {
-        public static int hand_dropdown=0x7f090001;
-        public static int pdf_list=0x7f090002;
-        public static int prop_dropdown=0x7f090000;
-        public static int prop_selector=0x7f090003;
+        public static int pdf_list=0x7f090000;
+        public static int prop_selector=0x7f090001;
     }
     public static final class attr {
         /** <p>Must be one of the following constant values.</p>
@@ -125,7 +123,8 @@ containing a value of this type.
         public static int activity_selector=0x7f030002;
         public static int activity_video=0x7f030003;
         public static int four_icon_view=0x7f030004;
-        public static int view_pdfs=0x7f030005;
+        public static int spinner_item=0x7f030005;
+        public static int view_pdfs=0x7f030006;
     }
     public static final class menu {
         public static int general=0x7f0b0000;
@@ -175,14 +174,10 @@ containing a value of this type.
     }
     public static final class string {
         public static int app_name=0x7f080000;
-        public static int ext_prop0=0x7f080018;
-        public static int ext_prop1=0x7f080019;
-        public static int ext_prop2=0x7f08001a;
-        public static int ext_prop3=0x7f08001b;
-        public static int global_so=0x7f08000e;
-        public static int global_ss=0x7f08000c;
-        public static int global_to=0x7f08000d;
-        public static int global_ts=0x7f08000b;
+        public static int ext_prop0=0x7f080014;
+        public static int ext_prop1=0x7f080015;
+        public static int ext_prop2=0x7f080016;
+        public static int ext_prop3=0x7f080017;
         public static int main_1111_button=0x7f080003;
         public static int main_3113_button=0x7f080002;
         public static int main_download_button=0x7f080004;
@@ -192,21 +187,21 @@ containing a value of this type.
         public static int menu_facebook=0x7f080007;
         public static int menu_help=0x7f080006;
         public static int menu_rate_this=0x7f080008;
-        public static int menu_settings=0x7f08001c;
-        public static int prop0=0x7f080014;
-        public static int prop1=0x7f080015;
-        public static int prop2=0x7f080016;
-        public static int prop3=0x7f080017;
-        public static int search_list_results_for=0x7f08001f;
-        public static int text_hand=0x7f080010;
-        public static int text_prop=0x7f08000f;
-        public static int title_activity_detail_zoom=0x7f08001d;
+        public static int menu_settings=0x7f080018;
+        public static int prop0=0x7f080010;
+        public static int prop1=0x7f080011;
+        public static int prop2=0x7f080012;
+        public static int prop3=0x7f080013;
+        public static int search_list_results_for=0x7f08001b;
+        public static int text_hand=0x7f08000c;
+        public static int text_prop=0x7f08000b;
+        public static int title_activity_detail_zoom=0x7f080019;
         public static int title_activity_main=0x7f080001;
-        public static int title_activity_search_list=0x7f080020;
-        public static int title_activity_video=0x7f08001e;
-        public static int vtg_pdf1=0x7f080011;
-        public static int vtg_pdf2=0x7f080012;
-        public static int vtg_pdf3=0x7f080013;
+        public static int title_activity_search_list=0x7f08001c;
+        public static int title_activity_video=0x7f08001a;
+        public static int vtg_pdf1=0x7f08000d;
+        public static int vtg_pdf2=0x7f08000e;
+        public static int vtg_pdf3=0x7f08000f;
     }
     public static final class style {
         public static int AppTheme=0x7f0a0000;

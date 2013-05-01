@@ -11,25 +11,8 @@
     <string name="menu_rate_this">Rate This App</string>
     <string name="menu_donate">Donate</string>
     <string name="menu_change_log">View Change Log</string>
-    <string name="global_ts">Together Time/ Same Direction</string>
-    <string name="global_ss">Split Time/ Same Direction</string>
-    <string name="global_to">Together Time/ Opposite Direction</string>
-    <string name="global_so">Split Time/ Opposite Direction</string>
     <string name="text_prop">Prop</string>
     <string name="text_hand">Hand</string>
-
-    <string-array name="prop_dropdown">
-        <item>@string/global_ts</item>
-        <item>@string/global_ss</item>
-        <item>@string/global_to</item>
-        <item>@string/global_so</item>
-    </string-array>
-    <string-array name="hand_dropdown">
-        <item>@string/global_ts</item>
-        <item>@string/global_ss</item>
-        <item>@string/global_to</item>
-        <item>@string/global_so</item>
-    </string-array>
 
     <string name="vtg_pdf1">VTG_1of3</string>
     <string name="vtg_pdf2">VTG_2of3</string>

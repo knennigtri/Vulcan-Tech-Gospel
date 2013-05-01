@@ -28,17 +28,21 @@
 	        android:text="description2"
 	        android:layout_alignBaseline="@id/detail_handLabel"
 	        android:layout_toRightOf="@id/detail_handLabel"
-	        android:maxLines="2"
+	        android:maxLines="1"
 	        style="@style/DescText"
+	        android:gravity="center_horizontal"
+	        android:layout_width="match_parent"
 	        />
 	   	<TextView
 	        android:id="@+id/detail_poiText"
 	        android:text="description1"
 			android:layout_alignBaseline="@id/detail_poiLabel"
 	        android:layout_toRightOf="@id/detail_poiLabel"
-	        android:maxLines="2"
+	        android:maxLines="1"
 	        style="@style/DescText"
+	        android:gravity="center_horizontal"
 	        android:layout_below="@id/detail_handText"
+	        android:layout_width="match_parent"
 	   		/>
    	</RelativeLayout>
     <ViewFlipper

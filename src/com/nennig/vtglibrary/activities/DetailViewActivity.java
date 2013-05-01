@@ -29,17 +29,18 @@ import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
+import com.nennig.vtglibrary.custobjs.MatrixID;
 import com.nennig.vtglibrary.custobjs.MovePins;
 import com.nennig.vtglibrary.custobjs.PropMove;
 import com.nennig.vtglibrary.custobjs.SingletonMovePinMap;
-import com.nennig.vtglibrary.custobjs.SingletonPoiMoveMap;
+import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
 import com.nennig.vtglibrary.draw.VTGMove;
 
 @SuppressLint("NewApi")
 public class DetailViewActivity extends BaseActivity{
 	private static final String TAG = AppConfig.APP_PNAME + ".DetialViewActivity";
 
-	private String _curMatrixID = "";
+	private MatrixID _curMatrixID;
     private String _curSet = "";
     
     static PropMove pMove = new PropMove();
@@ -57,13 +58,13 @@ public class DetailViewActivity extends BaseActivity{
         
         //Get the current set and matrixID for this detail view
         SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
-        _curMatrixID = sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0");
+        _curMatrixID = new MatrixID(sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0"));
         _curSet = sP.getString(AppConstants.CUR_SET, AppConstants.SET_1313);
         Log.d(TAG, "Cur Matrix " + _curMatrixID);
         
         //Get the singleton and get the information for the detail view
-  		SingletonPoiMoveMap sPoi = SingletonPoiMoveMap.getSingletonPoiMoveMap(this);
-  		pMove = sPoi.getPoiMove(_curMatrixID);
+  		SingletonMatrixMap sPoi = SingletonMatrixMap.getSingletonPoiMoveMap(this);
+  		pMove = sPoi.getPoiMove(_curMatrixID.getMatrixID());
   		
   		setupMove();
 	}
@@ -73,7 +74,7 @@ public class DetailViewActivity extends BaseActivity{
 		
 		//Get the singleton to create the move view for this matrixID
   		SingletonMovePinMap sMovePins = SingletonMovePinMap.getSingletonMovePinMap(this, _curSet);
-  		MovePins pMovePins = sMovePins.getMovePins(_curMatrixID);
+  		MovePins pMovePins = sMovePins.getMovePins(_curMatrixID.getMatrixID());
 		
 		//Set the move pins to the move view
   		VTGMove drawnMove = (VTGMove) findViewById(R.id.detail_customMoveDraw);
@@ -92,7 +93,7 @@ public class DetailViewActivity extends BaseActivity{
 				if(((VTGMove) v).iconIsTouched(event.getX(), event.getY())){
 					if(_curSet.equals(AppConstants.SET_1313)){
 						Intent i = new Intent(DetailViewActivity.this, VideoActivity.class);
-						i.putExtra("SET", _curSet);
+						i.putExtra(AppConstants.CUR_SET, _curSet);
 						startActivity(i);
 					}
 					else {
@@ -113,12 +114,11 @@ public class DetailViewActivity extends BaseActivity{
   		//The following code sets up all of the text details for the move
         TextView propText = (TextView) findViewById(R.id.detail_poiText);
         TextView handText = (TextView)findViewById(R.id.detail_handText);
-        
-        String[] parsedMatrixID = _curMatrixID.split("[x]");
-        int pInt = Integer.valueOf(parsedMatrixID[1]);
-        int hInt = Integer.valueOf(parsedMatrixID[0]);
-        String pText = getTimeDirectionString(pInt);
-        String hText = getTimeDirectionString(hInt);
+
+        int pInt = _curMatrixID.getPropID();
+        int hInt = _curMatrixID.getHandID();
+        String pText = MatrixID.MCategory.getStringLongFromIndex(pInt);
+        String hText = MatrixID.MCategory.getStringLongFromIndex(hInt);
         propText.setText(pText);
         handText.setText(hText);
         

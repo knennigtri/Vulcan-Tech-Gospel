@@ -61,40 +61,6 @@ public class BaseActivity extends Activity {
     }
     
     /**
-     * Converts a time direction string into the corresponding index value used in the matrix standard for this app.
-     * @param str The time direction index requested.
-     * @return index of the time direction
-     */
-    public int getTimeDirectionInt(String str){
-    	if(str.equals(getString(R.string.global_ts)))
-    		return 0;
-    	if(str.equals(getString(R.string.global_ss)))
-    		return 1;
-    	if(str.equals(getString(R.string.global_to)))
-    		return 2;
-    	if(str.equals(getString(R.string.global_so)))
-    		return 3;
-    	return 0;
-    }
-    
-    /**
-     * Converts the index into the corresponding time direction string in the standard for this app
-     * @param i index of the time direction
-     * @return string of the time direction
-     */
-    public String getTimeDirectionString(int i){
-    	if(i == 0)
-    		return getString(R.string.global_ts);
-    	if(i == 1)
-    		return getString(R.string.global_ss);
-    	if(i == 2)
-    		return getString(R.string.global_to);
-    	if(i == 3)
-    		return getString(R.string.global_so);
-    	return getString(R.string.global_ts);
-    }   
-    
-    /**
      * This method is built for displaying an icon in this app. It takes in the dimensions of the phone and then resizes 
      * the bitmap to fit the screen.
      * @param iStream The bitmap that needs resized
@@ -102,7 +68,6 @@ public class BaseActivity extends Activity {
      * @return resized bitmap
      */
 	public static Bitmap getBitmapImage(InputStream iStream, int reqWidth) {
-		Log.d(TAG, "ReqSize: " + reqWidth);
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -114,12 +79,10 @@ public class BaseActivity extends Activity {
         
         final int height = options.outHeight;
         final int width = options.outWidth;
-        Log.d(TAG, "H: " + height + " W: " + width);
        
         int newHeight = (int) Math.round(((float) reqWidth / (float) width)*height);
         int newWidth= reqWidth;
        
-        Log.d(TAG, "nH: " + newHeight + " nW: " + newWidth);
     	newBitmap = Bitmap.createScaledBitmap(newBitmap, newWidth, newHeight, true);
         
         return newBitmap;

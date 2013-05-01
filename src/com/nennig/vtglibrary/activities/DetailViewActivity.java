@@ -14,6 +14,7 @@ import android.util.FloatMath;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -78,32 +79,42 @@ public class DetailViewActivity extends BaseActivity{
 		
 		//Set the move pins to the move view
   		VTGMove drawnMove = (VTGMove) findViewById(R.id.detail_customMoveDraw);
-  		
-  		InputStream iStream;
-		try {
-			iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet));
-			drawnMove.addPinsAndIcon(pMovePins, iStream);
-		} catch (IOException e) {
-			drawnMove.addPins(pMovePins);
-		}
-  		
-		drawnMove.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if(((VTGMove) v).iconIsTouched(event.getX(), event.getY())){
-					if(_curSet.equals(AppConstants.SET_1313)){
-						Intent i = new Intent(DetailViewActivity.this, VideoActivity.class);
-						i.putExtra(AppConstants.CUR_SET, _curSet);
-						startActivity(i);
-					}
-					else {
-						//TODO Insert the videos for 1111
-						Toast.makeText(DetailViewActivity.this, "Videos will be available soon!", Toast.LENGTH_SHORT).show();
-					}
-				}
-				return false;
+
+  		if(isLiteVersion() && _curSet.equals(AppConstants.SET_1111)){
+  			drawnMove.removePinsAndIcon();
+  			drawnMove.addProMessage("This swipe feature is \n available through the \n Pro version only");
+  			drawnMove.setOnTouchListener(null);
+  		}
+  		else
+  		{
+  			drawnMove.removeProMessage();
+  			
+	  		InputStream iStream;
+			try {
+				iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet));
+				drawnMove.addPinsAndIcon(pMovePins, iStream);
+			} catch (IOException e) {
+				drawnMove.addPins(pMovePins);
 			}
-		});	
+	  		
+			drawnMove.setOnTouchListener(new OnTouchListener() {
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					if(((VTGMove) v).iconIsTouched(event.getX(), event.getY())){
+						if(_curSet.equals(AppConstants.SET_1313)){
+							Intent i = new Intent(DetailViewActivity.this, VideoActivity.class);
+							i.putExtra(AppConstants.CUR_SET, _curSet);
+							startActivity(i);
+						}
+						else {
+							//TODO Insert the videos for 1111
+							Toast.makeText(DetailViewActivity.this, "Videos will be available soon!", Toast.LENGTH_SHORT).show();
+						}
+					}
+					return false;
+				}
+			});
+  		}
 		
 		final GestureDetector gestureDetector;
         gestureDetector = new GestureDetector(new MyGestureDetector());

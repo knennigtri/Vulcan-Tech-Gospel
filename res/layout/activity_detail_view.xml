@@ -62,7 +62,7 @@
 	   		    android:layout_height="wrap_content"
 	   		    android:padding="10dp"
 	   		    android:background="@android:color/white"
-	   		    />
+			/>
 		 	<TextView
 			       android:id="@+id/detail_moveName"
 			       android:layout_width="match_parent"

@@ -19,6 +19,7 @@ public class AppConfig {
     		"Brian Thompson, Lorq Nichols, David Cantor, and Noel Yee. " +
     		"Lead app designer, Kevin Nennig, with contributions from Trevor Thompson.";
     public static final String PRO_TITLE = "VTG Pro Only";
+    //TODO Update Pro Message with Pro release
     public static final String PRO_MESSAGE = "Get this feature and more in the VTG Pro! Available by the end of June 2012.";
     
 	public static final ArrayList<String> CHANGE_LOG = new ArrayList<String>();

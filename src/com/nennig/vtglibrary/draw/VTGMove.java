@@ -12,10 +12,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.TextureView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.vtglibrary.R;
@@ -34,12 +38,13 @@ public class VTGMove extends View {
     
     private int primColor;
     private int secColor;
-    private int pinEndShape;
+
     
     private Paint primCirclePaint;
     private Paint secCirclePaint;
     private Paint primLinePaint;
     private Paint secLinePaint;
+    private Paint proPaint;
     
     RectF drawAreaBounds = new RectF();
     
@@ -91,6 +96,7 @@ public class VTGMove extends View {
 //	
 	
 	private MovePins curMove; 	//holds the current move pins to create the view
+	private String proMessage = ""; //Holds the pro message text
 	
 	/**
 	 * @param context
@@ -113,7 +119,6 @@ public class VTGMove extends View {
         try {
         	primColor = a.getColor(R.styleable.VTGMove_primaryColor, Color.BLACK);
         	secColor = a.getColor(R.styleable.VTGMove_secondaryColor, Color.BLUE);
-        	pinEndShape = a.getInt(R.styleable.VTGMove_pinEndShape, 0);
         } finally {
         	a.recycle();
         }
@@ -168,6 +173,12 @@ public class VTGMove extends View {
         secLinePaint.setColor(secColor);
         secLinePaint.setStrokeWidth(lineWidth);
         
+        proPaint = new Paint();
+		proPaint.setColor(Color.BLACK);
+		int line = ((getHeight() / 2)-15) / 3;
+		proPaint.setTextSize(40);
+		proPaint.setTextScaleX(1.2f);
+        
         drawAreaBounds = new RectF(0.0f +drawAreaPadding,0.0f +drawAreaPadding,
         		getMeasuredWidth()-drawAreaPadding,getMeasuredHeight()-drawAreaPadding);
         drawAreaBounds.offsetTo(getPaddingLeft(), getPaddingTop());
@@ -193,6 +204,31 @@ public class VTGMove extends View {
 	}
 	
 	/**
+	 * 
+	 */
+	public void removePinsAndIcon() {
+		curMove = null;
+		moveIcon = null;
+		invalidate();
+	}
+	
+	/**
+	 * 
+	 */
+	public void addProMessage(String str) {
+		proMessage = str;
+		invalidate();
+	}
+
+	/**
+	 * 
+	 */
+	public void removeProMessage() {
+		proMessage = "";
+		invalidate();
+	}
+	
+	/**
 	 * The overridden onDraw method takes the MovePins object and draws each of the pins according to the object.
 	 * depending on which pins are valid, the view will be draw accordingly.
 	 */
@@ -201,7 +237,6 @@ public class VTGMove extends View {
         super.onDraw(canvas);  
         
         RectF primRec, secRec;
-        
         if(curMove != null){
 	        //This checks to see if one of two pins should be drawn
 	        if(curMove.pin0 == null){
@@ -271,6 +306,16 @@ public class VTGMove extends View {
 	        	float top =  (getHeight() / 2.0f) - (size / 2.0f);
 	        	canvas.drawBitmap(bm, left, top, null);
 	        }
+        }
+        if(!proMessage.equals("")){
+        	int x = Math.round(getWidth() * (1.0f/4.0f));
+        	int y = Math.round(getHeight() * (1.0f/4.0f));
+//        	for(String line: proMessage.split("\n")){
+//        		canvas.drawText(line,x,y, proPaint);
+//        	      y+=proPaint.ascent()+proPaint.descent() + 5;
+//        	}
+        	drawMultilineText(proMessage,x,y, proPaint,canvas,2,new Rect(x,y,x+(2*x), y+(2*y)));
+        	Log.d(TAG, "Text displayed");
         }
 	}
 	
@@ -553,6 +598,50 @@ public class VTGMove extends View {
         
         return newBitmap;
     }
+	
+	   private void drawMultilineText(String str, int x, int y, Paint paint, Canvas canvas, int fontSize, Rect drawSpace) {
+		    int      lineHeight = 0;
+		    int      yoffset    = 0;
+		    String[] lines      = str.split(" ");
+
+		    // set height of each line (height of text + 20%)
+		    lineHeight = (int) (calculateHeightFromFontSize(str, fontSize) * 1.2);
+		    // draw each line
+		    String line = "";
+		    for (int i = 0; i < lines.length; ++i) {
+
+		        if(calculateWidthFromFontSize(line + " " + lines[i], fontSize) <= drawSpace.width()){
+		            line = line + " " + lines[i];
+
+		        }else{
+		            canvas.drawText(line, x, y + yoffset, paint);
+		            yoffset = yoffset + lineHeight;
+		            line = lines[i];
+		        }
+		    }
+		    canvas.drawText(line, x, y + yoffset, paint);
+
+		}
+
+		private int calculateWidthFromFontSize(String testString, int currentSize)
+		{
+		    Rect bounds = new Rect();
+		    Paint paint = new Paint();
+		    paint.setTextSize(currentSize);
+		    paint.getTextBounds(testString, 0, testString.length(), bounds);
+
+		    return (int) Math.ceil( bounds.width());
+		}
+
+		private int calculateHeightFromFontSize(String testString, int currentSize)
+		{
+		    Rect bounds = new Rect();
+		    Paint paint = new Paint();
+		    paint.setTextSize(currentSize);
+		    paint.getTextBounds(testString, 0, testString.length(), bounds);
+
+		    return (int) Math.ceil( bounds.height());
+		}
 
 	/**
 	 * @param x
@@ -564,4 +653,8 @@ public class VTGMove extends View {
 		return false;
 		
 	}
+
+
+
+
 }

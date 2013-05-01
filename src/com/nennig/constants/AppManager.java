@@ -202,20 +202,28 @@ public class AppManager {
     	alert.setTitle(AppConfig.PRO_TITLE);
     	alert.setMessage(AppConfig.PRO_MESSAGE);
     	
-    	alert.setPositiveButton("Go Pro", new DialogInterface.OnClickListener() { 
-            public void onClick(DialogInterface dialog, int whichButton) { 
-            	String url = DevConstants.GOOGLE_PLAY + "." + AppConfig.APP_PNAME + ".pro";
-            	Intent i = new Intent(Intent.ACTION_VIEW);
-            	i.setData(Uri.parse(url));
-            	c.startActivity(i);
-            } 
-        }); 
-        
-        alert.setNegativeButton("No Thanks", new DialogInterface.OnClickListener() { 
-            public void onClick(DialogInterface dialog, int whichButton) { 
-              // Canceled. 
-            } 
-      }); 
+    	//TODO Update this Pro version inflator
+    	
+      alert.setNeutralButton("Okay", new DialogInterface.OnClickListener() { 
+      public void onClick(DialogInterface dialog, int whichButton) { 
+        // Canceled. 
+      } 
+      });
+    	
+//    	alert.setPositiveButton("Go Pro", new DialogInterface.OnClickListener() { 
+//            public void onClick(DialogInterface dialog, int whichButton) { 
+//            	String url = DevConstants.GOOGLE_PLAY + "." + AppConfig.APP_PNAME + ".pro";
+//            	Intent i = new Intent(Intent.ACTION_VIEW);
+//            	i.setData(Uri.parse(url));
+//            	c.startActivity(i);
+//            } 
+//        }); 
+//        
+//        alert.setNegativeButton("No Thanks", new DialogInterface.OnClickListener() { 
+//            public void onClick(DialogInterface dialog, int whichButton) { 
+//              // Canceled. 
+//            } 
+//      }); 
       alert.show();
     }
 }

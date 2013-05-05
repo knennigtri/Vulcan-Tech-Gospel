@@ -28,14 +28,14 @@ public class AppManager {
     
     
     //Preferences Holder
-    private final static String PREV_VERSION_CODE = AppConfig.APP_PNAME + ".current.version";
-    private final static String DONT_SHOW_AGAIN = AppConfig.APP_PNAME + ".dontshowagain";
-    private final static String LAUNCH_COUNT = AppConfig.APP_PNAME + ".launchcount";
-    private final static String DATE_FIRST_LAUNCHED = AppConfig.APP_PNAME + ".datefirstlaunched";
+    private final static String PREV_VERSION_CODE = AppConfig.APP_TITLE_SHORT + ".current.version";
+    private final static String DONT_SHOW_AGAIN = AppConfig.APP_TITLE_SHORT + ".dontshowagain";
+    private final static String LAUNCH_COUNT = AppConfig.APP_TITLE_SHORT + ".launchcount";
+    private final static String DATE_FIRST_LAUNCHED = AppConfig.APP_TITLE_SHORT + ".datefirstlaunched";
     
     private final static int DAYS_UNTIL_PROMPT = 3;
     private final static int LAUNCHES_UNTIL_PROMPT = 7;
-	private static String TAG = AppConfig.APP_PNAME + ".AppManager";
+	private static String TAG = AppConfig.APP_TITLE_SHORT + ".AppManager";
 
     /**
      * Method to initialize the AppManager. Checks for amount of times used and current version
@@ -137,7 +137,7 @@ public class AppManager {
         b1.setText("Rate " + AppConfig.APP_TITLE);
         b1.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                c.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + AppConfig.APP_PNAME)));
+                c.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + c.getPackageName())));
                 dialog.dismiss();
             }
         });        

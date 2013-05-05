@@ -28,7 +28,7 @@ import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
 import com.nennig.vtglibrary.managers.VideoManager;
 
 public class VideoActivity extends BaseActivity {
-	private static final String TAG = AppConfig.APP_PNAME + ".DetialViewActivity";
+	private static final String TAG = AppConfig.APP_TITLE + ".DetialViewActivity";
 	
     boolean play = true;
     String _curMatrixID = "";

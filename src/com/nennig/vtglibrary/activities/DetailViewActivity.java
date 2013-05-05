@@ -39,7 +39,7 @@ import com.nennig.vtglibrary.draw.VTGMove;
 
 @SuppressLint("NewApi")
 public class DetailViewActivity extends BaseActivity{
-	private static final String TAG = AppConfig.APP_PNAME + ".DetialViewActivity";
+	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".DetialViewActivity";
 
 	private MatrixID _curMatrixID;
     private String _curSet = "";
@@ -82,12 +82,19 @@ public class DetailViewActivity extends BaseActivity{
 
   		if(isLiteVersion() && _curSet.equals(AppConstants.SET_1111)){
   			drawnMove.removePinsAndIcon();
-  			drawnMove.addProMessage("This swipe feature is \n available through the \n Pro version only");
+  			InputStream iStream;
+			try {
+				iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + AppConstants.DEFAULT_ICON);
+				drawnMove.addDefaultIcon(iStream);
+			} catch (IOException e) {
+				Log.d(TAG,e.getMessage());
+			}
+  			
   			drawnMove.setOnTouchListener(null);
   		}
   		else
   		{
-  			drawnMove.removeProMessage();
+  			drawnMove.removeDefaultIcon();
   			
 	  		InputStream iStream;
 			try {

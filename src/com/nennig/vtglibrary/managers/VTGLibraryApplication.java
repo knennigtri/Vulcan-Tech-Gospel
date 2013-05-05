@@ -12,6 +12,6 @@ import android.util.Log;
 public class VTGLibraryApplication extends Application{
 	public boolean isLiteVersion() {
 		Log.d("VTGLibrary", getPackageName());
-		return getPackageName().toLowerCase().contains("lite"); 
+		return !getPackageName().toLowerCase().contains("pro"); 
 	}
 }

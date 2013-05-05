@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
@@ -30,7 +31,7 @@ import com.nennig.vtglibrary.custobjs.PropMove;
 import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
 
 public class SelectorActivity extends BaseActivity {
-	private static final String TAG = "SelectorActivity";
+	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".SelectorActivity";
 	Spinner _propSinner, _handSpinner;
 	ImageView[] _posIvMatrix = new ImageView[4];
 	String[] iconList;

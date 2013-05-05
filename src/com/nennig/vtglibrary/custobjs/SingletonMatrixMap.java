@@ -13,12 +13,14 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.nennig.constants.AppConfig;
+
 import android.content.Context;
 import android.util.Log;
 
 public class SingletonMatrixMap {
 	private static final String DB_FILE = "detail_matrix_db.csv";
-	private static final String TAG = "SingletonMatrixMap";
+	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".SingletonMatrixMap";
 	private static SingletonMatrixMap ref;
 	/**
 	 * Holds all PropMove objects that are parsed from the db file
@@ -33,7 +35,7 @@ public class SingletonMatrixMap {
 	
 	//For debugging dbFile ONLY-------
 	public static void main(String[] args) {
-		String location = "D:\\My Documents\\workspace\\Vulcan Tech Gospel\\assets\\db_v2.csv";
+		String location = "D:\\My Documents\\workspace\\Vulcan Tech Gospel\\assets\\" + DB_FILE;
 		final SingletonMatrixMap obj = SingletonMatrixMap.getSingletonPoiMoveMap(location);
 	}
 	
@@ -106,6 +108,7 @@ public class SingletonMatrixMap {
 		    	  else
 		    	  {
 			    	  PropMove pM = parsePoiMoveLine(nextLineParse);
+			    	  Log.d(TAG, "PM: " + pM.toString());
 		    		  poiMoveMap.put(pM.moveID, pM);
 		    	  }
 		      }
@@ -126,7 +129,7 @@ public class SingletonMatrixMap {
 		for(int i = 0; i < nextLineParse.length; i++)
 		{
 			for(Field field : pM.getClass().getFields()){
-				if(headerIndexMap.get(getDBColumnName(field.getName())) == i)
+				if(headerIndexMap.get(getDBColumnName(field.getName())).equals(i))
 				{
 					pM.add(field.getName(),nextLineParse[i]);
 					break;
@@ -168,6 +171,7 @@ public class SingletonMatrixMap {
 					String moveColumn = split1[1];
 					String columnName = moveSet.charAt(1) + ":" + moveSet.charAt(2) +
 							"<" + moveColumn.toLowerCase() + ">";
+					Log.d(TAG, "ColumnName: " +columnName);
 					return columnName;
 				}
 			}

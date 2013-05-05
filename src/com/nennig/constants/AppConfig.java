@@ -12,12 +12,12 @@ public class AppConfig {
 
 	public final static String APP_TITLE = "Vulcan Tech Gospel";
 	public final static String APP_TITLE_SHORT = "VTG";
-    public final static String APP_PNAME = "com.nennig.vtglibrary";
+   // public final static String APP_PNAME = "com.nennig.vtglibrary";
 
     public static final String ABOUT_MESSAGE = "Vulcan Tech Gospel was created by David Cantor and Noel Yee." +
     		"Vulcan Tech Gospel Writers:  " +
     		"Brian Thompson, Lorq Nichols, David Cantor, and Noel Yee. " +
-    		"Lead app designer, Kevin Nennig, with contributions from Trevor Thompson.";
+    		"App Developer: Kevin Nennig. Video Creation: David Everett.";
     public static final String PRO_TITLE = "VTG Pro Only";
     //TODO Update Pro Message with Pro release
     public static final String PRO_MESSAGE = "Get this feature and more in the VTG Pro! Available by the end of June 2012.";

@@ -10,19 +10,19 @@ public class AppConstants {
 	/*
 	 * Preferences Constants
 	 */
-	public static final String VTG_PREFS = AppConfig.APP_PNAME + ".prefs";
-	public static final String MOVE_NAME = AppConfig.APP_PNAME + ".move.name";
-	public static final String CUR_MATRIX_ID = AppConfig.APP_PNAME + ".cur.matrix.id";
-	public static final String MOVE_PROP = AppConfig.APP_PNAME + ".move.Prop";	
+	public static final String VTG_PREFS = AppConfig.APP_TITLE_SHORT + ".prefs";
+	public static final String MOVE_NAME = AppConfig.APP_TITLE_SHORT + ".move.name";
+	public static final String CUR_MATRIX_ID = AppConfig.APP_TITLE_SHORT + ".cur.matrix.id";
+	public static final String MOVE_PROP = AppConfig.APP_TITLE_SHORT + ".move.Prop";	
 	
-	public static final String CUR_SET = AppConfig.APP_PNAME + ".cur.set";
+	public static final String CUR_SET = AppConfig.APP_TITLE_SHORT + ".cur.set";
 	
 	
 	/*
 	 * App Constants
 	 */
 	public static final String ICON_VIEW_FOLDER = "iconView";
-	public static final String DEFAULT_ICON = "default_icon";
+	public static final String DEFAULT_ICON = "default_icon1.png";
 	public static final String MAIN_IMAGE = "main_image.jpg";
 	
 	//TODO Create set constants for file identifiers
@@ -47,7 +47,6 @@ public class AppConstants {
     		"item_name=Mobile%20apps&currency_code=USD&" +
     		"bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted";
     public static String FACEBOOK = "https://www.facebook.com/groups/113059425470308/";
-    public static String RATEAPP = DevConstants.GOOGLE_PLAY + AppConfig.APP_PNAME;
     
     public static String setTitleString(boolean isLite, String curSet){
 	   if(isLite){

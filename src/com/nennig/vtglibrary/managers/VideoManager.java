@@ -10,7 +10,7 @@ import android.util.Log;
 
 
 public class VideoManager {
-	private static final String TAG = AppConfig.APP_PNAME + ".VideoManager";
+	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".VideoManager";
 	
 	//TODO rename videos and then update this method.
 	public static int getVideoID(Context c, String setType, String video, int prop){

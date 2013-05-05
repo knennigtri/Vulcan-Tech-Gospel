@@ -11,6 +11,7 @@ import com.nennig.constants.AppConstants;
  */
 public class PropMove{
 	public String moveID;
+	
 	public String m13_name;
 	public String m13_imageFileName;
 	public String m13_type;
@@ -112,5 +113,18 @@ public class PropMove{
 	
 	public void setName(String str){
 		m13_name = str;
+	}
+	
+	@Override
+	public String toString(){
+		String str = "";
+		str = "{";
+		str = str + moveID + ": \n";
+		str = str + "13Name = " + m13_name + "\n";
+		str = str + "13Image = " + m13_imageFileName + "\n";
+		str = str + "11Name = " + m11_name + "\n";		
+		str = str + "11Image = " + m11_imageFileName + "\n";
+		str = str + "}";
+		return str;
 	}
 }

@@ -33,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
@@ -40,7 +41,7 @@ import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
 import com.nennig.vtglibrary.custobjs.SingletonMovePinMap;
 
 public class MainActivity extends BaseActivity {
-	private static final String TAG = "MainActivity";
+	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".MainActivity";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -73,9 +74,9 @@ public class MainActivity extends BaseActivity {
 				else
 				{
 					saveCurSet(AppConstants.SET_1111);
-					Toast.makeText(MainActivity.this,
-							"This is a pro feature that will be added soon.",
-							Toast.LENGTH_LONG).show();
+					Intent intent = new Intent(MainActivity.this,
+							SelectorActivity.class);
+					startActivity(intent);
 				}
 			}
 		});

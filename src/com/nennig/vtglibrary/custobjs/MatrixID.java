@@ -5,6 +5,7 @@ package com.nennig.vtglibrary.custobjs;
 
 import java.util.ArrayList;
 
+import com.nennig.constants.AppConfig;
 import com.nennig.vtglibrary.R;
 
 import android.content.Context;
@@ -15,7 +16,7 @@ import android.util.Log;
  *
  */
 public class MatrixID {
-	private static final String TAG = "MatrixID Obj";
+	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".MatrixID";
 	private int propID;
 	private int handID;
 	private int posID;

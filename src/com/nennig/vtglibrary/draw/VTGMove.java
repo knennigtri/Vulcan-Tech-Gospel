@@ -34,7 +34,7 @@ import com.nennig.vtglibrary.custobjs.Pin.pinDirection;
  * pins and then draws the pins in that area according to color, direction, and the view's size.
  */
 public class VTGMove extends View {
-	private static final String TAG = AppConfig.APP_PNAME + ".VTGMove";
+	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".VTGMove";
     
     private int primColor;
     private int secColor;
@@ -72,6 +72,7 @@ public class VTGMove extends View {
 	}	
 	
 	private InputStream moveIcon;
+	private InputStream defaultIcon;
     float iconL=0;
     float iconT=0;
     float iconB=0;
@@ -96,7 +97,6 @@ public class VTGMove extends View {
 //	
 	
 	private MovePins curMove; 	//holds the current move pins to create the view
-	private String proMessage = ""; //Holds the pro message text
 	
 	/**
 	 * @param context
@@ -215,16 +215,16 @@ public class VTGMove extends View {
 	/**
 	 * 
 	 */
-	public void addProMessage(String str) {
-		proMessage = str;
+	public void addDefaultIcon(InputStream dIcon) {
+		defaultIcon = dIcon;
 		invalidate();
 	}
 
 	/**
 	 * 
 	 */
-	public void removeProMessage() {
-		proMessage = "";
+	public void removeDefaultIcon() {
+		defaultIcon = null;
 		invalidate();
 	}
 	
@@ -307,15 +307,22 @@ public class VTGMove extends View {
 	        	canvas.drawBitmap(bm, left, top, null);
 	        }
         }
-        if(!proMessage.equals("")){
-        	int x = Math.round(getWidth() * (1.0f/4.0f));
-        	int y = Math.round(getHeight() * (1.0f/4.0f));
-//        	for(String line: proMessage.split("\n")){
-//        		canvas.drawText(line,x,y, proPaint);
-//        	      y+=proPaint.ascent()+proPaint.descent() + 5;
-//        	}
-        	drawMultilineText(proMessage,x,y, proPaint,canvas,2,new Rect(x,y,x+(2*x), y+(2*y)));
-        	Log.d(TAG, "Text displayed");
+//        if(!proMessage.equals("")){
+//        	int x = Math.round(getWidth() * (1.0f/4.0f));
+//        	int y = Math.round(getHeight() * (1.0f/4.0f));
+////        	for(String line: proMessage.split("\n")){
+////        		canvas.drawText(line,x,y, proPaint);
+////        	      y+=proPaint.ascent()+proPaint.descent() + 5;
+////        	}
+//        	drawMultilineText(proMessage,x,y, proPaint,canvas,2,new Rect(x,y,x+(2*x), y+(2*y)));
+//        	Log.d(TAG, "Text displayed");
+//        }
+        if(defaultIcon != null){
+        	float size = Math.min(drawAreaBounds.width() * (3.0f/4.0f),drawAreaBounds.height() * (3.0f/4.0f));
+        	Bitmap bm = getBitmapImage(defaultIcon, size);
+        	float left = (getWidth() / 2.0f) - (size / 2.0f);
+        	float top =  (getHeight() / 2.0f) - (size / 2.0f);
+        	canvas.drawBitmap(bm, left, top, null);
         }
 	}
 	

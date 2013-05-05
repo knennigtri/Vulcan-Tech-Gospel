@@ -23,7 +23,7 @@ import com.nennig.constants.AppConstants;
 public class SingletonMovePinMap {
 	private static String move_db = "move_pins_db.csv";
 	
-	private static final String TAG = AppConfig.APP_PNAME + ".singleton.pin";
+	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".singletonMovePin";
 	private static SingletonMovePinMap ref;
 	private static String[] headers = new String[]{"Prop","Hand","Position","Pin0","Pin1","Pin2","Pin3",
 		"Pin4","Pin5","Pin6","Pin7"};

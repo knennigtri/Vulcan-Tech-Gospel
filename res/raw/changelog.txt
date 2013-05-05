@@ -22,11 +22,12 @@
 $ 2.0
   % Version 2.0
   _ 05-01-2013
-    * VTG Lite released!
-    * Poi Prop video integrated to each move! More videos to come in the Pro version.
-    * New details page
-    * Statistics module integrated
+    * Welcome to the new VTG Lite!
+    * Poi Prop video with each move!
+    * New custom drawn details page
+    * UI now more responsive
     * All Youtube links removed
+    * Simple PDF viewer removed
 $ 1.0
   % Version 1.0
   _ 12-26-2013

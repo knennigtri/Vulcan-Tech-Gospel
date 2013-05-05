@@ -27,6 +27,7 @@ import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.constants.ChangeLog;
+import com.nennig.constants.DevConstants;
 import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.managers.VTGLibraryApplication;
 
@@ -151,7 +152,7 @@ public class BaseActivity extends Activity {
 		}
 		else if(item.getItemId() == R.id.menu_rate_this)
 		{
-    		url = AppConstants.RATEAPP;
+    		url = DevConstants.GOOGLE_PLAY + getPackageName();
     		i = new Intent(Intent.ACTION_VIEW);
         	i.setData(Uri.parse(url));
         	startActivity(i);

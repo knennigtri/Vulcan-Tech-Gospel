@@ -1,18 +1,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_about"
-        android:icon="@android:drawable/ic_menu_info_details"
-        android:title="@string/menu_about"
-        android:orderInCategory="50"
-        android:showAsAction="never"/>     
-    <!-- item android:id="@+id/menu_help"
-        android:icon="@android:drawable/ic_menu_help"
-        android:title="@string/menu_help"
-        android:orderInCategory="100"
-        android:showAsAction="never"/-->  
-    <item android:id="@+id/menu_donate"
-        android:title="@string/menu_donate"
-        android:orderInCategory="50"
-        android:showAsAction="never"/>    
     <item android:id="@+id/menu_facebook"
         android:title="@string/menu_facebook"
         android:orderInCategory="300"
@@ -25,4 +11,18 @@
         android:title="@string/menu_change_log"
         android:orderInCategory="500"
         android:showAsAction="never"/>  
+     <item android:id="@+id/menu_donate"
+       android:title="@string/menu_donate"
+       android:orderInCategory="50"
+       android:showAsAction="ifRoom" />
+    <group android:id="@+id/menu_group_actionbar">
+		   	<item android:id="@+id/menu_share"
+		        android:title="Share"
+		        android:icon="@drawable/social_share"
+		        android:showAsAction="ifRoom" />
+		   	<item android:id="@+id/menu_about"
+		        android:title="@string/menu_about"
+		        android:icon="@drawable/action_about"
+		        android:showAsAction="ifRoom"/>     		   	
+   	</group>
 </menu>

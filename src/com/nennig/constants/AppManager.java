@@ -179,7 +179,7 @@ public class AppManager {
         alert.setTitle("About"); 
         alert.setMessage(AppConfig.ABOUT_MESSAGE);
         
-        alert.setPositiveButton("View Site", new DialogInterface.OnClickListener() { 
+        alert.setPositiveButton("Website", new DialogInterface.OnClickListener() { 
             public void onClick(DialogInterface dialog, int whichButton) { 
             	String url = DevConstants.MY_WEBSITE;
             	Intent i = new Intent(Intent.ACTION_VIEW);
@@ -188,9 +188,17 @@ public class AppManager {
             } 
         }); 
         
-        alert.setNegativeButton("Close", new DialogInterface.OnClickListener() { 
+        alert.setNeutralButton("Rate this app", new DialogInterface.OnClickListener() { 
             public void onClick(DialogInterface dialog, int whichButton) { 
-              // Canceled. 
+            	c.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + c.getPackageName())));
+            } 
+        }); 
+        
+        alert.setNegativeButton("Donate!", new DialogInterface.OnClickListener() { 
+            public void onClick(DialogInterface dialog, int whichButton) { 
+            	Intent i = new Intent(Intent.ACTION_VIEW);
+            	i.setData(Uri.parse(AppConstants.PAYPAL));
+            	c.startActivity(i);
             } 
       }); 
       alert.show();
@@ -225,5 +233,16 @@ public class AppManager {
 //            } 
 //      }); 
       alert.show();
+    }
+    
+    public static void share(final Context c, String str){
+    	Intent intent=new Intent(android.content.Intent.ACTION_SEND);
+    	intent.setType("text/plain");
+    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+    	// Add data to the intent, the receiving app will decide what to do with it.
+    	intent.putExtra(Intent.EXTRA_SUBJECT, AppConfig.APP_TITLE);
+    	intent.putExtra(Intent.EXTRA_TEXT, str);
+    	c.startActivity(Intent.createChooser(intent, "Share with..."));
     }
 }

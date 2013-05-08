@@ -2,5 +2,5 @@
     package="com.nennig.vtglibrary">
     
      <uses-sdk android:minSdkVersion="8"
-         android:targetSdkVersion="15" />
+         android:targetSdkVersion="11" />
 </manifest>

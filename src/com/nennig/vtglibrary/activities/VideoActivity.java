@@ -40,7 +40,7 @@ public class VideoActivity extends BaseActivity {
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	setTheme(android.R.style.Theme_Black_NoTitleBar);
+    	setTheme(android.R.style.Theme_Holo_NoActionBar_Fullscreen);
     	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
         

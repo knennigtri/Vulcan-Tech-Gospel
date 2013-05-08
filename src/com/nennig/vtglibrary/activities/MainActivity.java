@@ -11,6 +11,7 @@ package com.nennig.vtglibrary.activities;
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -23,6 +24,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -171,11 +173,5 @@ public class MainActivity extends BaseActivity {
 			e.putString(AppConstants.CUR_SET, setNumber);
 			e.commit();
 			Log.d(TAG, "Current Set: " + setNumber);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.general, menu);
-		return true;
 	}
 }

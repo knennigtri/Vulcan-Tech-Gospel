@@ -171,7 +171,6 @@ public class SingletonMatrixMap {
 					String moveColumn = split1[1];
 					String columnName = moveSet.charAt(1) + ":" + moveSet.charAt(2) +
 							"<" + moveColumn.toLowerCase() + ">";
-					Log.d(TAG, "ColumnName: " +columnName);
 					return columnName;
 				}
 			}

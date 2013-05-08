@@ -9,6 +9,7 @@ package com.nennig.vtglibrary.activities;
 import java.io.InputStream;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -21,7 +22,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Display;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
@@ -144,9 +147,8 @@ public class BaseActivity extends Activity {
     	}
 		else if(item.getItemId() == R.id.menu_donate)
 		{
-    		url = AppConstants.PAYPAL;
-        	i = new Intent(Intent.ACTION_VIEW);
-        	i.setData(Uri.parse(url));
+			i = new Intent(Intent.ACTION_VIEW);
+        	i.setData(Uri.parse(AppConstants.PAYPAL));
         	startActivity(i);
     		return true;
 		}
@@ -164,13 +166,35 @@ public class BaseActivity extends Activity {
             cl.getFullLogDialog().show();
             return true;
 		}
+		else if(item.getItemId() == R.id.menu_share)
+		{
+			AppManager.share(this, AppConfig.AppShare);
+            return true;
+		}
 		else
 		{
     		return super.onOptionsItemSelected(item);
     	}
     }
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.general, menu);
+		return true;
+	}
+    
     public boolean isLiteVersion()  {
     	return ((VTGLibraryApplication)getApplication()).isLiteVersion(); 
     }
+    
+//    @SuppressLint("NewApi")
+//	@Override
+//    protected void onStart() {
+//        super.onStart();
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+//        	ActionBar actionBar = this.getActionBar();
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//       }
+//        
+//    }
 }

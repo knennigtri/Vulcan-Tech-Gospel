@@ -16,5 +16,7 @@
     <color name="black_dark">#171717</color>
     
     <color name="purple_light">#a276eb</color>
-    <color name="purple_dark">#6a3ab2</color>   
+    <color name="purple_dark">#6a3ab2</color>
+
+    <color name="trans">#00000000</color>
 </resources>

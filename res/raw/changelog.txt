@@ -19,6 +19,12 @@
     </style>
   </head>
   <body>
+ $ 2.1
+    % Version 2.1
+    _ 05-22-2013
+      * About page upgraded. Check it out!
+      * About and Sharing in the activity bar now
+      * Images are now transparent
 $ 2.0
   % Version 2.0
   _ 05-01-2013

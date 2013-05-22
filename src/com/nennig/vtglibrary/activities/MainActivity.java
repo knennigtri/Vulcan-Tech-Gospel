@@ -22,13 +22,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnTouchListener;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -174,4 +169,17 @@ public class MainActivity extends BaseActivity {
 			e.commit();
 			Log.d(TAG, "Current Set: " + setNumber);
 	}
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.menu_share)
+        {
+            AppManager.share(this, "Vulcan Tech Gospel is now on Android! Check it out: " + AppConfig.appOnGPlayURL);
+            return true;
+        }
+        else
+        {
+            return super.onOptionsItemSelected(item);
+        }
+    }
 }

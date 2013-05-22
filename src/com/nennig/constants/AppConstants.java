@@ -23,11 +23,11 @@ public class AppConstants {
 	 */
 	public static final String ICON_VIEW_FOLDER = "iconView";
 	public static final String DEFAULT_ICON = "default_icon1.png";
-	public static final String MAIN_IMAGE = "main_image.jpg";
+	public static final String MAIN_IMAGE = "mainLogo.png";
 	
 	//TODO Create set constants for file identifiers
-	public static final String SET_1313 = "1313";
-	public static final String SET_1111 = "1111";
+	public static final String SET_1313 = "1:3::1:3";
+	public static final String SET_1111 = "1:1::1:1";
 	
 	/*
 	 * Constants for the youtube videos

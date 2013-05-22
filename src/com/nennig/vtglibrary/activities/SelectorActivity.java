@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -193,15 +192,24 @@ public class SelectorActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // app icon in Action Bar clicked; go home
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if(item.getItemId() == R.id.menu_share)
+        {
+            AppManager.share(this, "Checking out the " + _curSet + " set for Prop: " + MatrixID.MCategory.getStringAbbrFromLong(_propType) +
+             " and Hand: " + MatrixID.MCategory.getStringAbbrFromLong(_handType) +
+                    " in the new Vulcan Tech Gospel App. " + AppConfig.appOnGPlayURL);
+            return true;
+        }
+        else if(item.getItemId() == android.R.id.home)
+        {
+            // app icon in Action Bar clicked; go home
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            return true;
+        }
+        else
+        {
+            return super.onOptionsItemSelected(item);
         }
     }
 }

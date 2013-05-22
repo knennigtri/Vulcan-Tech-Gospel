@@ -23,7 +23,7 @@ public class AppConfig {
     public static final String PRO_MESSAGE = "Get this feature and more in the VTG Pro! Available by the end of June 2012.";
     
 	public static final ArrayList<String> CHANGE_LOG = new ArrayList<String>();
-	public static final String AppShare = "NEED A Share Message";
+	public static final String appOnGPlayURL = "http://goo.gl/motWI";
 	
 	static{
 		CHANGE_LOG.add("No New Updates");

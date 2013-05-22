@@ -80,6 +80,7 @@ public class DetailViewActivity extends BaseActivity{
 		
 		//Set the move pins to the move view
   		VTGMove drawnMove = (VTGMove) findViewById(R.id.detail_customMoveDraw);
+        drawnMove.setBackgroundResource(R.color.trans);
 
   		if(isLiteVersion() && _curSet.equals(AppConstants.SET_1111)){
   			drawnMove.removePinsAndIcon();
@@ -244,20 +245,33 @@ public class DetailViewActivity extends BaseActivity{
 			return AppConstants.SET_1111;
 		return AppConstants.SET_1313;
 	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-	        case android.R.id.home:
-	            // app icon in Action Bar clicked; go home
-	            Intent intent = new Intent(this, SelectorActivity.class);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(intent);
-	            return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
-	}
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.menu_share)
+        {
+            String name;
+            if(_curSet.equals(AppConstants.SET_1111))
+                name = pMove.m11_name;
+            else
+                name = pMove.m13_name;
+            AppManager.share(this, "Checking out the " + name +
+                    " move in the new Vulcan Tech Gospel App. " + AppConfig.appOnGPlayURL);
+            return true;
+        }
+        else if(item.getItemId() == android.R.id.home)
+        {
+            // app icon in Action Bar clicked; go home
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            return true;
+        }
+        else
+        {
+            return super.onOptionsItemSelected(item);
+        }
+    }
 }
 
 

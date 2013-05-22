@@ -7,13 +7,7 @@ import java.io.InputStream;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
+import android.graphics.*;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -154,25 +148,31 @@ public class VTGMove extends View {
         // filter won't work.
 //        setLayerToSW(this);
         int lineWidth = 5;
+
+//        BitmapShader bitmapShader = new BitmapShader(, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
 		
         primCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         primCirclePaint.setStyle(Paint.Style.FILL);
         primCirclePaint.setColor(primColor);
+//        primCirclePaint.setAlpha(0);
         
         primLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         primLinePaint.setStyle(Paint.Style.STROKE);
         primLinePaint.setColor(primColor);
         primLinePaint.setStrokeWidth(lineWidth);
+//        primLinePaint.setAlpha(0);
         
         secCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         secCirclePaint.setStyle(Paint.Style.FILL);
         secCirclePaint.setColor(secColor);
+//        secCirclePaint.setAlpha(0);
         
         secLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         secLinePaint.setStyle(Paint.Style.STROKE);
         secLinePaint.setColor(secColor);
         secLinePaint.setStrokeWidth(lineWidth);
-        
+//        secLinePaint.setAlpha(0);
+
         proPaint = new Paint();
 		proPaint.setColor(Color.BLACK);
 		int line = ((getHeight() / 2)-15) / 3;

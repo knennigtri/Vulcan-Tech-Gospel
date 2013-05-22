@@ -134,7 +134,8 @@ public class BaseActivity extends Activity {
     	String url;
     	if(item.getItemId() == R.id.menu_about)
     	{
-    		AppManager.aboutAlert(this);
+//    		AppManager.aboutAlert(this);
+            AppManager.getAboutDialog(this);
     		return true;
     	}
     	else if(item.getItemId() == R.id.menu_facebook)
@@ -164,11 +165,6 @@ public class BaseActivity extends Activity {
 		{
     		ChangeLog cl = new ChangeLog(this);
             cl.getFullLogDialog().show();
-            return true;
-		}
-		else if(item.getItemId() == R.id.menu_share)
-		{
-			AppManager.share(this, AppConfig.AppShare);
             return true;
 		}
 		else

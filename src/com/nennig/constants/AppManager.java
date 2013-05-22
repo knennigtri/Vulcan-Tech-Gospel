@@ -20,9 +20,11 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.nennig.vtglibrary.R;
 
 public class AppManager {
     
@@ -202,6 +204,53 @@ public class AppManager {
             } 
       }); 
       alert.show();
+    }
+
+    public static void getAboutDialog(final Context context) {
+        WebView wv = new WebView(context);
+
+//        if(Integer.parseInt(Build.VERSION.SDK) >= Build.VERSION_CODES.HONEYCOMB)
+//            Compatibility.setViewLayerTypeSoftware(wv);
+        wv.setBackgroundColor(0); // transparent
+//        wv.loadDataWithBaseURL(null, context.getString(R.raw.about), "text/html", "UTF-8",
+//                null);
+        wv.loadUrl("file:///android_asset/about.html");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(DevConstants.AM_TITLE)
+                .setView(wv)
+                .setNegativeButton("Donate!", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(AppConstants.PAYPAL));
+                        context.startActivity(i);
+                    }
+                })
+                .setNeutralButton("Rate this app", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + context.getPackageName())));
+                    }
+                })
+                .setPositiveButton("Website", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String url = DevConstants.MY_WEBSITE;
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        context.startActivity(i);
+                    }
+                });
+
+//        if (!full) {
+//            // "more ..." button
+//            builder.setNegativeButton(DevConstants.CL_SHOW_FULL,
+//                    new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            getFullLogDialog().show();
+//                        }
+//                    });
+//        }
+
+        builder.show();
     }
     
     public static void proVersionAlert(final Context c){

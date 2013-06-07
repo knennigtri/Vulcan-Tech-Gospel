@@ -110,16 +110,18 @@ public class DetailViewActivity extends BaseActivity{
                             if(isLiteVersion())
 							    new VideoManager(DetailViewActivity.this,VideoActivity.class, AppConstants.Set.getSet(_curSet),
                                     _curMatrixID, AppConstants.PropType.getPropType(0)).execute();
-                            int propID = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE).getInt(AppConstants.MOVE_PROP,0);
-                            //TODO Change when making more videos
-                            if(propID == 0)
-                                new VideoManager(DetailViewActivity.this,VideoActivity.class, AppConstants.Set.getSet(_curSet),
-                                        _curMatrixID, AppConstants.PropType.getPropType(propID)).execute();
                             else
-                                Toast.makeText(DetailViewActivity.this,
-                                        "This pro feature will be added soon.",
-                                        Toast.LENGTH_LONG).show();
-
+                            {
+                                int propID = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE).getInt(AppConstants.MOVE_PROP,0);
+                                //TODO Change when making more videos
+                                if(propID == 0)
+                                    new VideoManager(DetailViewActivity.this,VideoActivity.class, AppConstants.Set.getSet(_curSet),
+                                            _curMatrixID, AppConstants.PropType.getPropType(propID)).execute();
+                                else
+                                    Toast.makeText(DetailViewActivity.this,
+                                            "This pro feature will be added soon.",
+                                            Toast.LENGTH_LONG).show();
+                            }
 						}
 						else {
 							//TODO Insert the videos for 1111

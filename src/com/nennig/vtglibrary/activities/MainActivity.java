@@ -87,9 +87,7 @@ public class MainActivity extends BaseActivity {
 		_button3.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-                new VideoManager(MainActivity.this, VideoActivity.class,
-                        AppConstants.Set.ONEONE, new MatrixID("0x0x0"), AppConstants.PropType.POI).execute();
-//				viewPDFList();
+				viewPDFList();
 			}
 		});
 

@@ -89,7 +89,7 @@ public class SingletonMatrixMap {
 	
 	/**
 	 * This method parses the csv file and puts it into a hashmap of PoiMoves Objects
-	 * @param c
+	 * @param bR input reader
 	 */
 	private void parseDBInfo(BufferedReader bR){
 		boolean readHeaders = true;
@@ -108,7 +108,7 @@ public class SingletonMatrixMap {
 		    	  else
 		    	  {
 			    	  PropMove pM = parsePoiMoveLine(nextLineParse);
-			    	  Log.d(TAG, "PM: " + pM.toString());
+//			    	  Log.d(TAG, "PM: " + pM.toString());
 		    		  poiMoveMap.put(pM.moveID, pM);
 		    	  }
 		      }

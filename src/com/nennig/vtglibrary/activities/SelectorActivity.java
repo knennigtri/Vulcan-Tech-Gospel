@@ -1,15 +1,11 @@
 package com.nennig.vtglibrary.activities;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,6 +24,9 @@ import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.custobjs.MatrixID;
 import com.nennig.vtglibrary.custobjs.PropMove;
 import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class SelectorActivity extends BaseActivity {
 	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".SelectorActivity";
@@ -147,7 +146,7 @@ public class SelectorActivity extends BaseActivity {
 					positionExists = true;
 			}
 			matrixID = new MatrixID(hTIndex, pTIndex, posIndex);
-			PropMove pm = sPoiMap.getPoiMove(matrixID.getMatrixID()); //Get the PropMove info from the PoiMap
+			PropMove pm = sPoiMap.getPoiMove(matrixID.toString()); //Get the PropMove info from the PoiMap
 			
 			//If the position is real, then load the icon, else load the default icon
 			if(positionExists){
@@ -171,7 +170,7 @@ public class SelectorActivity extends BaseActivity {
 			}
 			
 			//Set the position icon and listener
-			final String curMatrixID = matrixID.getMatrixID();
+			final String curMatrixID = matrixID.toString();
 			_posIvMatrix[posIndex].setImageBitmap(posMatrix[posIndex]);
 			if(positionExists){
 		    	_posIvMatrix[posIndex].setOnTouchListener(new OnTouchListener() {

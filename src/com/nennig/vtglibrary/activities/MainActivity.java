@@ -8,10 +8,6 @@
  */
 package com.nennig.vtglibrary.activities;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -22,20 +18,28 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
+import com.nennig.vtglibrary.custobjs.MatrixID;
 import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
 import com.nennig.vtglibrary.custobjs.SingletonMovePinMap;
+import com.nennig.vtglibrary.managers.VideoManager;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MainActivity extends BaseActivity {
 	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".MainActivity";
@@ -83,7 +87,9 @@ public class MainActivity extends BaseActivity {
 		_button3.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				viewPDFList();
+                new VideoManager(MainActivity.this, VideoActivity.class,
+                        AppConstants.Set.ONEONE, new MatrixID("0x0x0"), AppConstants.PropType.POI).execute();
+//				viewPDFList();
 			}
 		});
 

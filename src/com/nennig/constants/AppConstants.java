@@ -11,9 +11,8 @@ public class AppConstants {
 	 * Preferences Constants
 	 */
 	public static final String VTG_PREFS = AppConfig.APP_TITLE_SHORT + ".prefs";
-	public static final String MOVE_NAME = AppConfig.APP_TITLE_SHORT + ".move.name";
 	public static final String CUR_MATRIX_ID = AppConfig.APP_TITLE_SHORT + ".cur.matrix.id";
-	public static final String MOVE_PROP = AppConfig.APP_TITLE_SHORT + ".move.Prop";	
+	public static final String MOVE_PROP = AppConfig.APP_TITLE_SHORT + ".moveprop";
 	
 	public static final String CUR_SET = AppConfig.APP_TITLE_SHORT + ".cur.set";
 	
@@ -28,6 +27,93 @@ public class AppConstants {
 	//TODO Create set constants for file identifiers
 	public static final String SET_1313 = "1:3::1:3";
 	public static final String SET_1111 = "1:1::1:1";
+    public static final String SET_1515 = "1:5::1:5";
+
+
+   public enum Set{
+       ONEONE {
+           @Override
+            public String toString(){
+                return super.toString();
+           }
+       }, ONETHREE {
+           @Override
+           public String toString(){
+               return super.toString();
+           }
+       },ONEFIVE {
+           @Override
+           public String toString(){
+               return super.toString();
+           }
+       };
+       public String toSetID(){
+           if(this.equals(ONEONE))
+               return "11";
+           if(this.equals(ONEFIVE))
+               return "15";
+           return "13";
+       }
+       public static Set getSet(String str){
+           if(str.equals(SET_1111))
+               return ONEONE;
+           if(str.equals(SET_1515))
+               return ONEFIVE;
+           else
+               return ONETHREE;
+       }
+   }
+    public enum PropType{
+        POI  {
+            @Override
+            public String toString(){
+                return "Poi";
+            }
+        },
+        CLUBS  {
+            @Override
+            public String toString(){
+                return "Clubs";
+            }
+        },
+        DSTAFF  {
+            @Override
+            public String toString(){
+                return "Double Staffs";
+            }
+        },
+        HOOPS  {
+            @Override
+            public String toString(){
+                return "Mini Hoops";
+            }
+        };
+
+        public String toPropID(){
+            if(this.equals(CLUBS))
+                return "club";
+            if(this.equals(DSTAFF))
+                return "dstaff";
+            if(this.equals(HOOPS))
+                return "hoops";
+            return "poi";
+        }
+
+        public static PropType getPropType(int i){
+            switch(i){
+                case 0:
+                    return POI;
+                case 1:
+                    return CLUBS;
+                case 2:
+                    return DSTAFF;
+                case 3:
+                    return HOOPS;
+                default:
+                    return POI;
+            }
+        }
+    }
 	
 	/*
 	 * Constants for the youtube videos

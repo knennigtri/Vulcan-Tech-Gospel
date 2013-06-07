@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -31,12 +30,13 @@ public class VideoActivity extends BaseActivity {
 	private static final String TAG = AppConfig.APP_TITLE + ".DetialViewActivity";
 	
     boolean play = true;
-    String _curMatrixID = "";
+    String _curMatrixIDStr = "";
     String _curSet = "";
     VideoView vView;
     
     int videoPropIndex = 0;
-    
+    MatrixID _curMatrixID;
+
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,14 +45,14 @@ public class VideoActivity extends BaseActivity {
         setContentView(R.layout.activity_video);
         
         final SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
-        _curMatrixID = sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0");
+        _curMatrixIDStr = sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0");
 		_curSet = getIntent().getExtras().getString(AppConstants.CUR_SET);
 		if(_curSet == null)
 			_curSet = AppConstants.SET_1313;
         
         //Create the singleton and get the information for the detail view
   		SingletonMatrixMap sPoi = SingletonMatrixMap.getSingletonPoiMoveMap(this);
-  		PropMove pMove = sPoi.getPoiMove(_curMatrixID);
+  		PropMove pMove = sPoi.getPoiMove(_curMatrixIDStr);
         
         Log.d(TAG, "videoPropIndex: " + videoPropIndex);
         
@@ -60,20 +60,22 @@ public class VideoActivity extends BaseActivity {
         TextView tvName = (TextView) findViewById(R.id.video_moveName);
         tvName.setText(pMove.getName(_curSet));
         TextView tvMove = (TextView) findViewById(R.id.video_move_hand_prop);
-        MatrixID matrixID = new MatrixID(_curMatrixID);
-        tvMove.setText("Hand: " + MatrixID.MCategory.getStringAbbrFromIndex(matrixID.getHandID()) +
-        		"  Prop: " + MatrixID.MCategory.getStringAbbrFromIndex(matrixID.getPropID())
+        _curMatrixID = new MatrixID(_curMatrixIDStr);
+        tvMove.setText("Hand: " + MatrixID.MCategory.getStringAbbrFromIndex(_curMatrixID.getHandID()) +
+        		"  Prop: " + MatrixID.MCategory.getStringAbbrFromIndex(_curMatrixID.getPropID())
         		);
         
         
         //Setup Video
 		vView = (VideoView)findViewById(R.id.videoView);		
-		setupNewVideo();
+//		setupNewVideo();
+        vView.setVideoPath(setupNewVideo().getVideoPath());
+
 		vView.start();
 		//Loops the video clip infinitely 		
 		vView.setOnPreparedListener(new OnPreparedListener() {
-		    @Override
-		    public void onPrepared(MediaPlayer mp) {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
 		        mp.setLooping(true);
 		        
 		    }
@@ -117,10 +119,10 @@ public class VideoActivity extends BaseActivity {
 	        		 Toast.makeText(VideoActivity.this,
 							"This pro feature will be added soon.",
 							Toast.LENGTH_LONG).show();
-					
-	        		 if(videoPropIndex != newVideoPropIndex){
-	        			 changeVideo(newVideoPropIndex, sP.edit());
-	        		 }
+					//TODO uncomment this out when adding props
+//	        		 if(videoPropIndex != newVideoPropIndex){
+//	        			 changeVideo(newVideoPropIndex, sP.edit());
+//	        		 }
 	        	 }
         	 }
         } 
@@ -141,18 +143,23 @@ public class VideoActivity extends BaseActivity {
     	videoPropIndex = prop;
     	e.putInt(AppConstants.MOVE_PROP, videoPropIndex);
     	e.commit();
-    	setupNewVideo();
+//    	setupNewVideo();
+        setupNewVideo().execute();
     }
     
     /**
      * This retrieves the new video from the VideoManager and then runs the video
      */
-    public void setupNewVideo(){
-    	int videoID = VideoManager.getVideoID(this, _curSet, _curMatrixID, videoPropIndex);
-		
-		String path = "android.resource://"+getPackageName()+"/" + videoID;
+    public VideoManager setupNewVideo(){
+//    	int videoID = VideoManager.getVideoID(this, _curSet, _curMatrixID.toString(), videoPropIndex);
+//		String path = "android.resource://"+getPackageName()+"/" + videoID;
+//
+//		vView.setVideoURI(Uri.parse(path));
 
-		vView.setVideoURI(Uri.parse(path));
+        //TODO FIX!
+        return new VideoManager(this,AppConstants.Set.getSet(_curSet),
+                _curMatrixID, AppConstants.PropType.getPropType(videoPropIndex));
+
     }
     
     public String getTimeDirectionStringShort(int i){

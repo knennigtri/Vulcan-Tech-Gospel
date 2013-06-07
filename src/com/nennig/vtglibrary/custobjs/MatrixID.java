@@ -3,13 +3,11 @@
  */
 package com.nennig.vtglibrary.custobjs;
 
-import java.util.ArrayList;
+import android.util.Log;
 
 import com.nennig.constants.AppConfig;
-import com.nennig.vtglibrary.R;
 
-import android.content.Context;
-import android.util.Log;
+import java.util.ArrayList;
 
 /**
  * @author Kevin Nennig (knennig213@gmail.com)
@@ -27,8 +25,8 @@ public class MatrixID {
 		if(id.length() == 5){
 			String[] parse = id.split(delim);
 			if(parse.length == 3){
-				propID = Integer.valueOf(parse[0]);
-				handID = Integer.valueOf(parse[1]);
+				handID = Integer.valueOf(parse[0]);
+				propID = Integer.valueOf(parse[1]);
 				posID = Integer.valueOf(parse[2]);
 			}
 			else
@@ -44,9 +42,10 @@ public class MatrixID {
 		this.posID = positionID;
 	}
 
-	public String getMatrixID(){
-		return propID + delim + handID + delim + posID;
-	}
+    @Override
+    public String toString(){
+        return handID + delim + propID + delim + posID;
+    }
 	
 	/**
 	 * @return the propID

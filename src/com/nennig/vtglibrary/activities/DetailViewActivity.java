@@ -1,20 +1,13 @@
 package com.nennig.vtglibrary.activities;
 
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Matrix;
-import android.graphics.PointF;
 import android.os.Bundle;
-import android.util.FloatMath;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,7 +15,6 @@ import android.view.View.OnTouchListener;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -34,9 +26,13 @@ import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.custobjs.MatrixID;
 import com.nennig.vtglibrary.custobjs.MovePins;
 import com.nennig.vtglibrary.custobjs.PropMove;
-import com.nennig.vtglibrary.custobjs.SingletonMovePinMap;
 import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
+import com.nennig.vtglibrary.custobjs.SingletonMovePinMap;
 import com.nennig.vtglibrary.draw.VTGMove;
+import com.nennig.vtglibrary.managers.VideoManager;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 @SuppressLint("NewApi")
 public class DetailViewActivity extends BaseActivity{
@@ -66,7 +62,7 @@ public class DetailViewActivity extends BaseActivity{
         
         //Get the singleton and get the information for the detail view
   		SingletonMatrixMap sPoi = SingletonMatrixMap.getSingletonPoiMoveMap(this);
-  		pMove = sPoi.getPoiMove(_curMatrixID.getMatrixID());
+  		pMove = sPoi.getPoiMove(_curMatrixID.toString());
   		
   		setupMove();
 	}
@@ -76,7 +72,7 @@ public class DetailViewActivity extends BaseActivity{
 		
 		//Get the singleton to create the move view for this matrixID
   		SingletonMovePinMap sMovePins = SingletonMovePinMap.getSingletonMovePinMap(this, _curSet);
-  		MovePins pMovePins = sMovePins.getMovePins(_curMatrixID.getMatrixID());
+  		MovePins pMovePins = sMovePins.getMovePins(_curMatrixID.toString());
 		
 		//Set the move pins to the move view
   		VTGMove drawnMove = (VTGMove) findViewById(R.id.detail_customMoveDraw);
@@ -111,9 +107,19 @@ public class DetailViewActivity extends BaseActivity{
 				public boolean onTouch(View v, MotionEvent event) {
 					if(((VTGMove) v).iconIsTouched(event.getX(), event.getY())){
 						if(_curSet.equals(AppConstants.SET_1313)){
-							Intent i = new Intent(DetailViewActivity.this, VideoActivity.class);
-							i.putExtra(AppConstants.CUR_SET, _curSet);
-							startActivity(i);
+                            if(isLiteVersion())
+							    new VideoManager(DetailViewActivity.this,VideoActivity.class, AppConstants.Set.getSet(_curSet),
+                                    _curMatrixID, AppConstants.PropType.getPropType(0)).execute();
+                            int propID = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE).getInt(AppConstants.MOVE_PROP,0);
+                            //TODO Change when making more videos
+                            if(propID == 0)
+                                new VideoManager(DetailViewActivity.this,VideoActivity.class, AppConstants.Set.getSet(_curSet),
+                                        _curMatrixID, AppConstants.PropType.getPropType(propID)).execute();
+                            else
+                                Toast.makeText(DetailViewActivity.this,
+                                        "This pro feature will be added soon.",
+                                        Toast.LENGTH_LONG).show();
+
 						}
 						else {
 							//TODO Insert the videos for 1111

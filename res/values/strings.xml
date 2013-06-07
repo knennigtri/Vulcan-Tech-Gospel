@@ -36,10 +36,6 @@
         <item>@string/prop3</item>
     </string-array>
 
-    <string name="ext_prop0">poi</string>
-    <string name="ext_prop1">club</string>
-    <string name="ext_prop2">dstaff</string>
-    <string name="ext_prop3">hoops</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_detail_zoom">DetailZoomActivity</string>
     <string name="title_activity_video">VideoActivity</string>

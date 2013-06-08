@@ -152,7 +152,7 @@ public class SelectorActivity extends BaseActivity {
 			//If the position is real, then load the icon, else load the default icon
 			if(positionExists){
 				Log.d(TAG,"Current Set: " + _curSet);
-				iconName = pm.getImageFileName(_curSet.toSetID());
+				iconName = pm.getImageFileName(_curSet);
 			}
 			else
 			{
@@ -162,7 +162,6 @@ public class SelectorActivity extends BaseActivity {
 				//Get Bitmap for position icon
     			Log.d(TAG, "iconName: " + iconName);
 	    		iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + iconName);
-	    		Log.d(TAG, "Recieved iStream");
 	    		
 	    		posMatrix[posIndex] = getBitmapImage(iStream, Math.round((float)(displayWidth / 2.5)));
 			} catch (IOException e) {

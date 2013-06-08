@@ -109,13 +109,13 @@ public class DetailViewActivity extends BaseActivity{
 			try {
                 if(_curSet.equals(Set.ONEFIVE))//TODO coming soon
                 {
-                    new VTGToast(this).comingSoonFeature();
+                    drawnMove.removePinsAndIcon();
                     iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.COMING_SOON_IMAGE);
                     drawnMove.addDefaultIcon(iStream);
                 }
                 else
                 {
-				    iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet.toSetID()));
+				    iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet));
 				    drawnMove.addPinsAndIcon(pMovePins, iStream);
                 }
 			} catch (IOException e) {
@@ -138,7 +138,7 @@ public class DetailViewActivity extends BaseActivity{
                             }
 						}
 						else {
-							//TODO coming soon Insert the videos for 1111
+                            //TODO coming soon Insert the videos for 1111
                             new VTGToast(DetailViewActivity.this).comingSoonFeature();
 						}
 					}

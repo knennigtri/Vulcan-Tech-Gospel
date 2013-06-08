@@ -37,7 +37,7 @@ public class PropMove{
 		}
 		return m13_name;
 	}
-	public String getImageFileName(String curSet){
+	public String getImageFileName(Set curSet){
 		if(curSet.equals(Set.ONETHREE)){
 			return m13_imageFileName;
 		}
@@ -47,7 +47,7 @@ public class PropMove{
 		}
 		return m13_imageFileName;
 	}
-	public String getType(String curSet){
+	public String getType(Set curSet){
 		if(curSet.equals(Set.ONETHREE)){
 			return m13_type;
 		}

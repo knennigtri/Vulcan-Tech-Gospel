@@ -19,6 +19,12 @@
     </style>
   </head>
   <body>
+    $ 2.2
+      % Version 2.2
+      _ 06-07-2013
+        * App size greatly reduced
+        * Backend upgrades for the Pro version
+        * Survey created for the VTG App
  $ 2.1
     % Version 2.1
     _ 05-22-2013

@@ -4,5 +4,6 @@
      <uses-sdk android:minSdkVersion="8"
          android:targetSdkVersion="11" />
     <application>
+        <activity android:name=".activities.SurveyActivity"/>
     </application>
 </manifest>

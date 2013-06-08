@@ -25,71 +25,148 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
-import com.nennig.vtglibrary.custobjs.MatrixID;
 import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
 import com.nennig.vtglibrary.custobjs.SingletonMovePinMap;
-import com.nennig.vtglibrary.managers.VideoManager;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity{
 	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".MainActivity";
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
 		AppManager.app_launched(MainActivity.this);
-		
-		//3:1::1:3 Button
-		final Button _1313Button = (Button) findViewById(R.id.main_3113_button);
-		_1313Button.setOnClickListener(new Button.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				saveCurSet(AppConstants.SET_1313);
-				Intent intent = new Intent(MainActivity.this,
-						SelectorActivity.class);
-				startActivity(intent);
-			}
-		});
-		
-		//1:1::1:1 Button
-		final Button _1111Button = (Button) findViewById(R.id.main_button2);
-		_1111Button.setOnClickListener(new Button.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				if(isLiteVersion())
-				{
-					AppManager.proVersionAlert(MainActivity.this);
-				}
-				else
-				{
-					saveCurSet(AppConstants.SET_1111);
-					Intent intent = new Intent(MainActivity.this,
-							SelectorActivity.class);
-					startActivity(intent);
-				}
-			}
-		});
 
-		// View PDF Button
-		final Button _button3 = (Button) findViewById(R.id.main_button3);
-		_button3.setOnClickListener(new Button.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				viewPDFList();
-			}
-		});
+        ArrayList<String> listItems=new ArrayList<String>();
+
+        listItems.add(AppConstants.SET_1313);       //0
+        listItems.add(AppConstants.SET_1111);       //1
+        listItems.add(AppConstants.SET_1515);       //2
+        listItems.add("Download The Vulcan");       //3
+        listItems.add("Help Build this app!");      //4
+        listItems.add("Learn about VTG");           //5
+        listItems.add("Join the Poi Community");    //6
+
+        final ArrayAdapter<String> aa = new ArrayAdapter<String>(this,R.layout.main_list_item,R.id.item_text,listItems);
+        ListView lv = (ListView) findViewById(R.id.main_listview);
+        lv.setAdapter(aa);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                    Intent intent;
+                    switch (pos){
+                        case 0: //13
+                            saveCurSet(AppConstants.SET_1313);
+                            intent = new Intent(MainActivity.this,
+                                    SelectorActivity.class);
+                            startActivity(intent);
+                            break;
+                        case 1: //11
+                            if(isLiteVersion())
+                            {
+                                AppManager.proVersionAlert(MainActivity.this);
+                            }
+                            else
+                            {
+                                saveCurSet(AppConstants.SET_1111);
+                                intent = new Intent(MainActivity.this,
+                                        SelectorActivity.class);
+                                startActivity(intent);
+                            }
+                            break;
+                        case 2: //15
+                            if(isLiteVersion())
+                            {
+                                AppManager.proVersionAlert(MainActivity.this);
+                            }
+                            else
+                            {
+                                Toast.makeText(MainActivity.this,
+                                        "This pro feature will be added soon.",
+                                        Toast.LENGTH_LONG).show();
+//                                saveCurSet(AppConstants.SET_1515);
+//                                intent = new Intent(MainActivity.this,
+//                                        SelectorActivity.class);
+//                                startActivity(intent);
+                            }
+                            break;
+                        case 3: //PDF
+                            viewPDFList();
+                            break;
+                        case 4: //Survey
+                            intent = new Intent(MainActivity.this,SurveyActivity.class);
+                            startActivity(intent);
+                            break;
+                        case 5: //Learn about VTG
+                            break;
+                        case 6: //Facebook Group
+                            String url = AppConstants.FACEBOOK;
+                            intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(url));
+                            startActivity(intent);
+                            break;
+                        default:
+                    }
+
+            }
+        });
+
+
+//		//3:1::1:3 Button
+//		final Button _1313Button = (Button) findViewById(R.id.main_3113_button);
+//		_1313Button.setOnClickListener(new Button.OnClickListener() {
+//			@Override
+//			public void onClick(View arg0) {
+//				saveCurSet(AppConstants.SET_1313);
+//				Intent intent = new Intent(MainActivity.this,
+//						SelectorActivity.class);
+//				startActivity(intent);
+//			}
+//		});
+//
+//		//1:1::1:1 Button
+//		final Button _1111Button = (Button) findViewById(R.id.main_button2);
+//		_1111Button.setOnClickListener(new Button.OnClickListener() {
+//			@Override
+//			public void onClick(View arg0) {
+//				if(isLiteVersion())
+//				{
+//					AppManager.proVersionAlert(MainActivity.this);
+//				}
+//				else
+//				{
+//					saveCurSet(AppConstants.SET_1111);
+//					Intent intent = new Intent(MainActivity.this,
+//							SelectorActivity.class);
+//					startActivity(intent);
+//				}
+//			}
+//		});
+//
+//		// View PDF Button
+//		final Button _button3 = (Button) findViewById(R.id.main_button3);
+//		_button3.setOnClickListener(new Button.OnClickListener() {
+//			@Override
+//			public void onClick(View arg0) {
+//				viewPDFList();
+//			}
+//		});
 
 		//Sets up the Main Image
 		ImageView mainImage = (ImageView) findViewById(R.id.main_image);
@@ -102,7 +179,7 @@ public class MainActivity extends BaseActivity {
 		}
 
 		Bitmap image = getBitmapImage(iStream,
-				Math.round((float) (displayWidth * .8)));
+                Math.round((float) (displayWidth * .8)));
 		mainImage.setImageBitmap(image);
 		
 		/*

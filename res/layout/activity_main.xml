@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
     
     <ImageView
 		    android:id="@+id/main_image"
@@ -10,7 +10,7 @@
 		    />
     
     
-     <Button
+     <!--Button
         android:id="@+id/main_3113_button"
         style="@style/ButtonText"
         android:layout_below="@id/main_image"
@@ -36,8 +36,14 @@
 		android:layout_margin="5dp"
         android:background="@drawable/black_button"
         android:text="@string/main_download_button" 
-        android:minHeight="35dp"/>
+        android:minHeight="35dp"/-->
      
-     
+     <ListView
+             android:id="@+id/main_listview"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+               android:layout_below="@id/main_image"
+             >
+     </ListView>
 
 </RelativeLayout>

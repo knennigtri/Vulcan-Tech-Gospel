@@ -33,10 +33,12 @@ import android.widget.Toast;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
+import com.nennig.constants.AppConstants.*;
 import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
 import com.nennig.vtglibrary.custobjs.SingletonMovePinMap;
+import com.nennig.vtglibrary.custobjs.VTGToast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,9 +56,9 @@ public class MainActivity extends BaseActivity{
 
         ArrayList<String> listItems=new ArrayList<String>();
 
-        listItems.add(AppConstants.SET_1313);       //0
-        listItems.add(AppConstants.SET_1111);       //1
-        listItems.add(AppConstants.SET_1515);       //2
+        listItems.add(Set.ONETHREE.toLabel());       //0
+        listItems.add(Set.ONEONE.toLabel());       //1
+        listItems.add(Set.ONEFIVE.toLabel());       //2
         listItems.add("Download The Vulcan");       //3
         listItems.add("Help Build this app!");      //4
         listItems.add("Learn about VTG");           //5
@@ -72,7 +74,7 @@ public class MainActivity extends BaseActivity{
                     Intent intent;
                     switch (pos){
                         case 0: //13
-                            saveCurSet(AppConstants.SET_1313);
+                            saveCurSet(Set.ONETHREE.toSetID());
                             intent = new Intent(MainActivity.this,
                                     SelectorActivity.class);
                             startActivity(intent);
@@ -84,7 +86,7 @@ public class MainActivity extends BaseActivity{
                             }
                             else
                             {
-                                saveCurSet(AppConstants.SET_1111);
+                                saveCurSet(Set.ONEONE.toSetID());
                                 intent = new Intent(MainActivity.this,
                                         SelectorActivity.class);
                                 startActivity(intent);
@@ -97,9 +99,7 @@ public class MainActivity extends BaseActivity{
                             }
                             else
                             {
-                                Toast.makeText(MainActivity.this,
-                                        "This pro feature will be added soon.",
-                                        Toast.LENGTH_LONG).show();
+                                new VTGToast(MainActivity.this).comingSoonProFeature();
 //                                saveCurSet(AppConstants.SET_1515);
 //                                intent = new Intent(MainActivity.this,
 //                                        SelectorActivity.class);
@@ -114,6 +114,8 @@ public class MainActivity extends BaseActivity{
                             startActivity(intent);
                             break;
                         case 5: //Learn about VTG
+                            //TODO coming soon
+                            new VTGToast(MainActivity.this).comingSoonFeature();
                             break;
                         case 6: //Facebook Group
                             String url = AppConstants.FACEBOOK;
@@ -172,7 +174,7 @@ public class MainActivity extends BaseActivity{
 		ImageView mainImage = (ImageView) findViewById(R.id.main_image);
 		InputStream iStream = null;
 		try {
-			iStream = getAssets().open(AppConstants.MAIN_IMAGE);
+			iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.MAIN_IMAGE_3D);
 		} catch (IOException e) {
 			Log.d(TAG, "MainActivity IOException");
 			Log.d(TAG, e.toString());
@@ -186,7 +188,7 @@ public class MainActivity extends BaseActivity{
 		 * Parse the db file so that the objects are ready when needed.
 		 */
 		SingletonMatrixMap.getSingletonPoiMoveMap(this);
-		SingletonMovePinMap.getSingletonMovePinMap(this, AppConstants.SET_1313);
+		SingletonMovePinMap.getSingletonMovePinMap(this);
 
 	}
 

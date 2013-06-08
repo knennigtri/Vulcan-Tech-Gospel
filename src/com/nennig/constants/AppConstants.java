@@ -5,6 +5,8 @@
 
 package com.nennig.constants;
 
+import android.widget.Toast;
+
 public class AppConstants {
 
 	/*
@@ -15,19 +17,27 @@ public class AppConstants {
 	public static final String MOVE_PROP = AppConfig.APP_TITLE_SHORT + ".moveprop";
 	
 	public static final String CUR_SET = AppConfig.APP_TITLE_SHORT + ".cur.set";
+
 	
 	
 	/*
 	 * App Constants
 	 */
 	public static final String ICON_VIEW_FOLDER = "iconView";
-	public static final String DEFAULT_ICON = "default_icon1.png";
-	public static final String MAIN_IMAGE = "mainLogo.png";
+    public static final String LOGO_FOLDER = "logos";
+	public static final String DEFAULT_ICON = "default_icon.png";
+	public static final String MAIN_IMAGE_2D = "mainLogo_2D.png";
+    public static final String MAIN_IMAGE_3D = "mainLogo_3D.png";
+    public static final String MAIN_IMAGE_2D_TRANS = "mainLogo_2D_Trans.png";
+    public static final String MAIN_IMAGE_3D_TRANS = "mainLogo_3D_Trans.png";
+    public static final String PRO_ONLY_IMAGE = "proOnlyLogo.png";
+    public static final String COMING_SOON_IMAGE = "comingSoonLogo.png";
+
 	
 	//TODO Create set constants for file identifiers
-	public static final String SET_1313 = "1:3::1:3";
-	public static final String SET_1111 = "1:1::1:1";
-    public static final String SET_1515 = "1:5::1:5";
+//	public static final String SET_1313 = "1:3::1:3";
+//	public static final String SET_1111 = "1:1::1:1";
+//    public static final String SET_1515 = "1:5::1:5";
 
 
    public enum Set{
@@ -54,10 +64,17 @@ public class AppConstants {
                return "15";
            return "13";
        }
+        public String toLabel(){
+            if(this.equals(ONEONE))
+                return "1:1::1:1";
+            if(this.equals(ONEFIVE))
+                return "1:5::1:5";
+            return "1:3::1:3";
+        }
        public static Set getSet(String str){
-           if(str.equals(SET_1111))
+           if(str.equals(ONEONE.toString()) || str.equals(ONEONE.toSetID()) || str.equals(ONEONE.name()))
                return ONEONE;
-           if(str.equals(SET_1515))
+           if(str.equals(ONEFIVE.toString()) || str.equals(ONEFIVE.toSetID()) || str.equals(ONEFIVE.name()))
                return ONEFIVE;
            else
                return ONETHREE;
@@ -134,19 +151,24 @@ public class AppConstants {
     		"bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted";
     public static String FACEBOOK = "https://www.facebook.com/groups/113059425470308/";
     
-    public static String setTitleString(boolean isLite, String curSet){
+    public static String setTitleString(boolean isLite, Set curSet){
 	   if(isLite){
-		   if(curSet.equals(AppConstants.SET_1313))
-			   return AppConfig.APP_TITLE_SHORT + " Lite - 1:3::1:3";
-		   if(curSet.equals(AppConstants.SET_1111))
-			   return AppConfig.APP_TITLE_SHORT + " Lite - 1:1::1:1";
+		   if(curSet.equals(Set.ONETHREE))
+			   return AppConfig.APP_TITLE_SHORT + " Lite - " + Set.ONETHREE.toLabel();
+		   if(curSet.equals(Set.ONEONE))
+			   return AppConfig.APP_TITLE_SHORT + " Lite - " + Set.ONEONE.toLabel();
+           if(curSet.equals(Set.ONEFIVE))
+               return AppConfig.APP_TITLE_SHORT + " Lite - " + Set.ONEFIVE.toLabel();
 	   }
-	   if(curSet.equals(AppConstants.SET_1313))
-		   return AppConfig.APP_TITLE_SHORT + " Pro - 1:3::1:3";
-	   if(curSet.equals(AppConstants.SET_1111))
-		   return AppConfig.APP_TITLE_SHORT + " Pro - 1:1::1:1";
+	   if(curSet.equals(Set.ONETHREE))
+		   return AppConfig.APP_TITLE_SHORT + " Pro - " + Set.ONETHREE.toLabel();
+	   if(curSet.equals(Set.ONEONE))
+		   return AppConfig.APP_TITLE_SHORT + " Pro - " + Set.ONEONE.toLabel();
+        if(curSet.equals(Set.ONEFIVE))
+            return AppConfig.APP_TITLE_SHORT + " Pro - " + Set.ONEFIVE.toLabel();
 	   return AppConfig.APP_TITLE_SHORT;
    }
+
 }
 
 

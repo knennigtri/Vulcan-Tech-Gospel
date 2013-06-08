@@ -40,18 +40,18 @@ public class SingletonMovePinMap {
 
 	//For debugging dbFile ONLY-------
 	public static void main(String[] args) {
-		String location = "D:\\My Documents\\workspace\\Vulcan Tech Gospel\\assets\\1313_move_db.csv";
-		final SingletonMovePinMap obj = SingletonMovePinMap.getSingletonMovePinMap(location, "1313");
+		String location = "D:\\My Documents\\workspace\\Vulcan Tech Gospel\\assets\\move_pins_db.csv";
+		final SingletonMovePinMap obj = SingletonMovePinMap.getSingletonMovePinMap(location);
 		for(MovePins mp : obj.movePinMap.values()){
 			System.out.println(mp.toString());
 		}
 	}
 	
-	public static SingletonMovePinMap getSingletonMovePinMap(final Object obj, final String set){
+	public static SingletonMovePinMap getSingletonMovePinMap(final Object obj){
 		if(ref == null){
 			parserThread = new Thread(new Runnable() {
 		        public void run() {
-		        	ref = new SingletonMovePinMap(obj, set);
+		        	ref = new SingletonMovePinMap(obj);
 		        }
 		    });
 			parserThread.start();
@@ -63,16 +63,16 @@ public class SingletonMovePinMap {
 	 * Creating a factory object so that it can be parsed from Context or from String. *Strictly for debugging purposes.
 	 * @param obj
 	 */
-	private SingletonMovePinMap(Object obj, String set){
+	private SingletonMovePinMap(Object obj){
 		if(obj != null){
 			if(obj instanceof Context)
-				createSingleton((Context) obj, set);
+				createSingleton((Context) obj);
 			if(obj instanceof String)
-				createSingleton((String) obj, set);
+				createSingleton((String) obj);
 		}
 	}
 	
-	private void createSingleton(String str, String set){
+	private void createSingleton(String str){
 		try{
 			BufferedReader bR = new BufferedReader(new FileReader(str));
 			parseDBInfo(bR);
@@ -80,7 +80,7 @@ public class SingletonMovePinMap {
 			Log.d(TAG, "" + e.getMessage());
 		}
 	}
-	private void createSingleton(Context c, String set){
+	private void createSingleton(Context c){
 		try{
 			InputStream iS = c.getAssets().open(move_db);
 			InputStreamReader iSR = new InputStreamReader(iS);
@@ -107,8 +107,7 @@ public class SingletonMovePinMap {
 
 	/**
 	 * This method parses the csv file and puts it into a hashmap of PoiMoves Objects
-	 * @param c
-	 */
+     */
 	private void parseDBInfo(BufferedReader bR){
 		boolean readHeaders = true;
 		try {

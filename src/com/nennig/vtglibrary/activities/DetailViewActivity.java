@@ -15,12 +15,14 @@ import android.view.View.OnTouchListener;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.AbsListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
+import com.nennig.constants.AppConstants.Set;
 import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.custobjs.MatrixID;
@@ -28,8 +30,10 @@ import com.nennig.vtglibrary.custobjs.MovePins;
 import com.nennig.vtglibrary.custobjs.PropMove;
 import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
 import com.nennig.vtglibrary.custobjs.SingletonMovePinMap;
+import com.nennig.vtglibrary.custobjs.VTGToast;
 import com.nennig.vtglibrary.draw.VTGMove;
 import com.nennig.vtglibrary.managers.VideoManager;
+import com.nennig.vtglibrary.prologic.proDetailView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +43,7 @@ public class DetailViewActivity extends BaseActivity{
 	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".DetialViewActivity";
 
 	private MatrixID _curMatrixID;
-    private String _curSet = "";
+    private AppConstants.Set _curSet;
     
     static PropMove pMove = new PropMove();
     
@@ -57,8 +61,9 @@ public class DetailViewActivity extends BaseActivity{
         //Get the current set and matrixID for this detail view
         SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
         _curMatrixID = new MatrixID(sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0"));
-        _curSet = sP.getString(AppConstants.CUR_SET, AppConstants.SET_1313);
+        _curSet = AppConstants.Set.getSet(sP.getString(AppConstants.CUR_SET, Set.ONETHREE.toSetID()));
         Log.d(TAG, "Cur Matrix " + _curMatrixID);
+
         
         //Get the singleton and get the information for the detail view
   		SingletonMatrixMap sPoi = SingletonMatrixMap.getSingletonPoiMoveMap(this);
@@ -71,61 +76,70 @@ public class DetailViewActivity extends BaseActivity{
         setTitle(AppConstants.setTitleString(isLiteVersion(), _curSet));
 		
 		//Get the singleton to create the move view for this matrixID
-  		SingletonMovePinMap sMovePins = SingletonMovePinMap.getSingletonMovePinMap(this, _curSet);
+  		SingletonMovePinMap sMovePins = SingletonMovePinMap.getSingletonMovePinMap(this);
   		MovePins pMovePins = sMovePins.getMovePins(_curMatrixID.toString());
 		
 		//Set the move pins to the move view
   		VTGMove drawnMove = (VTGMove) findViewById(R.id.detail_customMoveDraw);
         drawnMove.setBackgroundResource(R.color.trans);
 
-  		if(isLiteVersion() && _curSet.equals(AppConstants.SET_1111)){
+  		if(isLiteVersion() && !_curSet.equals(Set.ONETHREE)){
   			drawnMove.removePinsAndIcon();
   			InputStream iStream;
 			try {
-				iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + AppConstants.DEFAULT_ICON);
+				iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.PRO_ONLY_IMAGE);
 				drawnMove.addDefaultIcon(iStream);
 			} catch (IOException e) {
 				Log.d(TAG,e.getMessage());
 			}
-  			
-  			drawnMove.setOnTouchListener(null);
+            drawnMove.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if(((VTGMove) v).iconIsTouched(event.getX(), event.getY())){
+                        AppManager.proVersionAlert(DetailViewActivity.this);
+                    }
+                    return false;
+                }
+            });
   		}
   		else
   		{
   			drawnMove.removeDefaultIcon();
-  			
 	  		InputStream iStream;
 			try {
-				iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet));
-				drawnMove.addPinsAndIcon(pMovePins, iStream);
+                if(_curSet.equals(Set.ONEFIVE))//TODO coming soon
+                {
+                    new VTGToast(this).comingSoonFeature();
+                    iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.COMING_SOON_IMAGE);
+                    drawnMove.addDefaultIcon(iStream);
+                }
+                else
+                {
+				    iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet.toSetID()));
+				    drawnMove.addPinsAndIcon(pMovePins, iStream);
+                }
 			} catch (IOException e) {
 				drawnMove.addPins(pMovePins);
 			}
-	  		
+            //TODO Maybe implement someday....
+//            drawnMove = proDetailView.setUpIconAndPins(DetailViewActivity.this, _curMatrixID, _curSet, drawnMove);
+
 			drawnMove.setOnTouchListener(new OnTouchListener() {
 				@Override
 				public boolean onTouch(View v, MotionEvent event) {
 					if(((VTGMove) v).iconIsTouched(event.getX(), event.getY())){
-						if(_curSet.equals(AppConstants.SET_1313)){
+						if(_curSet.equals(Set.ONETHREE)){
                             if(isLiteVersion())
-							    new VideoManager(DetailViewActivity.this,VideoActivity.class, AppConstants.Set.getSet(_curSet),
+							    new VideoManager(DetailViewActivity.this,VideoActivity.class, AppConstants.Set.getSet(_curSet.toSetID()),
                                     _curMatrixID, AppConstants.PropType.getPropType(0)).execute();
                             else
                             {
-                                int propID = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE).getInt(AppConstants.MOVE_PROP,0);
-                                //TODO Change when making more videos
-                                if(propID == 0)
-                                    new VideoManager(DetailViewActivity.this,VideoActivity.class, AppConstants.Set.getSet(_curSet),
-                                            _curMatrixID, AppConstants.PropType.getPropType(propID)).execute();
-                                else
-                                    Toast.makeText(DetailViewActivity.this,
-                                            "This pro feature will be added soon.",
-                                            Toast.LENGTH_LONG).show();
+                                proDetailView.touchIcon(DetailViewActivity.this,_curSet,_curMatrixID);
                             }
 						}
 						else {
-							//TODO Insert the videos for 1111
-							Toast.makeText(DetailViewActivity.this, "Videos will be available soon!", Toast.LENGTH_SHORT).show();
+							//TODO coming soon Insert the videos for 1111
+                            new VTGToast(DetailViewActivity.this).comingSoonFeature();
 						}
 					}
 					return false;
@@ -153,9 +167,9 @@ public class DetailViewActivity extends BaseActivity{
 				
 		//Set the Image Name
 		TextView detailTV = (TextView) findViewById(R.id.detail_moveName);
-		if(pMove.getName(_curSet).length()>57)
+		if(pMove.getName(_curSet.toSetID()).length()>57)
 			detailTV.setTextSize(15);
-		detailTV.setText(pMove.getName(_curSet));
+		detailTV.setText(pMove.getName(_curSet.toSetID()));
 	}
 	
 	private Animation mInFromRight;
@@ -239,19 +253,23 @@ public class DetailViewActivity extends BaseActivity{
         }
     }
 	
-	public String getNextSet(){
-		if(_curSet.equals(AppConstants.SET_1111))
-			return AppConstants.SET_1313;
-		if(_curSet.equals(AppConstants.SET_1313))
-			return AppConstants.SET_1111;
-		return AppConstants.SET_1313;
+	public Set getPreviousSet(){
+		if(_curSet.equals(Set.ONEONE))
+			return Set.ONEFIVE;
+		if(_curSet.equals(Set.ONEFIVE))
+			return Set.ONETHREE;
+        if(_curSet.equals(Set.ONETHREE))
+            return Set.ONEONE;
+		return Set.ONETHREE;
 	}
-	public String getPreviousSet(){
-		if(_curSet.equals(AppConstants.SET_1111))
-			return AppConstants.SET_1313;
-		if(_curSet.equals(AppConstants.SET_1313))
-			return AppConstants.SET_1111;
-		return AppConstants.SET_1313;
+	public Set getNextSet(){
+        if(_curSet.equals(Set.ONEONE))
+            return Set.ONETHREE;
+        if(_curSet.equals(Set.ONETHREE))
+            return Set.ONEFIVE;
+        if(_curSet.equals(Set.ONEFIVE))
+            return Set.ONEONE;
+        return Set.ONETHREE;
 	}
 
     @Override
@@ -259,7 +277,7 @@ public class DetailViewActivity extends BaseActivity{
         if(item.getItemId() == R.id.menu_share)
         {
             String name;
-            if(_curSet.equals(AppConstants.SET_1111))
+            if(_curSet.equals(Set.ONEONE))
                 name = pMove.m11_name;
             else
                 name = pMove.m13_name;

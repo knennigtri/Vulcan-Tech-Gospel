@@ -4,6 +4,7 @@
 package com.nennig.vtglibrary.custobjs;
 
 import com.nennig.constants.AppConstants;
+import com.nennig.constants.AppConstants.*;
 
 /**
  * @author Kevin Nennig (knennig213@gmail.com)
@@ -27,50 +28,50 @@ public class PropMove{
 	public String m11_drawY;
 	
 	public String getName(String curSet){
-		if(curSet.equals(AppConstants.SET_1313)){
+		if(curSet.equals(Set.ONETHREE)){
 			return m13_name;
 		}
-		else if(curSet.equals(AppConstants.SET_1111))
+		else if(curSet.equals(Set.ONEONE))
 		{
 			return m11_name;
 		}
 		return m13_name;
 	}
 	public String getImageFileName(String curSet){
-		if(curSet.equals(AppConstants.SET_1313)){
+		if(curSet.equals(Set.ONETHREE)){
 			return m13_imageFileName;
 		}
-		else if(curSet.equals(AppConstants.SET_1111))
+		else if(curSet.equals(Set.ONEONE))
 		{
 			return m11_imageFileName;
 		}
 		return m13_imageFileName;
 	}
 	public String getType(String curSet){
-		if(curSet.equals(AppConstants.SET_1313)){
+		if(curSet.equals(Set.ONETHREE)){
 			return m13_type;
 		}
-		else if(curSet.equals(AppConstants.SET_1111))
+		else if(curSet.equals(Set.ONEONE))
 		{
 			return m11_type;
 		}
 		return m13_type;
 	}
 	public String getDrawX(String curSet){
-		if(curSet.equals(AppConstants.SET_1313)){
+		if(curSet.equals(Set.ONETHREE)){
 			return m13_drawX;
 		}
-		else if(curSet.equals(AppConstants.SET_1111))
+		else if(curSet.equals(Set.ONEONE))
 		{
 			return m11_drawX;
 		}
 		return m13_drawX;
 	}
 	public String getDrawY(String curSet){
-		if(curSet.equals(AppConstants.SET_1313)){
+		if(curSet.equals(Set.ONETHREE)){
 			return m13_drawY;
 		}
-		else if(curSet.equals(AppConstants.SET_1111))
+		else if(curSet.equals(Set.ONEONE))
 		{
 			return m11_drawY;
 		}

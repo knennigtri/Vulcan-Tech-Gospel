@@ -19,6 +19,7 @@ import android.widget.Spinner;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
+import com.nennig.constants.AppConstants.Set;
 import com.nennig.constants.AppManager;
 import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.custobjs.MatrixID;
@@ -38,7 +39,7 @@ public class SelectorActivity extends BaseActivity {
 	RelativeLayout mainLayout;
 
 	private static SingletonMatrixMap sPoiMap;
-	private String _curSet = "";
+	private Set _curSet;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public class SelectorActivity extends BaseActivity {
 		Log.d(TAG, "sPropMap: " + sPoiMap.toString());
 		
 		SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
-		_curSet = sP.getString(AppConstants.CUR_SET, AppConstants.SET_1313);
+		_curSet = Set.getSet(sP.getString(AppConstants.CUR_SET, Set.ONETHREE.toSetID()));
         
 		setTitle(AppConstants.setTitleString(isLiteVersion(), _curSet));
 		
@@ -151,7 +152,7 @@ public class SelectorActivity extends BaseActivity {
 			//If the position is real, then load the icon, else load the default icon
 			if(positionExists){
 				Log.d(TAG,"Current Set: " + _curSet);
-				iconName = pm.getImageFileName(_curSet);
+				iconName = pm.getImageFileName(_curSet.toSetID());
 			}
 			else
 			{

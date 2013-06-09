@@ -1,7 +1,7 @@
 package com.nennig.vtglibrary.activities;
 
-
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,9 +15,7 @@ import android.view.View.OnTouchListener;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.AbsListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.nennig.constants.AppConfig;
@@ -46,7 +44,7 @@ public class DetailViewActivity extends BaseActivity{
     private AppConstants.Set _curSet;
     
     static PropMove pMove = new PropMove();
-    
+
     //For Testing Purposes ONLY
 //    static {
 //    	pMove.m13_name = "This is m13";

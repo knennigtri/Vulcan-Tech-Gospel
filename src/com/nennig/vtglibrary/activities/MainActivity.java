@@ -52,8 +52,22 @@ public class MainActivity extends BaseActivity{
 		
 		AppManager.app_launched(MainActivity.this);
 
-        ArrayList<String> listItems=new ArrayList<String>();
+        /*Sets up the Main Image*/
+        ImageView mainImage = (ImageView) findViewById(R.id.main_image);
+        InputStream iStream = null;
+        try {
+            iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.MAIN_IMAGE_3D);
+        } catch (IOException e) {
+            Log.d(TAG, "MainActivity IOException");
+            Log.d(TAG, e.toString());
+        }
 
+        Bitmap image = getBitmapImage(iStream,
+                Math.round((float) (displayWidth * .8)));
+        mainImage.setImageBitmap(image);
+
+        /*Sets up the list of options*/
+        ArrayList<String> listItems=new ArrayList<String>();
         listItems.add(Set.ONETHREE.toLabel());       //0
         listItems.add(Set.ONEONE.toLabel());       //1
         listItems.add(Set.ONEFIVE.toLabel());       //2
@@ -66,6 +80,8 @@ public class MainActivity extends BaseActivity{
         ListView lv = (ListView) findViewById(R.id.main_listview);
         lv.setAdapter(aa);
 
+        lv.setFadingEdgeLength(10);
+        lv.setVerticalFadingEdgeEnabled(true);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
@@ -167,20 +183,6 @@ public class MainActivity extends BaseActivity{
 //				viewPDFList();
 //			}
 //		});
-
-		//Sets up the Main Image
-		ImageView mainImage = (ImageView) findViewById(R.id.main_image);
-		InputStream iStream = null;
-		try {
-			iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.MAIN_IMAGE_3D);
-		} catch (IOException e) {
-			Log.d(TAG, "MainActivity IOException");
-			Log.d(TAG, e.toString());
-		}
-
-		Bitmap image = getBitmapImage(iStream,
-                Math.round((float) (displayWidth * .8)));
-		mainImage.setImageBitmap(image);
 		
 		/*
 		 * Parse the db file so that the objects are ready when needed.

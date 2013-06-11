@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.nennig.constants.AppConfig;
+import com.nennig.constants.AppConstants.*;
 
 import android.content.Context;
 import android.util.Log;
@@ -41,19 +42,19 @@ public class SingletonMatrixMap {
 	
 	public static SingletonMatrixMap getSingletonPoiMoveMap(final Object obj){
 		if(ref == null){
-			parserThread = new Thread(new Runnable() {
-		        public void run() {
+//			parserThread = new Thread(new Runnable() {
+//		        public void run() {
 		        	ref = new SingletonMatrixMap(obj);	        	
-		        }
-		    });
-			parserThread.start();
+//		        }
+//		    });
+//			parserThread.start();
 		}
 		return ref;
 	}
 	
-	public static boolean ThreadFinished(){
-		return parserThread.isAlive();
-	}
+//	public static boolean ThreadFinished(){
+//		return parserThread.isAlive();
+//	}
 	
 	/**
 	 * Creating a factory object so that it can be parsed from Context or from String. *Strictly for debugging purposes.
@@ -98,7 +99,7 @@ public class SingletonMatrixMap {
 		      String[] nextLineParse;
 		      
 		      while ((nextLineStr = bR.readLine()) != null) {
-//		    	  Log.d(TAG, "LINE: " + nextLineStr);
+		    	  Log.d(TAG, "LINE: " + nextLineStr);
 		    	  nextLineParse = nextLineStr.split(",");
 	    		  
 		    	  if(readHeaders){
@@ -108,12 +109,12 @@ public class SingletonMatrixMap {
 		    	  else
 		    	  {
 			    	  PropMove pM = parsePoiMoveLine(nextLineParse);
-//			    	  Log.d(TAG, "PM: " + pM.toString());
-		    		  poiMoveMap.put(pM.moveID, pM);
+			    	  Log.d(TAG, "PM: " + pM.getMoveID().toString());
+		    		  poiMoveMap.put(pM.getMoveID().toString(), pM);
 		    	  }
 		      }
 		} catch (Exception e) {
-			Log.d(TAG, "Exception: " + e.toString());
+			Log.d(TAG, "parseDBInfo Exception: " + e.toString());
 		}finally{
 			 Log.d(TAG,"Finished Parse");
 		}
@@ -125,18 +126,22 @@ public class SingletonMatrixMap {
 	 * @return - new PropMove
 	 */
 	private PropMove parsePoiMoveLine(String[] nextLineParse) {
-		PropMove pM = new PropMove();  
+		PropMove pm = new PropMove();
 		for(int i = 0; i < nextLineParse.length; i++)
 		{
-			for(Field field : pM.getClass().getFields()){
-				if(headerIndexMap.get(getDBColumnName(field.getName())).equals(i))
-				{
-					pM.add(field.getName(),nextLineParse[i]);
-					break;
-				}
+            for(String field : pm.getDBFields()){
+                String index = getDBColumnName(field);
+                if(index != ""){ //skips any PropMove fields that are not DB fields
+                    if(headerIndexMap.get(index).equals(i))
+                    {
+                        Log.d(TAG, "parsePoiMoveLine adding: " + field);
+                        pm.add(field,nextLineParse[i]);
+                        break;
+                    }
+                }
 			}
 		}
-		return pM;
+		return pm;
 	}
 
 	/**
@@ -145,8 +150,8 @@ public class SingletonMatrixMap {
 	private void createIndexMap(){
 		PropMove pm = new PropMove();
 		//iterates through all fields in the PropMove class so that the indexes for each field can be found in the db file
-		for(Field field : pm.getClass().getFields()){
-			String columnName = getDBColumnName(field.getName());
+		for(String field : pm.getDBFields()){
+			String columnName = getDBColumnName(field);
 			if(!columnName.equals(""))
 				headerIndexMap.put(columnName,-1);
 		}
@@ -193,15 +198,15 @@ public class SingletonMatrixMap {
 		Log.d(TAG,"Headers: " + headerIndexMap.toString());
 	}
 
-	public PropMove getPoiMove(String moveID){
-		return poiMoveMap.get(moveID.toLowerCase());
+	public PropMove getPoiMove(MatrixID moveID){
+		return poiMoveMap.get(moveID.toString());
 	}
 	
 	@Override
 	public String toString(){
 		String str = "{";
 		for(PropMove pm : poiMoveMap.values()){
-			str = str + "; " + pm.moveID;
+			str = str + "; " + pm.getMoveID();
 		}
 		str = str + "}";
 		return str;

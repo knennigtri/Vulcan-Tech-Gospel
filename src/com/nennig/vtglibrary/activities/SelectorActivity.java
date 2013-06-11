@@ -62,11 +62,12 @@ public class SelectorActivity extends BaseActivity {
         _posIvMatrix[1] = (ImageView) findViewById(R.id.prop_pos_1);
         _posIvMatrix[2] = (ImageView) findViewById(R.id.prop_pos_2);
         _posIvMatrix[3] = (ImageView) findViewById(R.id.prop_pos_3);
-        _propType = "";
-        _handType = "";
+        _propType = MatrixID.MCategory.getStringLongFromIndex(0);
+        _handType = MatrixID.MCategory.getStringLongFromIndex(0);
         _prevPoiType = "";
         _prevHandType = "";
         _propSinner.setSelection(0);
+        _handSpinner.setSelection(0);
         
         refreshIcons();
         
@@ -147,12 +148,12 @@ public class SelectorActivity extends BaseActivity {
 					positionExists = true;
 			}
 			matrixID = new MatrixID(hTIndex, pTIndex, posIndex);
-			PropMove pm = sPoiMap.getPoiMove(matrixID.toString()); //Get the PropMove info from the PoiMap
-			
+			PropMove pm = sPoiMap.getPoiMove(matrixID); //Get the PropMove info from the PoiMap
+
 			//If the position is real, then load the icon, else load the default icon
 			if(positionExists){
-				Log.d(TAG,"Current Set: " + _curSet);
-				iconName = pm.getImageFileName(_curSet);
+				iconName = pm.getImageFileName(_curSet) + "." + pm.get_fileExt(_curSet);
+                Log.d(TAG,"FName: " + iconName);
 			}
 			else
 			{

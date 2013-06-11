@@ -31,7 +31,6 @@ public class VideoActivity extends BaseActivity {
 	private static final String TAG = AppConfig.APP_TITLE + ".DetialViewActivity";
 	
     boolean play = true;
-    String _curMatrixIDStr = "";
     Set _curSet;
     VideoView vView;
     
@@ -46,22 +45,21 @@ public class VideoActivity extends BaseActivity {
         setContentView(R.layout.activity_video);
         
         final SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
-        _curMatrixIDStr = sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0");
+        _curMatrixID = new MatrixID(sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0"));
 		_curSet = Set.getSet(getIntent().getExtras().getString(AppConstants.CUR_SET,Set.ONETHREE.toSetID()));
 		if(_curSet == null)
 			_curSet = Set.ONETHREE;
         
         //Create the singleton and get the information for the detail view
   		SingletonMatrixMap sPoi = SingletonMatrixMap.getSingletonPoiMoveMap(this);
-  		PropMove pMove = sPoi.getPoiMove(_curMatrixIDStr);
+  		PropMove pMove = sPoi.getPoiMove(_curMatrixID);
         
         Log.d(TAG, "videoPropIndex: " + videoPropIndex);
         
         //Set Video Name
         TextView tvName = (TextView) findViewById(R.id.video_moveName);
-        tvName.setText(pMove.getName(_curSet.toSetID()));
+        tvName.setText(pMove.getName(_curSet));
         TextView tvMove = (TextView) findViewById(R.id.video_move_hand_prop);
-        _curMatrixID = new MatrixID(_curMatrixIDStr);
         tvMove.setText("Hand: " + MatrixID.MCategory.getStringAbbrFromIndex(_curMatrixID.getHandID()) +
         		"  Prop: " + MatrixID.MCategory.getStringAbbrFromIndex(_curMatrixID.getPropID())
         		);

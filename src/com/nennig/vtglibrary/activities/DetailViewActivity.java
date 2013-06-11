@@ -65,7 +65,7 @@ public class DetailViewActivity extends BaseActivity{
         
         //Get the singleton and get the information for the detail view
   		SingletonMatrixMap sPoi = SingletonMatrixMap.getSingletonPoiMoveMap(this);
-  		pMove = sPoi.getPoiMove(_curMatrixID.toString());
+  		pMove = sPoi.getPoiMove(_curMatrixID);
   		
   		setupMove();
 	}
@@ -113,7 +113,8 @@ public class DetailViewActivity extends BaseActivity{
                 }
                 else
                 {
-				    iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet));
+				    iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet) +
+                            "_3D." + pMove.get_fileExt(_curSet));
 				    drawnMove.addPinsAndIcon(pMovePins, iStream);
                 }
 			} catch (IOException e) {
@@ -165,9 +166,9 @@ public class DetailViewActivity extends BaseActivity{
 				
 		//Set the Image Name
 		TextView detailTV = (TextView) findViewById(R.id.detail_moveName);
-		if(pMove.getName(_curSet.toSetID()).length()>57)
+		if(pMove.getName(_curSet).length()>57)
 			detailTV.setTextSize(15);
-		detailTV.setText(pMove.getName(_curSet.toSetID()));
+		detailTV.setText(pMove.getName(_curSet));
 	}
 	
 	private Animation mInFromRight;
@@ -274,11 +275,7 @@ public class DetailViewActivity extends BaseActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.menu_share)
         {
-            String name;
-            if(_curSet.equals(Set.ONEONE))
-                name = pMove.m11_name;
-            else
-                name = pMove.m13_name;
+            String name = pMove.getName(_curSet);
             AppManager.share(this, "Checking out the " + name +
                     " move in the new Vulcan Tech Gospel App. " + AppConfig.appOnGPlayURL);
             return true;

@@ -10,10 +10,12 @@ import com.nennig.constants.AppConfig;
 import java.util.ArrayList;
 
 /**
+ * This class holds the UID for all of the placement in the matrix. The UID follows the following format
+ * <Hand Position ID>x<Prop Position ID>x<Move Position ID>
  * @author Kevin Nennig (knennig213@gmail.com)
  *
  */
-public class MatrixID {
+public class MatrixID{
 	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".MatrixID";
 	private int propID;
 	private int handID;
@@ -44,7 +46,21 @@ public class MatrixID {
 
     @Override
     public String toString(){
-        return handID + delim + propID + delim + posID;
+        return new String(handID + delim + propID + delim + posID);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof MatrixID))
+            return false;
+        MatrixID other = (MatrixID) obj;
+        if(other.toString().equals(this.toString()))
+            return true;
+        return false;
     }
 	
 	/**

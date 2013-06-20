@@ -70,24 +70,6 @@ public class AppManager {
                 showRateDialog(c, editor);
             }
         }
-
-        /*
-         * Checks if there was an update in the app. If there was the update message is displayed
-         */
-//    	PackageInfo pInfo;
-//    	try {
-//            pInfo = c.getPackageManager().getPackageInfo(c.getPackageName(), PackageManager.GET_META_DATA);
-//            long vCode =  pInfo.versionCode;
-//            if (prefs.getLong(PREV_VERSION_CODE, 0) < vCode) {
-//                showVersionUpdateDialog(c,vCode);
-//                editor = prefs.edit();
-//                editor.putLong(PREV_VERSION_CODE, vCode);
-//                editor.commit();
-//            }
-//        } catch (PackageManager.NameNotFoundException e) {
-//            Log.e(TAG , "Error reading versionCode");
-//            e.printStackTrace();
-//        }
         
         ChangeLog cl = new ChangeLog(c);
         if (cl.firstRun())
@@ -95,8 +77,8 @@ public class AppManager {
 //        cl.getFullLogDialog().show();
         
         editor.commit();
-    }   
-    
+    }
+
     /**
      * Inflater to show updates to the app.
      * @param c

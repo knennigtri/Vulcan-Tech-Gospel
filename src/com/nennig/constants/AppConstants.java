@@ -17,7 +17,7 @@ public class AppConstants {
 	public static final String MOVE_PROP = AppConfig.APP_TITLE_SHORT + ".moveprop";
 	
 	public static final String CUR_SET = AppConfig.APP_TITLE_SHORT + ".cur.set";
-
+    public static final String DV_FIRSTTIME = AppConfig.APP_TITLE_SHORT + ".detailViewfirstTime";
 	
 	
 	/*

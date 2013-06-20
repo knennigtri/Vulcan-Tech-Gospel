@@ -21,7 +21,9 @@
   <body>
     $ 2.2
       % Version 2.2
-      _ 06-07-2013
+      _ 06-19-2013
+        * Pro version to be released by end of June!
+        * Main Menu changed to a list
         * App size greatly reduced
         * Backend upgrades for the Pro version
         * Survey created for the VTG App

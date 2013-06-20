@@ -2,6 +2,8 @@ package com.nennig.vtglibrary.activities;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -62,6 +64,8 @@ public class DetailViewActivity extends BaseActivity{
         _curSet = AppConstants.Set.getSet(sP.getString(AppConstants.CUR_SET, Set.ONETHREE.toSetID()));
         Log.d(TAG, "Cur Matrix " + _curMatrixID);
 
+        if(sP.getBoolean(AppConstants.DV_FIRSTTIME, true))
+            firstRunOfActivity(sP);
         
         //Get the singleton and get the information for the detail view
   		SingletonMatrixMap sPoi = SingletonMatrixMap.getSingletonPoiMoveMap(this);
@@ -69,8 +73,24 @@ public class DetailViewActivity extends BaseActivity{
   		
   		setupMove();
 	}
-	
-	private void setupMove(){
+
+    private void firstRunOfActivity(SharedPreferences sPref) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("New Feature!");
+        alert.setMessage("In the pro version you will be able to swipe through 1:1, 1:3, and 1:5 sets " +
+                "that have the same Hand/Prop. You can try this feature out on the Lite version by just " +
+                "swiping the image and see what happens!");
+
+        alert.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+            }
+        });
+        alert.show();
+        sPref.edit().putBoolean(AppConstants.DV_FIRSTTIME,false).commit();
+    }
+
+    private void setupMove(){
         setTitle(AppConstants.setTitleString(isLiteVersion(), _curSet));
 		
 		//Get the singleton to create the move view for this matrixID

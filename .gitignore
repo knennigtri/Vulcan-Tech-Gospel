@@ -23,6 +23,7 @@
 # generated files
 bin/
 gen/
+out/
 
 #raw files
 raw data/

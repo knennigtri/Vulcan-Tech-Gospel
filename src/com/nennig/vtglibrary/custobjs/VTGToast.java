@@ -19,7 +19,7 @@ public class VTGToast extends Toast {
     }
 
     public void comingSoonProFeature(){
-        makeText(c, "This pro feature will be added soon!", this.LENGTH_LONG).show();
+        makeText(c, "This pro feature will be added in a later update", this.LENGTH_LONG).show();
     }
 
     public void proOnlyFeature(){

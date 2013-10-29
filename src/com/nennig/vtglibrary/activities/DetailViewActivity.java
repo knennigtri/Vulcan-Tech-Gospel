@@ -33,7 +33,6 @@ import com.nennig.vtglibrary.custobjs.SingletonMovePinMap;
 import com.nennig.vtglibrary.custobjs.VTGToast;
 import com.nennig.vtglibrary.draw.VTGMove;
 import com.nennig.vtglibrary.managers.VideoManager;
-import com.nennig.vtglibrary.prologic.proDetailView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -101,7 +100,7 @@ public class DetailViewActivity extends BaseActivity{
   		VTGMove drawnMove = (VTGMove) findViewById(R.id.detail_customMoveDraw);
         drawnMove.setBackgroundResource(R.color.trans);
 
-  		if(isLiteVersion() && !_curSet.equals(Set.ONETHREE)){
+  		if(isLiteVersion() && !_curSet.equals(Set.ONETHREE)){ //Lite Statement
   			drawnMove.removePinsAndIcon();
   			InputStream iStream;
 			try {
@@ -120,12 +119,12 @@ public class DetailViewActivity extends BaseActivity{
                 }
             });
   		}
-  		else
+  		else //Pro Statement
   		{
   			drawnMove.removeDefaultIcon();
 	  		InputStream iStream;
 			try {
-                if(_curSet.equals(Set.ONEFIVE))//TODO coming soon
+                if(_curSet.equals(Set.ONEFIVE))//TODO 1:5 Coming Soon
                 {
                     drawnMove.removePinsAndIcon();
                     iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.COMING_SOON_IMAGE);
@@ -134,32 +133,57 @@ public class DetailViewActivity extends BaseActivity{
                 else
                 {
 				    iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet) +
-                            "_3D." + pMove.get_fileExt(_curSet));
+                           "." + pMove.get_fileExt(_curSet));
 				    drawnMove.addPinsAndIcon(pMovePins, iStream);
                 }
 			} catch (IOException e) {
 				drawnMove.addPins(pMovePins);
 			}
-            //TODO Maybe implement someday....
-//            drawnMove = proDetailView.setUpIconAndPins(DetailViewActivity.this, _curMatrixID, _curSet, drawnMove);
 
 			drawnMove.setOnTouchListener(new OnTouchListener() {
 				@Override
 				public boolean onTouch(View v, MotionEvent event) {
 					if(((VTGMove) v).iconIsTouched(event.getX(), event.getY())){
-						if(_curSet.equals(Set.ONETHREE)){
-                            if(isLiteVersion())
-							    new VideoManager(DetailViewActivity.this,VideoActivity.class, AppConstants.Set.getSet(_curSet.toSetID()),
+						//Save new set
+			          //  getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE).edit().putString(AppConstants.CUR_SET, _curSet.toString()).commit();
+						
+//			            if(_curSet.equals(Set.ONETHREE) || _curSet.equals(Set.ONEONE)){
+//                            if(isLiteVersion())
+//							    new VideoManager(DetailViewActivity.this,VideoActivity.class, AppConstants.Set.getSet(_curSet.toSetID()),
+//                                    _curMatrixID, AppConstants.PropType.getPropType(0)).execute();
+//                            else
+//                            {
+//                                int propID = getSharedPreferences(AppConstants.VTG_PREFS, BaseActivity.MODE_PRIVATE).getInt(AppConstants.MOVE_PROP,0);
+//                                //TODO Change when making Clubs, Staff, and Hoops Videos
+//                                if(propID == 0)//lock for only showing the poi videos that are made
+//                                    new VideoManager(DetailViewActivity.this,VideoActivity.class, _curSet,
+//                                    		_curMatrixID, AppConstants.PropType.getPropType(0)).execute();
+//                                else
+//                                    new VTGToast(DetailViewActivity.this).comingSoonProFeature();
+//                            }
+//						}
+//						else {
+//                            //TODO coming soon Insert the videos for 1111
+//                            new VTGToast(DetailViewActivity.this).comingSoonFeature();
+//						}
+			            if(isLiteVersion()){ //Lite Statement
+			            	new VideoManager(DetailViewActivity.this,VideoActivity.class, AppConstants.Set.getSet(_curSet.toSetID()),
                                     _curMatrixID, AppConstants.PropType.getPropType(0)).execute();
-                            else
-                            {
-                                proDetailView.touchIcon(DetailViewActivity.this,_curSet,_curMatrixID);
-                            }
-						}
-						else {
-                            //TODO coming soon Insert the videos for 1111
-                            new VTGToast(DetailViewActivity.this).comingSoonFeature();
-						}
+			            }
+			            else //Pro Statement
+			            {
+			            	if(_curSet.equals(Set.ONETHREE) || _curSet.equals(Set.ONEONE)){
+			            		int propID = getSharedPreferences(AppConstants.VTG_PREFS, BaseActivity.MODE_PRIVATE).getInt(AppConstants.MOVE_PROP,0);
+                                //TODO Change when making Clubs, Staff, and Hoops Videos
+                                if(propID == 0)//lock for only showing the poi videos that are made
+                                    new VideoManager(DetailViewActivity.this,VideoActivity.class, _curSet,
+                                    		_curMatrixID, AppConstants.PropType.getPropType(0)).execute();
+                                else
+                                    new VTGToast(DetailViewActivity.this).comingSoonProFeature();
+			            	}
+			            	else	//Implement new 1:5 videos Here
+			            		new VTGToast(DetailViewActivity.this).comingSoonFeature();
+			            }
 					}
 					return false;
 				}
@@ -191,6 +215,9 @@ public class DetailViewActivity extends BaseActivity{
 		detailTV.setText(pMove.getName(_curSet));
 	}
 	
+    /*
+     * Animation for Switching between Sets
+     */
 	private Animation mInFromRight;
     private Animation mOutToLeft;
     private Animation mInFromLeft;
@@ -271,6 +298,9 @@ public class DetailViewActivity extends BaseActivity{
             return super.onFling(e1, e2, velocityX, velocityY);
         }
     }
+	/*
+	 * End Animation for Sets
+	 */
 	
 	public Set getPreviousSet(){
 		if(_curSet.equals(Set.ONEONE))

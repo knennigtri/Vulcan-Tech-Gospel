@@ -56,7 +56,7 @@ public class MainActivity extends BaseActivity{
         ImageView mainImage = (ImageView) findViewById(R.id.main_image);
         InputStream iStream = null;
         try {
-            iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.MAIN_IMAGE_3D);
+            iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.MAIN_IMAGE);
         } catch (IOException e) {
             Log.d(TAG, "MainActivity IOException");
             Log.d(TAG, e.toString());

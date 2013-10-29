@@ -24,6 +24,7 @@
 bin/
 gen/
 out/
+build/
 
 #raw files
 raw data/

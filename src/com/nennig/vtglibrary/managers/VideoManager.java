@@ -131,7 +131,7 @@ public class VideoManager extends AsyncTask<Void, Void, Boolean>{
         if(result)
         {
             Intent i = new Intent(activity, destClass);
-            i.putExtra(AppConstants.CUR_SET, _set);
+            i.putExtra(AppConstants.CUR_SET, _set.toString());
             activity.startActivity(i);
             if(destroyActivity)
                 activity.finish();

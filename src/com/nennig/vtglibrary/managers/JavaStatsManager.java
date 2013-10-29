@@ -38,7 +38,6 @@ public class JavaStatsManager extends StatsManager {
 	
 	@Override
 	public void disconnect() {
-		// TODO Auto-generated method stub
 
 	}
 	

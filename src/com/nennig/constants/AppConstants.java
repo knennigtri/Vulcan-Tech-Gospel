@@ -5,8 +5,6 @@
 
 package com.nennig.constants;
 
-import android.widget.Toast;
-
 public class AppConstants {
 
 	/*
@@ -27,17 +25,9 @@ public class AppConstants {
     public static final String LOGO_FOLDER = "logos";
 	public static final String DEFAULT_ICON = "default_icon.png";
     public static final String MAIN_IMAGE = "mainLogo.png";
- //   public static final String MAIN_IMAGE_3D = "mainLogo_3D.png";
- //   public static final String MAIN_IMAGE_2D_TRANS = "mainLogo_2D_Trans.png";
- //   public static final String MAIN_IMAGE_3D_TRANS = "mainLogo_3D_Trans.png";
     public static final String PRO_ONLY_IMAGE = "proOnlyLogo.png";
     public static final String COMING_SOON_IMAGE = "comingSoonLogo.png";
 
-	
-	//TODO Create set constants for file identifiers
-//	public static final String SET_1313 = "1:3::1:3";
-//	public static final String SET_1111 = "1:1::1:1";
-//    public static final String SET_1515 = "1:5::1:5";
 
 
    public enum Set{

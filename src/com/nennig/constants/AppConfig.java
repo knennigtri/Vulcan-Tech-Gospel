@@ -20,11 +20,11 @@ public class AppConfig {
     		"App Developer: Kevin Nennig. Video Creation: David Everett.";
     public static final String PRO_TITLE = "VTG Pro Only";
     //TODO Update Pro Message with Pro release
-    public static final String PRO_MESSAGE = "VTG Pro WILL be available by July 1. " +
-            "There will be an update to the Lite version with a notification announcing it.";
+    public static final String PRO_MESSAGE = "Get this feature and more in the Pro version.";
     
 	public static final ArrayList<String> CHANGE_LOG = new ArrayList<String>();
 	public static final String appOnGPlayURL = "http://goo.gl/motWI";
+	protected static final String PRO_PACKAGE = "com.nennig.vulcan.tech.gospel.pro";
 	
 	static{
 		CHANGE_LOG.add("No New Updates");

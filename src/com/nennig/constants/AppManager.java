@@ -38,6 +38,8 @@ public class AppManager {
     private final static int DAYS_UNTIL_PROMPT = 3;
     private final static int LAUNCHES_UNTIL_PROMPT = 7;
 	private static String TAG = AppConfig.APP_TITLE_SHORT + ".AppManager";
+	
+	private static String _rateText = "If you enjoy using " + AppConfig.APP_TITLE + ", please take a moment to rate it. Thanks for your support!";
 
     /**
      * Method to initialize the AppManager. Checks for amount of times used and current version
@@ -112,7 +114,7 @@ public class AppManager {
         ll.setOrientation(LinearLayout.VERTICAL);
         
         TextView tv = new TextView(c);
-        tv.setText("If you enjoy using " + AppConfig.APP_TITLE + ", please take a moment to rate it. Thanks for your support!");
+        tv.setText(_rateText);
         tv.setWidth(240);
         tv.setPadding(4, 0, 4, 10);
         ll.addView(tv);
@@ -249,20 +251,20 @@ public class AppManager {
       } 
       });
     	
-//    	alert.setPositiveButton("Go Pro", new DialogInterface.OnClickListener() { 
-//            public void onClick(DialogInterface dialog, int whichButton) { 
-//            	String url = DevConstants.GOOGLE_PLAY + "." + AppConfig.APP_PNAME + ".pro";
-//            	Intent i = new Intent(Intent.ACTION_VIEW);
-//            	i.setData(Uri.parse(url));
-//            	c.startActivity(i);
-//            } 
-//        }); 
-//        
-//        alert.setNegativeButton("No Thanks", new DialogInterface.OnClickListener() { 
-//            public void onClick(DialogInterface dialog, int whichButton) { 
-//              // Canceled. 
-//            } 
-//      }); 
+    	alert.setPositiveButton("Detials", new DialogInterface.OnClickListener() { 
+            public void onClick(DialogInterface dialog, int whichButton) { 
+            	String url = DevConstants.GOOGLE_PLAY + "." + AppConfig.PRO_PACKAGE;
+            	Intent i = new Intent(Intent.ACTION_VIEW);
+            	i.setData(Uri.parse(url));
+            	c.startActivity(i);
+            } 
+        }); 
+        
+        alert.setNegativeButton("No Thanks", new DialogInterface.OnClickListener() { 
+            public void onClick(DialogInterface dialog, int whichButton) { 
+              // Canceled. 
+            } 
+      }); 
       alert.show();
     }
     

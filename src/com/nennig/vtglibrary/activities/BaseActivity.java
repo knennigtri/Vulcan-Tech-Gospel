@@ -20,6 +20,7 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -167,7 +168,12 @@ public class BaseActivity extends Activity {
             cl.getFullLogDialog().show();
             return true;
 		}
-		else
+		else if( item.getItemId() == android.R.id.home)
+		{
+			NavUtils.navigateUpFromSameTask(this);
+	        return true;
+		}	
+    	else
 		{
     		return super.onOptionsItemSelected(item);
     	}

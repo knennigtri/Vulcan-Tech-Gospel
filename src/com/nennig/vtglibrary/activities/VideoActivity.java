@@ -1,5 +1,6 @@
 package com.nennig.vtglibrary.activities;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.media.MediaPlayer;
@@ -38,11 +39,13 @@ public class VideoActivity extends BaseActivity {
     MatrixID _curMatrixID;
 
     
-    @Override
+    @SuppressLint("NewApi")
+	@Override
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(android.R.style.Theme_Holo_NoActionBar_Fullscreen);
     	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         
         final SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
         _curMatrixID = new MatrixID(sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0"));

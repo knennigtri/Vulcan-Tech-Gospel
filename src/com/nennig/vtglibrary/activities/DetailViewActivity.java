@@ -56,6 +56,7 @@ public class DetailViewActivity extends BaseActivity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_view);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         
         //Get the current set and matrixID for this detail view
         SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);

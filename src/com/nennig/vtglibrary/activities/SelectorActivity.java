@@ -46,6 +46,7 @@ public class SelectorActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selector);
         mainLayout = (RelativeLayout) findViewById(R.layout.activity_selector);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         
         //Create the singleton and get the information for the detail view
 		sPoiMap = SingletonMatrixMap.getSingletonPoiMoveMap(this);

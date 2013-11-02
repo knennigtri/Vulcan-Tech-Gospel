@@ -23,6 +23,7 @@ public class SurveyActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey_wv);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         WebView wv = (WebView) findViewById(R.id.survey_webView);
 //        if(API_LEVEL >= Build.VERSION_CODES.HONEYCOMB)

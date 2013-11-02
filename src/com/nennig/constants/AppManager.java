@@ -245,12 +245,6 @@ public class AppManager {
     	
     	//TODO Update this Pro version inflator
     	
-      alert.setNeutralButton("Okay", new DialogInterface.OnClickListener() { 
-      public void onClick(DialogInterface dialog, int whichButton) { 
-        // Canceled. 
-      } 
-      });
-    	
     	alert.setPositiveButton("Detials", new DialogInterface.OnClickListener() { 
             public void onClick(DialogInterface dialog, int whichButton) { 
             	String url = DevConstants.GOOGLE_PLAY + "." + AppConfig.PRO_PACKAGE;

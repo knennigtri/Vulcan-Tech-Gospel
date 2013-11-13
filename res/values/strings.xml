@@ -13,15 +13,16 @@
     <string name="menu_change_log">View Change Log</string>
     <string name="text_prop">Prop</string>
     <string name="text_hand">Hand</string>
-
-    <string name="vtg_pdf1">VTG_1of3</string>
-    <string name="vtg_pdf2">VTG_2of3</string>
-    <string name="vtg_pdf3">VTG_3of3</string>
+        <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 
     <string-array name="pdf_list">
-        <item>@string/vtg_pdf1</item>
-        <item>@string/vtg_pdf2</item>
-        <item>@string/vtg_pdf3</item>
+        <item>VTG PDF 1:3 1of3</item>
+        <item>VTG Youtube 1:3 1of3</item>
+        <item>VTG PDF 1:3 2of3</item>
+        <item>VTG Youtube 1:3 2of3</item>
+        <item>VTG PDF 1:3 3of3</item>
+        <item>VTG Youtube 1:3 3of3</item>
     </string-array>
 
     <string name="prop0">Poi</string>

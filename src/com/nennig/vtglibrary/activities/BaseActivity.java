@@ -7,12 +7,14 @@
 package com.nennig.vtglibrary.activities;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -20,11 +22,18 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.nennig.constants.AppConfig;
@@ -44,8 +53,9 @@ public class BaseActivity extends Activity {
     public static int displayHeight = 0;
 	public static final String ROOT_FOLDER = Environment.getExternalStorageDirectory().toString();
 	private static final String TAG = "BaseActivity";
+	
+	
     @SuppressLint("NewApi")
-    
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,9 +72,9 @@ public class BaseActivity extends Activity {
 		} else{
 	        displayWidth = display.getWidth();             
 	        displayHeight = display.getHeight();  
-		}
+		}		
     }
-    
+	
     /**
      * This method is built for displaying an icon in this app. It takes in the dimensions of the phone and then resizes 
      * the bitmap to fit the screen.
@@ -124,7 +134,7 @@ public class BaseActivity extends Activity {
         
         return matrix;
     }
-    
+	
 	/**
 	 * This is a generalized menu for all activities in this app. This allows users to access the most important information
 	 * about this app and it's market and social capabilities.
@@ -132,7 +142,7 @@ public class BaseActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	Intent i;
-    	String url;
+    	String url;    	
     	if(item.getItemId() == R.id.menu_about)
     	{
 //    		AppManager.aboutAlert(this);

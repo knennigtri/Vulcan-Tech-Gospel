@@ -17,7 +17,6 @@ public class AppConstants {
 	public static final String CUR_SET = AppConfig.APP_TITLE_SHORT + ".cur.set";
     public static final String DV_FIRSTTIME = AppConfig.APP_TITLE_SHORT + ".detailViewfirstTime";
 	
-	
 	/*
 	 * App Constants
 	 */
@@ -27,8 +26,29 @@ public class AppConstants {
     public static final String MAIN_IMAGE = "mainLogo.png";
     public static final String PRO_ONLY_IMAGE = "proOnlyLogo.png";
     public static final String COMING_SOON_IMAGE = "comingSoonLogo.png";
+    
+	/*
+	 * Constants for the legacy content
+	 */
+    public static String vtg2Index1Of3_youtube = "http://www.youtube.com/watch?v=gT6SKnBiZ1Q";
+    public static String vtg2Index2Of3_youtube = "http://www.youtube.com/watch?v=evUnR4God6Q";
+    public static String vtg2Index3Of3_youtube = "http://www.youtube.com/watch?v=fbdJOOkniF0";
+    public static String vtg2Index1Of3_pdf = "http://noelyee.weebly.com/uploads/7/2/9/6/7296674/vtg2index.pdf";
+    public static String vtg2Index2Of3_pdf = "http://noelyee.weebly.com/uploads/7/2/9/6/7296674/vtg2index2of3.pdf";
+    public static String vtg2Index3Of3_pdf = "http://noelyee.weebly.com/uploads/7/2/9/6/7296674/vtg2index30f3.pdf";
 
-
+    /*
+     * Constants used for the inflator on every page
+     */
+    //http://misha.beshkin.lv/android-add-paypal-donation-page-to-app/
+    public static String PAYPAL = "https://www.paypal.com/cgi-bin/webscr?" +
+    		"cmd=_donations&" +
+    		"business=kissena%40hotmail%2ecom&" +
+    		"lc=EE&" +
+    		"item_name=Mobile%20apps&currency_code=USD&" +
+    		"bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted";
+    public static String FACEBOOK = "https://www.facebook.com/groups/113059425470308/";
+    public static final String VTG_GENERATOR = "http://www.noelyee.com/VTGgenerator.html";
 
    public enum Set{
        ONEONE {
@@ -121,44 +141,6 @@ public class AppConstants {
             }
         }
     }
-	
-	/*
-	 * Constants for the youtube videos
-	 */
-    public static String vtg2Index1Of3 = "http://www.youtube.com/watch?v=gT6SKnBiZ1Q";
-    public static String vtg2Index2Of3 = "http://www.youtube.com/watch?v=evUnR4God6Q";
-    public static String vtg2Index3Of3 = "http://www.youtube.com/watch?v=fbdJOOkniF0";
-    
-    /*
-     * Constants used for the inflator on every page
-     */
-    //http://misha.beshkin.lv/android-add-paypal-donation-page-to-app/
-    public static String PAYPAL = "https://www.paypal.com/cgi-bin/webscr?" +
-    		"cmd=_donations&" +
-    		"business=kissena%40hotmail%2ecom&" +
-    		"lc=EE&" +
-    		"item_name=Mobile%20apps&currency_code=USD&" +
-    		"bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted";
-    public static String FACEBOOK = "https://www.facebook.com/groups/113059425470308/";
-    
-    public static String setTitleString(boolean isLite, Set curSet){
-	   if(isLite){
-		   if(curSet.equals(Set.ONETHREE))
-			   return AppConfig.APP_TITLE_SHORT + " Lite - " + Set.ONETHREE.toLabel();
-		   if(curSet.equals(Set.ONEONE))
-			   return AppConfig.APP_TITLE_SHORT + " Lite - " + Set.ONEONE.toLabel();
-           if(curSet.equals(Set.ONEFIVE))
-               return AppConfig.APP_TITLE_SHORT + " Lite - " + Set.ONEFIVE.toLabel();
-	   }
-	   if(curSet.equals(Set.ONETHREE))
-		   return AppConfig.APP_TITLE_SHORT + " Pro - " + Set.ONETHREE.toLabel();
-	   if(curSet.equals(Set.ONEONE))
-		   return AppConfig.APP_TITLE_SHORT + " Pro - " + Set.ONEONE.toLabel();
-        if(curSet.equals(Set.ONEFIVE))
-            return AppConfig.APP_TITLE_SHORT + " Pro - " + Set.ONEFIVE.toLabel();
-	   return AppConfig.APP_TITLE_SHORT;
-   }
-
 }
 
 

@@ -6,7 +6,7 @@
 		> 
 
    <ListView 
-       android:id="@+id/main_pdf_list"
+       android:id="@+id/pdf_list"
        android:layout_width="fill_parent"
        android:layout_height="0dp"
        android:background="#FFFFFF" 

@@ -1,13 +1,14 @@
 package com.nennig.vtglibrary.activities;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.NavUtils;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppConstants.Set;
 import com.nennig.constants.AppManager;
+import com.nennig.constants.Dlog;
 import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.custobjs.MatrixID;
 import com.nennig.vtglibrary.custobjs.MovePins;
@@ -34,12 +36,10 @@ import com.nennig.vtglibrary.custobjs.VTGToast;
 import com.nennig.vtglibrary.draw.VTGMove;
 import com.nennig.vtglibrary.managers.VideoManager;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 @SuppressLint("NewApi")
 public class DetailViewActivity extends BaseActivity{
 	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".DetialViewActivity";
+	private boolean ENABLE_DEBUG = false;
 
 	private MatrixID _curMatrixID;
     private AppConstants.Set _curSet;
@@ -62,7 +62,7 @@ public class DetailViewActivity extends BaseActivity{
         SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
         _curMatrixID = new MatrixID(sP.getString(AppConstants.CUR_MATRIX_ID, "0x0x0"));
         _curSet = AppConstants.Set.getSet(sP.getString(AppConstants.CUR_SET, Set.ONETHREE.toSetID()));
-        Log.d(TAG, "Cur Matrix " + _curMatrixID);
+        Dlog.d(TAG, "Cur Matrix " + _curMatrixID, ENABLE_DEBUG);
 
         if(sP.getBoolean(AppConstants.DV_FIRSTTIME, true))
             firstRunOfActivity(sP);
@@ -91,7 +91,7 @@ public class DetailViewActivity extends BaseActivity{
     }
 
     private void setupMove(){
-        setTitle(AppConstants.setTitleString(isLiteVersion(), _curSet));
+        setTitle(_curSet.toLabel());
 		
 		//Get the singleton to create the move view for this matrixID
   		SingletonMovePinMap sMovePins = SingletonMovePinMap.getSingletonMovePinMap(this);
@@ -108,7 +108,7 @@ public class DetailViewActivity extends BaseActivity{
 				iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.PRO_ONLY_IMAGE);
 				drawnMove.addDefaultIcon(iStream);
 			} catch (IOException e) {
-				Log.d(TAG,e.getMessage());
+				Dlog.d(TAG,e.getMessage(), ENABLE_DEBUG);
 			}
             drawnMove.setOnTouchListener(new OnTouchListener() {
                 @Override
@@ -191,8 +191,8 @@ public class DetailViewActivity extends BaseActivity{
 			});
   		}
 		
-		final GestureDetector gestureDetector;
-        gestureDetector = new GestureDetector(new MyGestureDetector());
+//		final GestureDetector gestureDetector;
+//        gestureDetector = new GestureDetector(new MyGestureDetector());
         
         mViewFlipper = (ViewFlipper) findViewById(R.id.view_flipper);
         initAnimations();
@@ -334,9 +334,7 @@ public class DetailViewActivity extends BaseActivity{
         else if(item.getItemId() == android.R.id.home)
         {
             // app icon in Action Bar clicked; go home
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+        	NavUtils.navigateUpFromSameTask(this);
             return true;
         }
         else

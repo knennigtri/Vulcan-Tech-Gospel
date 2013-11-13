@@ -1,8 +1,8 @@
 package com.nennig.vtglibrary.activities;
 
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.webkit.WebView;
 
@@ -39,6 +39,12 @@ public class SurveyActivity extends BaseActivity {
         if(item.getItemId() == R.id.menu_share)
         {
             AppManager.share(this, "Vulcan Tech Gospel is now on Android! Check it out: " + AppConfig.appOnGPlayURL);
+            return true;
+        }
+        else if(item.getItemId() == android.R.id.home)
+        {
+            // app icon in Action Bar clicked; go home
+        	NavUtils.navigateUpFromSameTask(this);
             return true;
         }
         else

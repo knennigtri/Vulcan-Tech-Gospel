@@ -13,9 +13,9 @@ public class AppConstants {
 	public static final String VTG_PREFS = AppConfig.APP_TITLE_SHORT + ".prefs";
 	public static final String CUR_MATRIX_ID = AppConfig.APP_TITLE_SHORT + ".cur.matrix.id";
 	public static final String MOVE_PROP = AppConfig.APP_TITLE_SHORT + ".moveprop";
-	
 	public static final String CUR_SET = AppConfig.APP_TITLE_SHORT + ".cur.set";
     public static final String DV_FIRSTTIME = AppConfig.APP_TITLE_SHORT + ".detailViewfirstTime";
+    public static final String HTML_URL = AppConfig.APP_TITLE_SHORT + ".htmlsurvey";
 	
 	/*
 	 * App Constants
@@ -49,6 +49,7 @@ public class AppConstants {
     		"bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted";
     public static String FACEBOOK = "https://www.facebook.com/groups/113059425470308/";
     public static final String VTG_GENERATOR = "http://www.noelyee.com/VTGgenerator.html";
+    public static final String VTG_SURVEY = "https://docs.google.com/forms/d/1FgkWiiCRchB7MD398Fdr3vAP0jsGsHotYCt_Qjhl_f0/viewform";
 
    public enum Set{
        ONEONE {

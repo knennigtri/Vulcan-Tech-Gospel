@@ -4,10 +4,6 @@
        style="@style/DrawerItem"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:layout_marginTop="20dp"
-       android:background="@android:color/transparent"
-       android:gravity="center"
-       android:text="default"
-       android:textSize="20sp" >
-
+       android:background="@drawable/drawer_button"
+       android:gravity="left" >
      </TextView>

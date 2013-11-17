@@ -29,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
@@ -54,6 +55,12 @@ public class DrawerActivity extends BaseActivity {
 	private ArrayList<String> mDrawerItems;
 	private OnItemClickListener mDrawerListener;
 	
+	private static final String mPdfs = "1:3 PDFs";
+	private static final String mSuggestion = "Suggestion Box";
+	private static final String mLearn = "Learn about VTG";
+	private static final String mFacebook = "Join Facebook";
+	private static final String mGenerator = "VTG Generator";
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {      
 		super.onCreate(savedInstanceState);
@@ -66,18 +73,18 @@ public class DrawerActivity extends BaseActivity {
         drawerList.add(Set.ONETHREE.toLabel());      //0
         drawerList.add(Set.ONEONE.toLabel());        //1
         drawerList.add(Set.ONEFIVE.toLabel());       //2
-        drawerList.add("Download The Vulcan");       //3
-        drawerList.add("Help Build this app!");      //4
-        drawerList.add("Learn about VTG");           //5
-        drawerList.add("Join the Poi Community");    //6
-        drawerList.add("VTG Generator"); 			 //7
+        drawerList.add(mGenerator);       //3
+        drawerList.add(mFacebook);      //4
+        drawerList.add(mLearn);           //5
+        drawerList.add(mPdfs);    //6
+        drawerList.add(mSuggestion); 			 //7
         Dlog.d(TAG, "DrawerList: " + drawerList,ENABLE_DEBUG);
-		
+        
         setDrawerItems(drawerList, drawerID, drawerWrapperID, new OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int pos,
 					long id) {
-				selectItem(a, pos);
+				selectItem(a, (TextView) view);
 			}
         });
 	}
@@ -119,17 +126,19 @@ public class DrawerActivity extends BaseActivity {
 	    }
 	   
 		/** Starts a new activity according to what is clicked */
-		private void selectItem(Activity a, int pos) {
+		private void selectItem(Activity a, TextView tv) {
 			Intent intent;
 			String url;
-			 switch (pos){
-	         case 0: //13
+			CharSequence name = tv.getText();
+			 if(name.equals(Set.ONETHREE.toLabel()))
+			 {
 	             saveCurSet(Set.ONETHREE.toSetID());
 	             intent = new Intent(a,
 	                     SelectorActivity.class);
 	             startActivity(intent);
-	             break;
-	         case 1: //11
+	         }
+			 else if(name.equals(Set.ONEONE.toLabel()))
+			 {
 	             if(isLiteVersion())
 	             {
 	                 AppManager.proVersionAlert(a);
@@ -141,8 +150,9 @@ public class DrawerActivity extends BaseActivity {
 	                         SelectorActivity.class);
 	                 startActivity(intent);
 	             }
-	             break;
-	         case 2: //15
+			 }
+			 else if(name.equals(Set.ONEFIVE.toLabel()))
+			 {
 	             if(isLiteVersion())
 	             {
 	                 AppManager.proVersionAlert(a);
@@ -156,28 +166,36 @@ public class DrawerActivity extends BaseActivity {
 //	                         SelectorActivity.class);
 //	                 startActivity(intent);
 	             }
-	             break;
-	         case 3: //PDF
+			 }
+			 else if(name.equals(mPdfs))
+			 {
 	             viewPDFList();
-	             break;
-	         case 4: //Survey
-	             intent = new Intent(a,SurveyActivity.class);
+			 }
+			 else if(name.equals(mSuggestion))
+			 {
+	             intent = new Intent(a,HTMLActivity.class);
+	             intent.putExtra(AppConstants.HTML_URL, AppConstants.VTG_SURVEY);
 	             startActivity(intent);
-	             break;
-	         case 5: //Learn about VTG
+			 }
+			 else if(name.equals(mLearn))
+			 {
 	             //TODO coming soon
 	             new VTGToast(a).comingSoonFeature();
-	             break;
-	         case 6: //Facebook Group
+			 }
+			 else if(name.equals(mFacebook))
+			 {
 	             url = AppConstants.FACEBOOK;
 	             intent = new Intent(Intent.ACTION_VIEW);
 	             intent.setData(Uri.parse(url));
 	             startActivity(intent);
-	             break;
-	         case 7: //VTG Generator
-	        	 url = AppConstants.VTG_GENERATOR;
-	             startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(url)));
-	        	 break;
+			 }
+			 else if(name.equals(mGenerator))
+			 {
+				 intent = new Intent(a,HTMLActivity.class);
+	             intent.putExtra(AppConstants.HTML_URL, AppConstants.VTG_GENERATOR);
+	             startActivity(intent);
+//	        	 url = AppConstants.VTG_GENERATOR;
+//	             startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(url)));
 			 }
 	     }
 			 

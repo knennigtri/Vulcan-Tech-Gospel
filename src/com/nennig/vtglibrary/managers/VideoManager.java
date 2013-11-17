@@ -59,7 +59,7 @@ public class VideoManager extends AsyncTask<Void, Void, Boolean>{
         destClass = destC;
         _set = set;
         videosDir = Environment.getExternalStorageDirectory() +
-                "/Android/data/" + activity.getPackageName() + "/files/";
+                "/Android/data/"+ AppConfig.APP_PNAME +"/videos/";
         videoFile = "v" + set.toSetID() + "_" + id.toString() + "_" + propID.toPropID() + "." + videoExt;
 
         downloadSite = "http://noelyee.com/vtg%20videos/" + videoFile;

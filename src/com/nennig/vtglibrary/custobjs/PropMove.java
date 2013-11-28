@@ -3,28 +3,40 @@
  */
 package com.nennig.vtglibrary.custobjs;
 
-import android.util.Log;
-
-import com.nennig.constants.AppConfig;
-import com.nennig.constants.AppConstants;
-import com.nennig.constants.AppConstants.*;
-
-import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import com.nennig.constants.AppConfig;
+import com.nennig.constants.AppConstants.Set;
+
 /**
  * @author Kevin Nennig (knennig213@gmail.com)
- *
+ * This file is used to create the PropMove. This class is constructed and then built through
+ * the add method. The add method takes in the title of the field and the data for the field
+ * and then puts the information into this class if it is applicable.
  */
 public class PropMove{
     private static final String TAG = AppConfig.APP_TITLE_SHORT + ".PropMove";
 
+    //These Fields are directly related to the db file called "detail_matrix_db.csv"
+    private static final String field_moveID = "moveID";
+    private static final String field_x_axis = "x_axis";
+    private static final String field_y_axis = "y_axis";
+	private static final String field_m13_name = "1:3<name>";
+    private static final String field_m13_imageFileName = "1:3<imageFileName>";
+    private static final String field_m11_name = "1:1<name>";
+    private static final String field_m11_imageFileName = "1:1<imageFileName>";
+    private static final String field_m15_name = "1:5<name>";
+    private static final String field_m15_imageFileName = "1:5<imageFileName>";
+    
+    
     private MatrixID moveID;
 	
+    private VTGMoveAxis x_axis;
+    private VTGMoveAxis y_axis;
+    
 	private String m13_name;
     private String m13_imageFileName;
-    private String m13_pdf;
 
     private String m11_name;
     private String m11_imageFileName;
@@ -53,7 +65,6 @@ public class PropMove{
 
         m13_name = "";
         m13_imageFileName = "";
-        m13_pdf = "";
         m13_fileExt = "";
         m11_name = "";
         m11_imageFileName = "";
@@ -101,20 +112,33 @@ public class PropMove{
     public MatrixID getMoveID(){
         return moveID;
     }
-	
+    public VTGMoveAxis getXAxis(){
+    	return x_axis;
+    }
+    public VTGMoveAxis getYAxis(){
+    	return y_axis;
+    }
+    
 	/**
 	 * Huge adder that assigns the field value to the correct value.
 	 * @param name
 	 * @param fieldValue
 	 */
 	public void add(String name, String fieldValue) {
-		if(name.toLowerCase().equals("moveid".toLowerCase()))
+		if(name.toLowerCase().equals(field_moveID.toLowerCase()))
 			moveID = new MatrixID(fieldValue);
-
+		else if(name.toLowerCase().equals(field_x_axis.toLowerCase()))
+		{
+			x_axis = new VTGMoveAxis(VTGMoveAxis.axis.X, fieldValue);
+		}
+		else if(name.toLowerCase().equals(field_y_axis.toLowerCase()))
+		{
+			y_axis = new VTGMoveAxis(VTGMoveAxis.axis.Y, fieldValue);			
+		}
         //1:3 fields
-        else if(name.toLowerCase().equals("m13_name".toLowerCase()))
+        else if(name.toLowerCase().equals(field_m13_name.toLowerCase()))
 			m13_name = fieldValue;
-		else if(name.toLowerCase().equals("m13_imageFileName".toLowerCase()))
+		else if(name.toLowerCase().equals(field_m13_imageFileName.toLowerCase()))
         {
             int i = fieldValue.lastIndexOf('.');
             if (i > 0) {
@@ -127,13 +151,10 @@ public class PropMove{
                 m13_fileExt = defaultExt;
             }
         }
-		else if(name.toLowerCase().equals("m13_pdf".toLowerCase()))
-			m13_pdf = fieldValue;
-		
 		//1:1 fields
-		else if(name.toLowerCase().equals("m11_name".toLowerCase()))
+		else if(name.toLowerCase().equals(field_m11_name.toLowerCase()))
 			m11_name = fieldValue;
-		else if(name.toLowerCase().equals("m11_imageFileName".toLowerCase()))
+		else if(name.toLowerCase().equals(field_m11_imageFileName.toLowerCase()))
         {
             int i = fieldValue.lastIndexOf('.');
             if (i > 0) {
@@ -148,9 +169,9 @@ public class PropMove{
         }
 
         //1:5 fields
-        else if(name.toLowerCase().equals("m15_name".toLowerCase()))
+        else if(name.toLowerCase().equals(field_m15_name.toLowerCase()))
             m15_name = fieldValue;
-        else if(name.toLowerCase().equals("m15_imageFileName".toLowerCase()))
+        else if(name.toLowerCase().equals(field_m15_imageFileName.toLowerCase()))
         {
             int i = fieldValue.lastIndexOf('.');
             if (i > 0) {
@@ -170,14 +191,16 @@ public class PropMove{
 		String str = "";
 		str = "{";
 		str = str + moveID + ": \n";
-		str = str + "13Name = " + m13_name + "\n";
-		str = str + "13Image = " + m13_imageFileName + "\n";
+		str = str + x_axis.toString() + "\n";
+		str = str + y_axis.toString() + "\n";
+		str = str + field_m13_name + " = " + m13_name + "\n";
+		str = str + field_m13_imageFileName + " = " + m13_imageFileName + "\n";
         str = str + "13FileExt = " + m13_fileExt + "\n";
-		str = str + "11Name = " + m11_name + "\n";		
-		str = str + "11Image = " + m11_imageFileName + "\n";
-        str = str + "15FileExt = " + m11_fileExt + "\n";
-        str = str + "15Name = " + m15_name + "\n";
-        str = str + "15Image = " + m15_imageFileName + "\n";
+		str = str + field_m11_name + " = " + m11_name + "\n";		
+		str = str + field_m11_imageFileName + " = " + m11_imageFileName + "\n";
+        str = str + "11FileExt = " + m11_fileExt + "\n";
+        str = str + field_m15_name + " = " + m15_name + "\n";
+        str = str + field_m15_imageFileName + " = " + m15_imageFileName + "\n";
         str = str + "15FileExt = " + m15_fileExt + "\n";
 		str = str + "}";
 		return new String(str);

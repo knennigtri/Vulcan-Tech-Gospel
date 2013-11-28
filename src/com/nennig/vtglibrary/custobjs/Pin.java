@@ -5,7 +5,7 @@ package com.nennig.vtglibrary.custobjs;
 
 /**
  * @author Kevin Nennig (knennig213@gmail.com)
- *
+ * Tog In, Tog out, Split In, Split out, Tog Split, Split Tog
  */
 public class Pin{
 	private pinDirection direction;
@@ -16,14 +16,14 @@ public class Pin{
 	}
 	
 	public enum pinDirection{
-		INSIDE, OUTSIDE
+		IN, OUT
 	}
 	
 	public Pin(String dir, String col){
-		if(dir.equals("I"))
-			setDirection(pinDirection.INSIDE);
-		else if(dir.equals("O"))
-			setDirection(pinDirection.OUTSIDE);
+		if(dir.toLowerCase().equals("in"))
+			setDirection(pinDirection.IN);
+		else if(dir.toLowerCase().equals("out"))
+			setDirection(pinDirection.OUT);
 		
 		if(col.equals("B"))
 			setColor(pinColor.PRIMARY);

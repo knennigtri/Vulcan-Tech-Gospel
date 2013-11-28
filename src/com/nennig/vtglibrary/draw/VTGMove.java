@@ -537,7 +537,7 @@ public class VTGMove extends View {
 	 * @return - the y coordinate for the bottom pin box
 	 */
 	private float boxBottomCY(pinDirection direction, RectF pinBox) {
-		if(direction.equals(pinDirection.INSIDE))
+		if(direction.equals(pinDirection.IN))
 			return pinBox.top + pinBox.height() * oneEigth;
 		else
 			return pinBox.top + pinBox.height() * sevenEigths;
@@ -550,7 +550,7 @@ public class VTGMove extends View {
 	 * @return - the y coordinate for the top pin box
 	 */
 	private float boxTopCY(pinDirection direction, RectF pinBox) {
-		if(direction.equals(pinDirection.INSIDE))
+		if(direction.equals(pinDirection.IN))
 			return pinBox.top + pinBox.height() * sevenEigths;
 		else
 			return pinBox.top + pinBox.height() * oneEigth;
@@ -563,7 +563,7 @@ public class VTGMove extends View {
 	 * @return - the x coordinate for the right pin box
 	 */
 	private float boxRightCX(pinDirection direction, RectF pinBox) {
-		if(direction.equals(pinDirection.INSIDE))
+		if(direction.equals(pinDirection.IN))
 			return pinBox.left + pinBox.width() * oneEigth;
 		else
 			return pinBox.left + pinBox.width() * sevenEigths;
@@ -576,7 +576,7 @@ public class VTGMove extends View {
 	 * @return - the x coordinate for the left pin box
 	 */
 	private float boxLeftCX(pinDirection direction, RectF pinBox) {
-		if(direction.equals(pinDirection.INSIDE))
+		if(direction.equals(pinDirection.IN))
 			return pinBox.left + pinBox.width() * sevenEigths;
 		else
 			return pinBox.left + pinBox.width() * oneEigth;

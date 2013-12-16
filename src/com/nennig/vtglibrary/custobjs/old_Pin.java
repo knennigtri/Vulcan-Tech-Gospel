@@ -7,7 +7,7 @@ package com.nennig.vtglibrary.custobjs;
  * @author Kevin Nennig (knennig213@gmail.com)
  * Tog In, Tog out, Split In, Split out, Tog Split, Split Tog
  */
-public class Pin{
+public class old_Pin{
 	private pinDirection direction;
 	private pinColor color;
 	
@@ -19,7 +19,7 @@ public class Pin{
 		IN, OUT
 	}
 	
-	public Pin(String dir, String col){
+	public old_Pin(String dir, String col){
 		if(dir.toLowerCase().equals("in"))
 			setDirection(pinDirection.IN);
 		else if(dir.toLowerCase().equals("out"))

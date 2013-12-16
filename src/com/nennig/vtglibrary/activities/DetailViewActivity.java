@@ -28,10 +28,8 @@ import com.nennig.constants.AppManager;
 import com.nennig.constants.Dlog;
 import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.custobjs.MatrixID;
-import com.nennig.vtglibrary.custobjs.MovePins;
 import com.nennig.vtglibrary.custobjs.PropMove;
 import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
-import com.nennig.vtglibrary.custobjs.SingletonMovePinMap;
 import com.nennig.vtglibrary.custobjs.VTGToast;
 import com.nennig.vtglibrary.draw.VTGMove;
 import com.nennig.vtglibrary.managers.VideoManager;
@@ -94,8 +92,8 @@ public class DetailViewActivity extends BaseActivity{
         setTitle(_curSet.toLabel());
 		
 		//Get the singleton to create the move view for this matrixID
-  		SingletonMovePinMap sMovePins = SingletonMovePinMap.getSingletonMovePinMap(this);
-  		MovePins pMovePins = sMovePins.getMovePins(_curMatrixID.toString());
+//  		SingletonMovePinMap sMovePins = SingletonMovePinMap.getSingletonMovePinMap(this);
+//  		MovePins pMovePins = sMovePins.getMovePins(_curMatrixID.toString());
 		
 		//Set the move pins to the move view
   		VTGMove drawnMove = (VTGMove) findViewById(R.id.detail_customMoveDraw);
@@ -135,10 +133,10 @@ public class DetailViewActivity extends BaseActivity{
                 {
 				    iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet) +
                            "." + pMove.get_fileExt(_curSet));
-				    drawnMove.addPinsAndIcon(pMovePins, iStream);
+				    drawnMove.addPinsAndIcon(pMove, iStream);
                 }
 			} catch (IOException e) {
-				drawnMove.addPins(pMovePins);
+				drawnMove.addPins(pMove);
 			}
 
 			drawnMove.setOnTouchListener(new OnTouchListener() {

@@ -28,7 +28,6 @@ import com.nennig.constants.AppManager;
 import com.nennig.constants.AppConstants.Set;
 import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
-import com.nennig.vtglibrary.custobjs.SingletonMovePinMap;
 import com.nennig.vtglibrary.custobjs.VTGToast;
 
 public class MainActivity extends DrawerActivity{
@@ -61,7 +60,6 @@ public class MainActivity extends DrawerActivity{
 		 * Parse the db file so that the objects are ready when needed.
 		 */
 		SingletonMatrixMap.getSingletonPoiMoveMap(this);
-		SingletonMovePinMap.getSingletonMovePinMap(this);
 		
 		Button tipOfTheWeek = (Button) findViewById(R.id.main_button_tip);
 		tipOfTheWeek.setText("Tip of the Week");

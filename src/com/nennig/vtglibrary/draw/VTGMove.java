@@ -16,10 +16,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.nennig.constants.AppConfig;
+import com.nennig.constants.Dlog;
 import com.nennig.vtglibrary.R;
-import com.nennig.vtglibrary.custobjs.MovePins;
-import com.nennig.vtglibrary.custobjs.Pin;
-import com.nennig.vtglibrary.custobjs.Pin.pinDirection;
+//import com.nennig.vtglibrary.custobjs.Pin;
+import com.nennig.vtglibrary.custobjs.PropMove;
+import com.nennig.vtglibrary.custobjs.VTGMoveAxis;
+import com.nennig.vtglibrary.custobjs.VTGToast;
+import com.nennig.vtglibrary.custobjs.VTGMoveAxis.Orientation;
 
 /**
  * @author Kevin Nennig (knennig213@gmail.com)
@@ -29,15 +32,16 @@ import com.nennig.vtglibrary.custobjs.Pin.pinDirection;
  */
 public class VTGMove extends View {
 	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".VTGMove";
+	private static final boolean ENABLEDEBUG = true;
     
     private int primColor;
-    private int secColor;
+//    private int secColor;
 
     
     private Paint primCirclePaint;
-    private Paint secCirclePaint;
+//    private Paint secCirclePaint;
     private Paint primLinePaint;
-    private Paint secLinePaint;
+//    private Paint secLinePaint;
     private Paint proPaint;
     
     RectF drawAreaBounds = new RectF();
@@ -89,8 +93,7 @@ public class VTGMove extends View {
 //	}
 //	static MovePins curMove = testMove;
 //	
-	
-	private MovePins curMove; 	//holds the current move pins to create the view
+	private PropMove _pMove; //holds current move object
 	
 	/**
 	 * @param context
@@ -112,7 +115,6 @@ public class VTGMove extends View {
         
         try {
         	primColor = a.getColor(R.styleable.VTGMove_primaryColor, Color.BLACK);
-        	secColor = a.getColor(R.styleable.VTGMove_secondaryColor, Color.BLUE);
         } finally {
         	a.recycle();
         }
@@ -161,17 +163,6 @@ public class VTGMove extends View {
         primLinePaint.setColor(primColor);
         primLinePaint.setStrokeWidth(lineWidth);
 //        primLinePaint.setAlpha(0);
-        
-        secCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        secCirclePaint.setStyle(Paint.Style.FILL);
-        secCirclePaint.setColor(secColor);
-//        secCirclePaint.setAlpha(0);
-        
-        secLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        secLinePaint.setStyle(Paint.Style.STROKE);
-        secLinePaint.setColor(secColor);
-        secLinePaint.setStrokeWidth(lineWidth);
-//        secLinePaint.setAlpha(0);
 
         proPaint = new Paint();
 		proPaint.setColor(Color.BLACK);
@@ -188,8 +179,8 @@ public class VTGMove extends View {
 	 * This adds the move pins to the view so that they can be drawn
 	 * @param mp
 	 */
-	public void addPins(MovePins mp){
-		curMove = mp;
+	public void addPins(PropMove mp){
+		_pMove = mp;
 		moveIcon = null;
 		invalidate();
 	}
@@ -197,8 +188,8 @@ public class VTGMove extends View {
 	 * This adds the move pins to the view so that they can be drawn
 	 * @param mp
 	 */
-	public void addPinsAndIcon(MovePins mp, InputStream isIcon){
-		curMove = mp;
+	public void addPinsAndIcon(PropMove mp, InputStream isIcon){
+		_pMove = mp;
 		moveIcon = isIcon;
 		invalidate();
 	}
@@ -207,7 +198,7 @@ public class VTGMove extends View {
 	 * 
 	 */
 	public void removePinsAndIcon() {
-		curMove = null;
+		_pMove = null;
 		moveIcon = null;
 		invalidate();
 	}
@@ -236,14 +227,51 @@ public class VTGMove extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);  
         
-        RectF primRec, secRec;
-        if(curMove != null){
+        if(_pMove != null){
 	        //This checks to see if one of two pins should be drawn
-	        if(curMove.pin0 == null){
-	        	primRec = makePinBox(PinBoxPos.RIGHT);
-	        	drawOnePin(canvas, PinBoxPos.RIGHT, curMove.pin7, primRec);
-	        	iconR = primRec.left;
+	        if(_pMove.getXAxis().getHandOrientation().equals(VTGMoveAxis.Orientation.SPLIT)){
+	        	RectF rightRec = makePinBox(PinBoxPos.RIGHT);
+	        	RectF leftRec = makePinBox(PinBoxPos.LEFT);
+	        	
+	        	switch(_pMove.getXAxis().getPropOrientation()){
+	        	case IN:
+		        	drawOnePin(canvas, PinBoxPos.RIGHT, Orientation.IN, rightRec);
+		        	drawOnePin(canvas, PinBoxPos.LEFT, Orientation.IN, leftRec);
+	        	case OUT:
+		        	drawOnePin(canvas, PinBoxPos.RIGHT, Orientation.OUT, rightRec);
+		        	drawOnePin(canvas, PinBoxPos.LEFT, Orientation.OUT, leftRec);
+	        	case TOG:
+		        	drawOnePin(canvas, PinBoxPos.RIGHT, Orientation.IN, rightRec);
+		        	drawOnePin(canvas, PinBoxPos.LEFT, Orientation.OUT, leftRec);
+	        	default:
+					Dlog.d(TAG, "prop orientation wrong: " + _pMove.getXAxis().getPropOrientation(), ENABLEDEBUG);
+	        	}
+	        	iconR = rightRec.left; //determines the right of the icon based on the left of the right pin box
+	        	iconL = rightRec.right; //determines the left of the icon based on the right of the left pin box
 	        }
+	        if(_pMove.getYAxis().getHandOrientation().equals(VTGMoveAxis.Orientation.SPLIT)){
+	        	RectF topRec = makePinBox(PinBoxPos.TOP);
+	        	RectF bottomRec = makePinBox(PinBoxPos.BOTTOM);
+	        	
+	        	switch(_pMove.getYAxis().getPropOrientation()){
+	        	case IN:
+		        	drawOnePin(canvas, PinBoxPos.TOP, Orientation.IN, topRec);
+		        	drawOnePin(canvas, PinBoxPos.BOTTOM, Orientation.IN, bottomRec);
+	        	case OUT:
+		        	drawOnePin(canvas, PinBoxPos.TOP, Orientation.OUT, topRec);
+		        	drawOnePin(canvas, PinBoxPos.BOTTOM, Orientation.OUT, bottomRec);
+	        	case TOG:
+		        	drawOnePin(canvas, PinBoxPos.TOP, Orientation.OUT, topRec);
+		        	drawOnePin(canvas, PinBoxPos.BOTTOM, Orientation.IN, bottomRec);
+	        	default:
+					Dlog.d(TAG, "prop orientation wrong: " + _pMove.getXAxis().getPropOrientation(), ENABLEDEBUG);
+	        	}
+	        	iconT = topRec.bottom; //determines the top of the icon based on the bottom of the top pin box
+	        	iconB = bottomRec.top; //determines the bottom of the icon based on the top of the bottom pin box
+	        }
+	        
+	        /*
+	        
 	        else
 	        {
 	        	RectF[] arr = makeHalfPinBoxes(PinBoxPos.RIGHT, makePinBox(PinBoxPos.RIGHT));
@@ -298,7 +326,7 @@ public class VTGMove extends View {
 	        	drawTwoPins(canvas, PinBoxPos.BOTTOM, curMove.pin5, primRec, curMove.pin6, secRec);
 	        	iconB = primRec.top;
 	        }
-	        
+	        */
 	        if(moveIcon != null){
 	        	float size = Math.min(Math.abs(iconL-iconR), Math.abs(iconT-iconB)) * (9.0f/10.0f);
 	        	Bitmap bm = getBitmapImage(moveIcon, size);
@@ -440,9 +468,15 @@ public class VTGMove extends View {
 	 * @param secPin - the secondary pin that will be drawn
 	 * @param secPinBox - the secondary box where the secondary pin will be drawn
 	 */
-	private void drawTwoPins(Canvas canvas, PinBoxPos boxPos, Pin primPin, RectF primPinBox, Pin secPin, RectF secPinBox ) {
-		drawOnePin(canvas, boxPos, primPin, primPinBox);
-		drawOnePin(canvas, boxPos, secPin, secPinBox);
+//	private void drawTogHands(Canvas canvas, PinBoxPos boxPos, Pin primPin, RectF primPinBox, Pin secPin, RectF secPinBox ) {
+//		//
+//		
+//		drawOnePin(canvas, boxPos, primPin, primPinBox);
+//		drawOnePin(canvas, boxPos, secPin, secPinBox);
+//	}
+	
+	private void drawSplitHands(){
+		
 	}
 	
 	/**
@@ -453,17 +487,12 @@ public class VTGMove extends View {
 	 * @param pin - the pin that will be drawn
 	 * @param pinBox - the box where the pin will be drawn
 	 */
-	private void drawOnePin(Canvas canvas, PinBoxPos boxPos, Pin pin, RectF pinBox) {
+	private void drawOnePin(Canvas canvas, PinBoxPos boxPos, Orientation direction, RectF pinBox) {
 		//Setup the Paint for the current pin
 		Paint curCirclePaint = null;
 		Paint curLinePaint = null;
-		if(pin.getColor().equals(Pin.pinColor.PRIMARY)){
-			curCirclePaint = primCirclePaint;
-			curLinePaint = primLinePaint;
-		}else if(pin.getColor().equals(Pin.pinColor.SECONDARY)){
-			curCirclePaint = secCirclePaint;
-			curLinePaint = secLinePaint;
-		}
+		curCirclePaint = primCirclePaint;
+		curLinePaint = primLinePaint;
 	
 		//calculates the points for the line of the pin
 		float lStartX=0,lStartY=0,lStopX=0,lStopY=0;
@@ -503,23 +532,23 @@ public class VTGMove extends View {
 		float cx=0, cy=0, cRad=0;
 		switch(boxPos){
 		case RIGHT:
-			cx = boxRightCX(pin.getDirection(), pinBox);
+			cx = boxRightCX(direction, pinBox);
 			cy = pinBox.top + pinBox.height() * oneHalf;
 			cRad = pinBox.width() * twoEigths;
 			break;
 		case TOP:
 			cx = pinBox.left + pinBox.width() * oneHalf;
-			cy = boxTopCY(pin.getDirection(), pinBox);
+			cy = boxTopCY(direction, pinBox);
 			cRad = pinBox.height() * twoEigths;
 			break;
 		case LEFT:
-			cx = boxLeftCX(pin.getDirection(), pinBox);
+			cx = boxLeftCX(direction, pinBox);
 			cy = pinBox.top + pinBox.height() * oneHalf;
 			cRad = pinBox.width() * twoEigths;
 			break;
 		case BOTTOM:
 			cx = pinBox.left + pinBox.width() * oneHalf;
-			cy = boxBottomCY(pin.getDirection(), pinBox);
+			cy = boxBottomCY(direction, pinBox);
 			cRad = pinBox.height() * twoEigths;
 			break;
 		default:
@@ -536,8 +565,8 @@ public class VTGMove extends View {
 	 * @param pinBox - the box where the pin is being drawn
 	 * @return - the y coordinate for the bottom pin box
 	 */
-	private float boxBottomCY(pinDirection direction, RectF pinBox) {
-		if(direction.equals(pinDirection.IN))
+	private float boxBottomCY(Orientation direction, RectF pinBox) {
+		if(direction.equals(Orientation.IN))
 			return pinBox.top + pinBox.height() * oneEigth;
 		else
 			return pinBox.top + pinBox.height() * sevenEigths;
@@ -549,8 +578,8 @@ public class VTGMove extends View {
 	 * @param pinBox - the box where the pin is being drawn
 	 * @return - the y coordinate for the top pin box
 	 */
-	private float boxTopCY(pinDirection direction, RectF pinBox) {
-		if(direction.equals(pinDirection.IN))
+	private float boxTopCY(Orientation direction, RectF pinBox) {
+		if(direction.equals(Orientation.IN))
 			return pinBox.top + pinBox.height() * sevenEigths;
 		else
 			return pinBox.top + pinBox.height() * oneEigth;
@@ -562,8 +591,8 @@ public class VTGMove extends View {
 	 * @param pinBox - the box where the pin is being drawn
 	 * @return - the x coordinate for the right pin box
 	 */
-	private float boxRightCX(pinDirection direction, RectF pinBox) {
-		if(direction.equals(pinDirection.IN))
+	private float boxRightCX(Orientation direction, RectF pinBox) {
+		if(direction.equals(Orientation.IN))
 			return pinBox.left + pinBox.width() * oneEigth;
 		else
 			return pinBox.left + pinBox.width() * sevenEigths;
@@ -575,8 +604,8 @@ public class VTGMove extends View {
 	 * @param pinBox - the box where the pin is being drawn
 	 * @return - the x coordinate for the left pin box
 	 */
-	private float boxLeftCX(pinDirection direction, RectF pinBox) {
-		if(direction.equals(pinDirection.IN))
+	private float boxLeftCX(Orientation direction, RectF pinBox) {
+		if(direction.equals(Orientation.IN))
 			return pinBox.left + pinBox.width() * sevenEigths;
 		else
 			return pinBox.left + pinBox.width() * oneEigth;

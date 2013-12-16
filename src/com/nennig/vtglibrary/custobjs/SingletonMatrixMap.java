@@ -21,7 +21,7 @@ public class SingletonMatrixMap {
 	private static final String DB_FILE = "detail_matrix_db.csv";
 	private static final String TAG = AppConfig.APP_TITLE_SHORT
 			+ ".SingletonMatrixMap";
-	private static boolean ENABLE_DEBUG = false;
+	private static boolean ENABLE_DEBUG = true;
 
 	private static SingletonMatrixMap ref;
 	/**
@@ -104,7 +104,6 @@ public class SingletonMatrixMap {
 		try {
 			String nextLineStr;
 			String[] nextLineParse;
-
 			while ((nextLineStr = bR.readLine()) != null) {
 				Dlog.d(TAG, "LINE: " + nextLineStr, ENABLE_DEBUG);
 				nextLineParse = nextLineStr.split(",");
@@ -119,9 +118,9 @@ public class SingletonMatrixMap {
 				}
 			}
 		} catch (Exception e) {
-			Dlog.d(TAG, "parseDBInfo Exception: " + e.toString(), ENABLE_DEBUG);
+			Dlog.e(TAG, "parseDBInfo Exception: " + e.toString(), ENABLE_DEBUG);
 		} finally {
-			Dlog.d(TAG, "Finished Parse", ENABLE_DEBUG);
+			Dlog.d(TAG, "Finished Parse!", ENABLE_DEBUG);
 		}
 	}
 
@@ -159,9 +158,11 @@ public class SingletonMatrixMap {
 		// iterates through all fields in the PropMove class so that the indexes
 		// for each field can be found in the db file
 		for (String field : pm.getDBFields()) {
-			String columnName = getDBColumnName(field);
-			if (!columnName.equals(""))
-				headerIndexMap.put(columnName, -1);
+			if(field.startsWith("m")){
+				String columnName = getDBColumnName(field);
+				if (!columnName.equals(""))
+					headerIndexMap.put(columnName, -1);	
+			}
 		}
 	}
 
@@ -175,16 +176,17 @@ public class SingletonMatrixMap {
 	 * @return - db header field
 	 */
 	private String getDBColumnName(String fieldName) {
-		if (fieldName.toLowerCase().equals("moveID".toLowerCase())) // checks
-																	// for UID
-																	// in the db
-																	// file
-			return fieldName.toLowerCase();
+		if (fieldName.contains("matrixID")) // checks for UID in the db file
+			return "matrixid";
+		else if(fieldName.contains("axis")){
+			return fieldName.substring(1).toLowerCase();
+		}
 		else {
 			String[] split1 = fieldName.split("_");
 			if (split1.length > 1) // Make sure it parsed correctly
 			{
 				String moveSet = split1[0];
+				
 				if (moveSet.length() > 2) // Checks for the identifier of "m"
 											// and then the number to identify
 											// the type of move "11","13","15"
@@ -211,8 +213,9 @@ public class SingletonMatrixMap {
 	private void getheaderIndexes(String[] nextLineParse) {
 		createIndexMap();
 		for (int i = 0; i < nextLineParse.length; i++) {
-			if (headerIndexMap.containsKey(nextLineParse[i].toLowerCase()))
-				headerIndexMap.put(nextLineParse[i].toLowerCase(), i);
+			String key = nextLineParse[i].toLowerCase();
+			if (headerIndexMap.containsKey(key))
+				headerIndexMap.put(key, i);
 		}
 		Dlog.d(TAG, "Headers: " + headerIndexMap.toString(), ENABLE_DEBUG);
 	}

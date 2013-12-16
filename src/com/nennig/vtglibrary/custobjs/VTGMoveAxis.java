@@ -14,48 +14,48 @@ public class VTGMoveAxis {
 	private static final String TAG = "VTGMoveAxis";
 	private static final boolean ENABLE_DEBUG = true;
 	
-	private moveID _firstID, _secondID;
+	private Orientation _handOrientation, _propOrientation;
 	private axis _axis;
 	
-	enum axis{
+	public static enum axis{
 		X,Y;
 	}
 	
-	enum moveID{
+	public static enum Orientation{
 		TOG, SPLIT, IN, OUT
 	}
 	
 	public VTGMoveAxis(axis z, String axisID){
 		boolean validString = true;
-		moveID firstID = null, secondID = null;
+		Orientation firstID = null, secondID = null;
 		
 		String[] split = axisID.split(" ");
 		if(split.length == 2)
 		{
-			if(split[0].toLowerCase() == "tog")
-				firstID = moveID.TOG;
-			if(split[1].toLowerCase() == "tog")
-				secondID = moveID.TOG;
-			if(split[0].toLowerCase() == "split")
-				firstID = moveID.SPLIT;
-			if(split[1].toLowerCase() == "split")
-				secondID = moveID.SPLIT;
-			if(split[0].toLowerCase() == "in")
-				firstID = moveID.IN;
-			if(split[1].toLowerCase() == "in")
-				secondID = moveID.IN;
-			if(split[0].toLowerCase() == "out")
-				firstID = moveID.OUT;
-			if(split[1].toLowerCase() == "out")
-				secondID = moveID.OUT;
+			if(split[0].toLowerCase().contains("tog"))
+				firstID = Orientation.TOG;
+			if(split[1].toLowerCase().contains("tog"))
+				secondID = Orientation.TOG;
+			if(split[0].toLowerCase().contains("split"))
+				firstID = Orientation.SPLIT;
+			if(split[1].toLowerCase().contains("split"))
+				secondID = Orientation.SPLIT;
+			if(split[0].toLowerCase().contains("in"))
+				firstID = Orientation.IN;
+			if(split[1].toLowerCase().contains("in"))
+				secondID = Orientation.IN;
+			if(split[0].toLowerCase().contains("out"))
+				firstID = Orientation.OUT;
+			if(split[1].toLowerCase().contains("out"))
+				secondID = Orientation.OUT;
 		}
 		else
 			validString = false;
 		
 		if((firstID != null) && (secondID != null)){
-			if(!(firstID.equals(moveID.IN)|| firstID.equals(moveID.OUT) || firstID.equals(secondID))){
-				_firstID = firstID;
-				_secondID = secondID;
+			if(!(firstID.equals(Orientation.IN)) && !(firstID.equals(Orientation.OUT)) && !(firstID.equals(secondID))){
+				_handOrientation = firstID;
+				_propOrientation = secondID;
 			}
 			else
 				validString = false;
@@ -69,43 +69,43 @@ public class VTGMoveAxis {
 		if(!validString)
 		{
 			Dlog.d(TAG, "Cannot create VTGMoveAxis, incorrect parameters: " + firstID + " " + secondID
-					+ " String: " + axisID, ENABLE_DEBUG);
+					+ " String: '" + axisID +"'", ENABLE_DEBUG);
 //			throw Exception;
 		}
 	}
 
 	/**
-	 * @return the _secondID
+	 * @return the _propOrientation
 	 */
-	public moveID get_secondID() {
-		return _secondID;
+	public Orientation getPropOrientation() {
+		return _propOrientation;
 	}
 
 	/**
-	 * @param _secondID the _secondID to set
+	 * @param _propOrientation the _propOrientation to set
 	 */
-	public void set_secondID(moveID _secondID) {
-		this._secondID = _secondID;
+	public void setPropOrientation(Orientation _secondID) {
+		this._propOrientation = _secondID;
 	}
 
 	/**
-	 * @return the _firstID
+	 * @return the _handOrientation
 	 */
-	public moveID get_firstID() {
-		return _firstID;
+	public Orientation getHandOrientation() {
+		return _handOrientation;
 	}
 
 	/**
-	 * @param _firstID the _firstID to set
+	 * @param _handOrientation the _handOrientation to set
 	 */
-	public void set_firstID(moveID _firstID) {
-		this._firstID = _firstID;
+	public void setHandOrientation(Orientation _firstID) {
+		this._handOrientation = _firstID;
 	}
 
 	/**
 	 * @return the _axis
 	 */
-	public axis get_axis() {
+	public axis getAxis() {
 		return _axis;
 	}
 
@@ -117,8 +117,8 @@ public class VTGMoveAxis {
 	}
 	
 	public String toString(){
-		if(_firstID != null)
-			return "axis: " + _axis.toString() + " " + _firstID.toString() + " " + _secondID;
+		if(_handOrientation != null)
+			return "axis: " + _axis.toString() + " " + _handOrientation.toString() + " " + _propOrientation;
 		else
 			return "Axis was not created correctly....";
 	}

@@ -45,7 +45,7 @@ import com.nennig.vtglibrary.custobjs.VTGToast;
  */
 public class DrawerActivity extends BaseActivity {
 	private static final String TAG = "DrawerActivity";
-	private static final boolean ENABLE_DEBUG = true;
+	private static final boolean ENABLE_DEBUG = false;
 	
 	protected boolean mDrawerEnabled = false;
 	protected CharSequence mDrawerTitle, mTitle;

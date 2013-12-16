@@ -9,9 +9,9 @@ package com.nennig.vtglibrary.custobjs;
  *
  */
 
-public class MovePins{
+public class old_MovePins{
 	public String matrixID="";
-	public Pin pin0;
+	/*public Pin pin0;
 	public Pin pin1;
 	public Pin pin2;
 	public Pin pin3;
@@ -40,5 +40,5 @@ public class MovePins{
 		if(pin7 != null)
 			str = str + " 7=" + pin7.toString();
 		return str;
-	}
+	}*/
 }

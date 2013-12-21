@@ -234,20 +234,23 @@ public class VTGMove extends View {
 	        	RectF leftRec = makePinBox(PinBoxPos.LEFT);
 	        	
 	        	switch(_pMove.getXAxis().getPropOrientation()){
-	        	case IN:
+	        	case IN: //Shows Double Pin!
 		        	drawOnePin(canvas, PinBoxPos.RIGHT, Orientation.IN, rightRec);
 		        	drawOnePin(canvas, PinBoxPos.LEFT, Orientation.IN, leftRec);
-	        	case OUT:
+		        	break;
+	        	case OUT: // Only one side works
 		        	drawOnePin(canvas, PinBoxPos.RIGHT, Orientation.OUT, rightRec);
 		        	drawOnePin(canvas, PinBoxPos.LEFT, Orientation.OUT, leftRec);
-	        	case TOG:
+		        	break;
+	        	case TOG: // Case Works!
 		        	drawOnePin(canvas, PinBoxPos.RIGHT, Orientation.IN, rightRec);
 		        	drawOnePin(canvas, PinBoxPos.LEFT, Orientation.OUT, leftRec);
+		        	break;
 	        	default:
 					Dlog.d(TAG, "prop orientation wrong: " + _pMove.getXAxis().getPropOrientation(), ENABLEDEBUG);
 	        	}
 	        	iconR = rightRec.left; //determines the right of the icon based on the left of the right pin box
-	        	iconL = rightRec.right; //determines the left of the icon based on the right of the left pin box
+	        	iconL = leftRec.right; //determines the left of the icon based on the right of the left pin box
 	        }
 	        if(_pMove.getYAxis().getHandOrientation().equals(VTGMoveAxis.Orientation.SPLIT)){
 	        	RectF topRec = makePinBox(PinBoxPos.TOP);
@@ -257,76 +260,69 @@ public class VTGMove extends View {
 	        	case IN:
 		        	drawOnePin(canvas, PinBoxPos.TOP, Orientation.IN, topRec);
 		        	drawOnePin(canvas, PinBoxPos.BOTTOM, Orientation.IN, bottomRec);
-	        	case OUT:
+		        	break;
+	        	case OUT: // Only one side works
 		        	drawOnePin(canvas, PinBoxPos.TOP, Orientation.OUT, topRec);
 		        	drawOnePin(canvas, PinBoxPos.BOTTOM, Orientation.OUT, bottomRec);
-	        	case TOG:
+		        	break;
+	        	case TOG: // Case Works!
 		        	drawOnePin(canvas, PinBoxPos.TOP, Orientation.OUT, topRec);
 		        	drawOnePin(canvas, PinBoxPos.BOTTOM, Orientation.IN, bottomRec);
+		        	break;
 	        	default:
-					Dlog.d(TAG, "prop orientation wrong: " + _pMove.getXAxis().getPropOrientation(), ENABLEDEBUG);
+					Dlog.d(TAG, "prop orientation wrong: " + _pMove.getYAxis().getPropOrientation(), ENABLEDEBUG);
+					break;
 	        	}
 	        	iconT = topRec.bottom; //determines the top of the icon based on the bottom of the top pin box
 	        	iconB = bottomRec.top; //determines the bottom of the icon based on the top of the bottom pin box
 	        }
-	        
-	        /*
-	        
-	        else
-	        {
-	        	RectF[] arr = makeHalfPinBoxes(PinBoxPos.RIGHT, makePinBox(PinBoxPos.RIGHT));
-	        	primRec = arr[0];
-	        	secRec = arr[1];
-	        	drawTwoPins(canvas, PinBoxPos.RIGHT, curMove.pin7, primRec, curMove.pin0, secRec);
-	        	iconR = primRec.left;
+	        if(_pMove.getXAxis().getHandOrientation().equals(VTGMoveAxis.Orientation.TOG)){
+	        	RectF rightRec = makePinBox(PinBoxPos.RIGHT);
+	        	RectF leftRec = makePinBox(PinBoxPos.LEFT);
+	        	
+	        	switch (_pMove.getXAxis().getPropOrientation()) {
+				case IN:
+					drawTwoPins(canvas, PinBoxPos.RIGHT, Orientation.IN, rightRec);
+					drawTwoPins(canvas, PinBoxPos.LEFT, Orientation.IN, leftRec);
+					break;
+				case OUT:
+					drawTwoPins(canvas, PinBoxPos.RIGHT, Orientation.OUT, rightRec);
+					drawTwoPins(canvas, PinBoxPos.LEFT, Orientation.OUT, leftRec);
+					break;
+				case SPLIT:
+					//TODO Special Case
+					break;
+				default:
+					Dlog.d(TAG, "prop orientation wrong: " + _pMove.getXAxis().getPropOrientation(), ENABLEDEBUG);
+					break;
+				}
+	        	iconR = rightRec.left; //determines the right of the icon based on the left of the right pin box
+	        	iconL = leftRec.right; //determines the left of the icon based on the right of the left pin box
+	        }
+	        if(_pMove.getYAxis().getHandOrientation().equals(VTGMoveAxis.Orientation.TOG)){
+	        	RectF topRec = makePinBox(PinBoxPos.TOP);
+	        	RectF bottomRec = makePinBox(PinBoxPos.BOTTOM);
+	        	
+	        	switch (_pMove.getYAxis().getPropOrientation()) {
+				case IN:
+					drawTwoPins(canvas, PinBoxPos.TOP, Orientation.IN, topRec);
+					drawTwoPins(canvas, PinBoxPos.BOTTOM, Orientation.IN, bottomRec);
+					break;
+				case OUT:
+					drawTwoPins(canvas, PinBoxPos.TOP, Orientation.OUT, topRec);
+					drawTwoPins(canvas, PinBoxPos.BOTTOM, Orientation.OUT, bottomRec);
+					break;
+				case SPLIT:
+					//TODO Special Case
+					break;
+				default:
+					Dlog.d(TAG, "prop orientation wrong: " + _pMove.getYAxis().getPropOrientation(), ENABLEDEBUG);
+					break;
+				}
+	        	iconT = topRec.bottom; //determines the top of the icon based on the bottom of the top pin box
+	        	iconB = bottomRec.top; //determines the bottom of the icon based on the top of the bottom pin box
 	        }
 	        
-	        if (curMove.pin2 == null)
-	        {
-	        	primRec = makePinBox(PinBoxPos.TOP);
-	        	drawOnePin(canvas, PinBoxPos.TOP, curMove.pin1, primRec);
-	        	iconT = primRec.bottom;
-	        }
-	        else
-	        {
-	        	RectF[] arr = makeHalfPinBoxes(PinBoxPos.TOP, makePinBox(PinBoxPos.TOP));
-	        	primRec = arr[0];
-	        	secRec = arr[1];
-	        	drawTwoPins(canvas, PinBoxPos.TOP, curMove.pin1, primRec, curMove.pin2, secRec);
-	        	iconT = primRec.bottom;
-	        }
-	        
-	        
-	        if(curMove.pin4 == null)
-	        {
-	        	primRec = makePinBox(PinBoxPos.LEFT);
-	        	drawOnePin(canvas, PinBoxPos.LEFT, curMove.pin3, primRec);
-	        	iconL = primRec.right;
-	        }
-	        else
-	        {
-	        	RectF[] arr = makeHalfPinBoxes(PinBoxPos.LEFT, makePinBox(PinBoxPos.LEFT));
-	        	primRec = arr[0];
-	        	secRec = arr[1];
-	        	drawTwoPins(canvas, PinBoxPos.LEFT, curMove.pin3, primRec, curMove.pin4, secRec);
-	        	iconL = primRec.right;
-	        }
-	        
-	        if(curMove.pin6 == null)
-	        {
-	        	primRec = makePinBox(PinBoxPos.BOTTOM);
-	        	drawOnePin(canvas, PinBoxPos.BOTTOM, curMove.pin5, primRec);
-	        	iconB = primRec.top;
-	        }
-	        else
-	        {
-	        	RectF[] arr = makeHalfPinBoxes(PinBoxPos.BOTTOM, makePinBox(PinBoxPos.BOTTOM));
-	        	primRec = arr[0];
-	        	secRec = arr[1];
-	        	drawTwoPins(canvas, PinBoxPos.BOTTOM, curMove.pin5, primRec, curMove.pin6, secRec);
-	        	iconB = primRec.top;
-	        }
-	        */
 	        if(moveIcon != null){
 	        	float size = Math.min(Math.abs(iconL-iconR), Math.abs(iconT-iconB)) * (9.0f/10.0f);
 	        	Bitmap bm = getBitmapImage(moveIcon, size);
@@ -468,15 +464,14 @@ public class VTGMove extends View {
 	 * @param secPin - the secondary pin that will be drawn
 	 * @param secPinBox - the secondary box where the secondary pin will be drawn
 	 */
-//	private void drawTogHands(Canvas canvas, PinBoxPos boxPos, Pin primPin, RectF primPinBox, Pin secPin, RectF secPinBox ) {
-//		//
-//		
-//		drawOnePin(canvas, boxPos, primPin, primPinBox);
-//		drawOnePin(canvas, boxPos, secPin, secPinBox);
-//	}
-	
-	private void drawSplitHands(){
-		
+	private void drawTwoPins(Canvas canvas, PinBoxPos boxPos, Orientation dir, RectF pinBox ) {
+		RectF[] halves = makeHalfPinBoxes(boxPos, pinBox);
+		if(halves.length == 2){
+			drawOnePin(canvas, boxPos, dir, halves[0]); //primary
+			drawOnePin(canvas, boxPos, dir, halves[1]); //secondary
+		}
+		else
+			Dlog.d(TAG, "half rectangles not calculated correctly", ENABLEDEBUG);
 	}
 	
 	/**
@@ -689,8 +684,4 @@ public class VTGMove extends View {
 		return false;
 		
 	}
-
-
-
-
 }

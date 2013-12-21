@@ -62,6 +62,8 @@ public class VTGMove extends View {
 	float threeEigths = 3.0f/8.0f;
 	float sevenEigths = 7.0f/8.0f;
 	
+	float oneSixteenth = 1.0f/16.0f;
+	
 	/*
 	 * Enum to determine which box we are calculating
 	 */
@@ -290,7 +292,8 @@ public class VTGMove extends View {
 					drawTwoPins(canvas, PinBoxPos.LEFT, Orientation.OUT, leftRec);
 					break;
 				case SPLIT:
-					//TODO Special Case
+					drawSplitPins(canvas, _pMove.getXAxis().getAxis(), rightRec);
+					drawSplitPins(canvas, _pMove.getXAxis().getAxis(), leftRec);
 					break;
 				default:
 					Dlog.d(TAG, "prop orientation wrong: " + _pMove.getXAxis().getPropOrientation(), ENABLEDEBUG);
@@ -313,7 +316,8 @@ public class VTGMove extends View {
 					drawTwoPins(canvas, PinBoxPos.BOTTOM, Orientation.OUT, bottomRec);
 					break;
 				case SPLIT:
-					//TODO Special Case
+					drawSplitPins(canvas, _pMove.getYAxis().getAxis(), topRec);
+					drawSplitPins(canvas, _pMove.getYAxis().getAxis(), bottomRec);
 					break;
 				default:
 					Dlog.d(TAG, "prop orientation wrong: " + _pMove.getYAxis().getPropOrientation(), ENABLEDEBUG);
@@ -348,6 +352,193 @@ public class VTGMove extends View {
         	float top =  (getHeight() / 2.0f) - (size / 2.0f);
         	canvas.drawBitmap(bm, left, top, null);
         }
+	}
+	
+	/**
+	 * This method takes in the parameters for two pins and then draws each pin according the the parameters
+	 * @param canvas - the drawable area
+	 * @param boxPos - The area which the pin box is located
+	 * @param primPin - the primary pin that will be drawn
+	 * @param primPinBox - the primary box where the primary pin will be drawn
+	 * @param secPin - the secondary pin that will be drawn
+	 * @param secPinBox - the secondary box where the secondary pin will be drawn
+	 */
+	private void drawTwoPins(Canvas canvas, PinBoxPos boxPos, Orientation dir, RectF pinBox ) {
+		RectF[] halves = makeHalfPinBoxes(boxPos, pinBox);
+		if(halves.length == 2){
+			drawOnePin(canvas, boxPos, dir, halves[0]); //primary
+			drawOnePin(canvas, boxPos, dir, halves[1]); //secondary
+		}
+		else
+			Dlog.d(TAG, "half rectangles not calculated correctly", ENABLEDEBUG);
+	}
+
+	/**
+	 * This is the main method for drawing the pins. This takes the position pf the pin box, the box size, and the 
+	 * details of the pin and draws it onto the view.
+	 * @param canvas - the drawable area
+	 * @param boxPos - The area which the pin box is located
+	 * @param pin - the pin that will be drawn
+	 * @param pinBox - the box where the pin will be drawn
+	 */
+	private void drawOnePin(Canvas canvas, PinBoxPos boxPos, Orientation direction, RectF pinBox) {
+		//Setup the Paint for the current pin
+		Paint curCirclePaint = null;
+		Paint curLinePaint = null;
+		curCirclePaint = primCirclePaint;
+		curLinePaint = primLinePaint;
+	
+		//calculates the points for the line of the pin
+		float lStartX=0,lStartY=0,lStopX=0,lStopY=0;
+		switch(boxPos){
+		case RIGHT:
+			lStartY = pinBox.top + (pinBox.height() * oneHalf);
+			lStopY =  lStartY;
+			lStartX = pinBox.left;
+			lStopX = pinBox.right;
+			break;
+		case TOP:
+			lStartX = pinBox.left + (pinBox.width() * oneHalf);
+			lStopX = lStartX;
+			lStartY = pinBox.top;
+			lStopY = pinBox.bottom;
+			break;
+		case LEFT:
+			lStartY = pinBox.top + (pinBox.height() * oneHalf);
+			lStopY =  lStartY;
+			lStartX = pinBox.left;
+			lStopX = pinBox.right;
+			break;
+		case BOTTOM:
+			lStartX = pinBox.left + (pinBox.width() * oneHalf);
+			lStopX = lStartX;
+			lStartY = pinBox.top;
+			lStopY = pinBox.bottom;
+			break;
+		default:
+			break;
+		}
+		canvas.drawLine(lStartX,lStartY,lStopX,lStopY, curLinePaint);
+			
+		//calculates the center and radius for the pin head
+		float cx=0, cy=0, cRad=0, cxHand=0, cyHand=0;
+		switch(boxPos){
+		case RIGHT:
+			cx = boxRightCX(direction, pinBox);
+			cy = pinBox.top + pinBox.height() * oneHalf;
+			cRad = pinBox.width() * oneEigth;
+//			cxHand=boxLeftCX(direction, pinBox);
+//			cyHand=cy;
+			break;
+		case TOP:
+			cx = pinBox.left + pinBox.width() * oneHalf;
+			cy = boxTopCY(direction, pinBox);
+			cRad = pinBox.height() * oneEigth;
+//			cxHand=cx;
+//			cyHand=boxBottomCY(direction, pinBox);
+			break;
+		case LEFT:
+			cx = boxLeftCX(direction, pinBox);
+			cy = pinBox.top + pinBox.height() * oneHalf;
+			cRad = pinBox.width() * oneEigth;
+//			cxHand = boxRightCX(direction, pinBox);
+//			cyHand = cy;
+			break;
+		case BOTTOM:
+			cx = pinBox.left + pinBox.width() * oneHalf;
+			cy = boxBottomCY(direction, pinBox);
+			cRad = pinBox.height() * oneEigth;
+//			cxHand = cx;
+//			cyHand = boxTopCY(direction, pinBox);
+			break;
+		default:
+			break;
+		}
+		canvas.drawCircle(cx, cy, cRad, curCirclePaint);	
+		
+//		calculates and draws the center point of the line
+//		cRad = pinBox.width() * oneSixteenth;
+//		canvas.drawCircle(cxHand, cyHand, cRad, curCirclePaint);
+	}
+
+	/**
+	 * This creates the Tog Split pin. This is a pin with a head on both sides of the line 
+	 * and then a center point in the line to distinguish where the hands are.
+	 * @param canvas - The drawable area
+	 * @param pos - the identifier where the pin box is located
+	 * @param boxRec - the box where the pin will be drawn
+	 */
+	private void drawSplitPins(Canvas canvas, VTGMoveAxis.axis axis, RectF pinBox) {
+		//Setup the Paint for the current pin
+		Paint curCirclePaint = null;
+		Paint curLinePaint = null;
+		curCirclePaint = primCirclePaint;
+		curLinePaint = primLinePaint;
+	
+		//calculates the points for the line of the pin
+		float lStartX=0,lStartY=0,lStopX=0,lStopY=0;
+		switch(axis){
+		case X:
+			lStartY = pinBox.top + (pinBox.height() * oneHalf);
+			lStopY =  lStartY;
+			lStartX = pinBox.left;
+			lStopX = pinBox.right;
+			break;
+		case Y:
+			lStartX = pinBox.left + (pinBox.width() * oneHalf);
+			lStopX = lStartX;
+			lStartY = pinBox.top;
+			lStopY = pinBox.bottom;
+			break;
+		default:
+			break;
+		}
+		canvas.drawLine(lStartX,lStartY,lStopX,lStopY, curLinePaint);
+		
+		float cx,cy,cRad;
+		//Calculates and draws the right/top circle
+		cx=0; cy=0; cRad=0;
+		switch(axis){
+		case X:
+			cx = boxRightCX(Orientation.OUT, pinBox);
+			cy = pinBox.top + pinBox.height() * oneHalf;
+			cRad = pinBox.width() * oneEigth;
+			break;
+		case Y:
+			cx = pinBox.left + pinBox.width() * oneHalf;
+			cy = boxTopCY(Orientation.OUT, pinBox);
+			cRad = pinBox.height() * oneEigth;
+			break;
+		default:
+			break;
+		}
+		canvas.drawCircle(cx, cy, cRad, curCirclePaint);
+		
+		//Calculates and draws the left/bottom circle
+		cx=0; cy=0; cRad=0;
+		switch(axis){
+		case X:
+			cx = boxRightCX(Orientation.IN, pinBox);
+			cy = pinBox.top + pinBox.height() * oneHalf;
+			cRad = pinBox.width() * oneEigth;
+			break;
+		case Y:
+			cx = pinBox.left + pinBox.width() * oneHalf;
+			cy = boxTopCY(Orientation.IN, pinBox);
+			cRad = pinBox.height() * oneEigth;
+			break;
+		default:
+			break;
+		}
+		canvas.drawCircle(cx, cy, cRad, curCirclePaint);
+		
+		//calculates and draws the center point of the line
+		cx=0; cy=0; cRad=0;
+		cx = pinBox.centerX();
+		cy = pinBox.centerY();
+		cRad = pinBox.width() * oneSixteenth;
+		canvas.drawCircle(cx, cy, cRad, curCirclePaint);
+		
 	}
 	
 	/**
@@ -455,105 +646,7 @@ public class VTGMove extends View {
 		return new RectF[] {primBox,secBox};
 	}
 	
-	/**
-	 * This method takes in the parameters for two pins and then draws each pin according the the parameters
-	 * @param canvas - the drawable area
-	 * @param boxPos - The area which the pin box is located
-	 * @param primPin - the primary pin that will be drawn
-	 * @param primPinBox - the primary box where the primary pin will be drawn
-	 * @param secPin - the secondary pin that will be drawn
-	 * @param secPinBox - the secondary box where the secondary pin will be drawn
-	 */
-	private void drawTwoPins(Canvas canvas, PinBoxPos boxPos, Orientation dir, RectF pinBox ) {
-		RectF[] halves = makeHalfPinBoxes(boxPos, pinBox);
-		if(halves.length == 2){
-			drawOnePin(canvas, boxPos, dir, halves[0]); //primary
-			drawOnePin(canvas, boxPos, dir, halves[1]); //secondary
-		}
-		else
-			Dlog.d(TAG, "half rectangles not calculated correctly", ENABLEDEBUG);
-	}
-	
-	/**
-	 * This is the main method for drawing the pins. This takes the position pf the pin box, the box size, and the 
-	 * details of the pin and draws it onto the view.
-	 * @param canvas - the drawable area
-	 * @param boxPos - The area which the pin box is located
-	 * @param pin - the pin that will be drawn
-	 * @param pinBox - the box where the pin will be drawn
-	 */
-	private void drawOnePin(Canvas canvas, PinBoxPos boxPos, Orientation direction, RectF pinBox) {
-		//Setup the Paint for the current pin
-		Paint curCirclePaint = null;
-		Paint curLinePaint = null;
-		curCirclePaint = primCirclePaint;
-		curLinePaint = primLinePaint;
-	
-		//calculates the points for the line of the pin
-		float lStartX=0,lStartY=0,lStopX=0,lStopY=0;
-		switch(boxPos){
-		case RIGHT:
-			lStartY = pinBox.top + (pinBox.height() * oneHalf);
-			lStopY =  lStartY;
-			lStartX = pinBox.left;
-			lStopX = pinBox.right;
-			break;
-		case TOP:
-			lStartX = pinBox.left + (pinBox.width() * oneHalf);
-			lStopX = lStartX;
-			lStartY = pinBox.top;
-			lStopY = pinBox.bottom;
-			break;
-		case LEFT:
-			lStartY = pinBox.top + (pinBox.height() * oneHalf);
-			lStopY =  lStartY;
-			lStartX = pinBox.left;
-			lStopX = pinBox.right;
-			break;
-		case BOTTOM:
-			lStartX = pinBox.left + (pinBox.width() * oneHalf);
-			lStopX = lStartX;
-			lStartY = pinBox.top;
-			lStopY = pinBox.bottom;
-			break;
-		default:
-			break;
-		}
 		
-		Log.d(TAG, "LINE: " + lStartX +" "+lStartY+" "+lStopX+" "+lStopY);
-		canvas.drawLine(lStartX,lStartY,lStopX,lStopY, curLinePaint);
-			
-		//calculates the center and radius for the pin head
-		float cx=0, cy=0, cRad=0;
-		switch(boxPos){
-		case RIGHT:
-			cx = boxRightCX(direction, pinBox);
-			cy = pinBox.top + pinBox.height() * oneHalf;
-			cRad = pinBox.width() * twoEigths;
-			break;
-		case TOP:
-			cx = pinBox.left + pinBox.width() * oneHalf;
-			cy = boxTopCY(direction, pinBox);
-			cRad = pinBox.height() * twoEigths;
-			break;
-		case LEFT:
-			cx = boxLeftCX(direction, pinBox);
-			cy = pinBox.top + pinBox.height() * oneHalf;
-			cRad = pinBox.width() * twoEigths;
-			break;
-		case BOTTOM:
-			cx = pinBox.left + pinBox.width() * oneHalf;
-			cy = boxBottomCY(direction, pinBox);
-			cRad = pinBox.height() * twoEigths;
-			break;
-		default:
-			break;
-		}
-
-		canvas.drawCircle(cx, cy, cRad, curCirclePaint);
-		
-	}
-	
 	/**
 	 * Calculates the y coordinate for the bottom pin box according to the pin direction
 	 * @param direction - direction of the pin

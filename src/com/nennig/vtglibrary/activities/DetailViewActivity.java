@@ -75,11 +75,15 @@ public class DetailViewActivity extends BaseActivity{
     private void firstRunOfActivity(SharedPreferences sPref) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("New Feature!");
-        alert.setMessage("In the pro version you will be able to swipe through 1:1, 1:3, and 1:5 sets " +
+        if(isLiteVersion())
+        	alert.setMessage("In the pro version you will be able to swipe through 1:1, 1:3, and 1:5 sets " +
                 "that have the same Hand/Prop. You can try this feature out on the Lite version by just " +
                 "swiping the image and see what happens!");
-
-        alert.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+        else
+        	alert.setMessage("You can now swipe through 1:1, 1:3, and 1:5 sets " +
+                "that have the same Hand/Prop. Try it out! Just " +
+                "swipe the image and see what happens!");
+        alert.setPositiveButton("Sweet!", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
             }

@@ -7,13 +7,17 @@ import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -24,9 +28,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
@@ -38,6 +45,7 @@ import com.nennig.constants.AppConstants.Set;
 import com.nennig.constants.Dlog;
 import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.custobjs.VTGToast;
+import com.nennig.vtglibrary.managers.VideoManager;
 
 /**
  * @author Kevin Nennig (knennig213@gmail.com)
@@ -60,6 +68,7 @@ public class DrawerActivity extends BaseActivity {
 	private static final String mLearn = "Learn about VTG";
 	private static final String mFacebook = "Join Facebook";
 	private static final String mGenerator = "VTG Generator";
+	private static final String mDownloadVideos = "Cache All Videos";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {      
@@ -76,7 +85,8 @@ public class DrawerActivity extends BaseActivity {
         drawerList.add(mGenerator);       //3
         drawerList.add(mFacebook);      //4
         drawerList.add(mLearn);           //5
-        drawerList.add(mPdfs);    //6
+        drawerList.add(mDownloadVideos); //6
+//        drawerList.add(mPdfs);    //6
         drawerList.add(mSuggestion); 			 //7
         Dlog.d(TAG, "DrawerList: " + drawerList,ENABLE_DEBUG);
         
@@ -159,7 +169,7 @@ public class DrawerActivity extends BaseActivity {
 	             }
 	             else
 	             {
-	            	 //TODO Unlock 15
+	            	 //TODO Pro - Unlock 15
 	                 new VTGToast(a).comingSoonProFeature();
 //	                 saveCurSet(Set.ONEFIVE.toSetID());
 //	                 intent = new Intent(a,
@@ -171,6 +181,12 @@ public class DrawerActivity extends BaseActivity {
 			 {
 	             viewPDFList();
 			 }
+			 else if(name.equals(mDownloadVideos))
+			 {
+				 //TODO Pro - Finish implementing Download Videos
+				 new VTGToast(this).comingSoonProFeature();
+//				 viewDownloadsList();
+			 }
 			 else if(name.equals(mSuggestion))
 			 {
 	             intent = new Intent(a,HTMLActivity.class);
@@ -179,7 +195,7 @@ public class DrawerActivity extends BaseActivity {
 			 }
 			 else if(name.equals(mLearn))
 			 {
-	             //TODO coming soon
+	             //TODO Lite - coming soon
 	             new VTGToast(a).comingSoonFeature();
 			 }
 			 else if(name.equals(mFacebook))
@@ -199,7 +215,72 @@ public class DrawerActivity extends BaseActivity {
 			 }
 	     }
 			 
-		 private void viewPDFList() {
+		 /**
+		 * 
+		 */
+		private void viewDownloadsList() {	
+			if(isLiteVersion()){
+				new VTGToast(this).proOnlyFeature();
+			}
+			else
+			{
+		        final AlertDialog.Builder alert = new AlertDialog.Builder(this); 
+		        alert.setTitle("Cache All Videos");
+		        alert.setMessage("Downloading all videos will increase overall responsiveness of this app. " +
+		        		"Would you like to download all the videos now?");
+		        
+		        alert.setPositiveButton("Download", new DialogInterface.OnClickListener() { 
+		            public void onClick(DialogInterface dialog, int whichButton) { 
+		            	ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		            	NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+	
+		            	if (mWifi.isConnected()) {
+		            	    downloadVideos();
+		            	}
+		            	else{
+		            		alert.setTitle("WARNING");
+		            		alert.setMessage("It's suggested you are connected to Wifi when downloading all videos since " +
+		            				"downloads can be upwards of 22MB.");
+		            		alert.setPositiveButton("Just Download", new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									downloadVideos();								
+								}
+							});
+		            		alert.setNeutralButton("Wifi Settings", new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									startActivityForResult(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS),100);
+								}
+							});
+							alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {}
+								});
+		            	}
+		            } 
+		        });   
+		        alert.setNegativeButton("No Thanks", new DialogInterface.OnClickListener() {				
+					@Override
+					public void onClick(DialogInterface dialog, int which) {}
+				});
+		        alert.show();
+			}
+		}
+		//Callback once the wifi is turned on.
+		protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+			  if (requestCode == 100) {
+			     if(resultCode == RESULT_OK){      
+			         downloadVideos();          
+			     }
+			  }
+		}
+		//downloads all of the videos for the app
+		private void downloadVideos() {
+			VideoManager.downloadAllVideos(this);
+		}
+		
+		private void viewPDFList() {
 			Dialog viewDialog = new Dialog(this);
 			viewDialog.getWindow().setFlags(
 					WindowManager.LayoutParams.FLAG_BLUR_BEHIND,

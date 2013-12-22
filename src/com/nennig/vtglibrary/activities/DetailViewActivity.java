@@ -127,18 +127,18 @@ public class DetailViewActivity extends BaseActivity{
   			drawnMove.removeDefaultIcon();
 	  		InputStream iStream;
 			try {
-                if(_curSet.equals(Set.ONEFIVE))//TODO 1:5 Coming Soon
-                {
-                    drawnMove.removePinsAndIcon();
-                    iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.COMING_SOON_IMAGE);
-                    drawnMove.addDefaultIcon(iStream);
-                }
-                else
-                {
+//                if(_curSet.equals(Set.ONEFIVE))//TODO 1:5 Coming Soon
+//                {
+//                    drawnMove.removePinsAndIcon();
+//                    iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.COMING_SOON_IMAGE);
+//                    drawnMove.addDefaultIcon(iStream);
+//                }
+//                else
+//                {
 				    iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet) +
                            "." + pMove.get_fileExt(_curSet));
 				    drawnMove.addPinsAndIcon(pMove, iStream);
-                }
+//                }
 			} catch (IOException e) {
 				drawnMove.addPins(pMove);
 			}

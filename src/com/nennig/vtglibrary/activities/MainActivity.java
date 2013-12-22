@@ -105,10 +105,8 @@ public class MainActivity extends DrawerActivity{
 	             }
 	             else
 	             {
-	            	//TODO Unlock 15
-	            	 new VTGToast(MainActivity.this).comingSoonProFeature();
-//					saveCurSet(Set.ONEFIVE.toSetID());
-//		            startActivity(new Intent(MainActivity.this, SelectorActivity.class));
+					saveCurSet(Set.ONEFIVE.toSetID());
+		            startActivity(new Intent(MainActivity.this, SelectorActivity.class));
 	             }
 			}
 		});

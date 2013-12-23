@@ -77,7 +77,6 @@
 		        
 			<com.nennig.vtglibrary.draw.VTGMove
 	   		    android:id="@+id/detail_customMoveDraw"
-	   		    android:layout_below="@id/detail_moveType"
 	   		    android:layout_width="match_parent"
 	   		    android:layout_height="wrap_content"
 	   		    android:padding="10dp"

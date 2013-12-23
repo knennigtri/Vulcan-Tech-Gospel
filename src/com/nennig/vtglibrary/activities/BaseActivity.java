@@ -36,6 +36,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
@@ -198,15 +199,17 @@ public class BaseActivity extends Activity {
     public boolean isLiteVersion()  {
     	return ((VTGLibraryApplication)getApplication()).isLiteVersion(); 
     }
-    
-//    @SuppressLint("NewApi")
-//	@Override
-//    protected void onStart() {
-//        super.onStart();
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-//        	ActionBar actionBar = this.getActionBar();
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//       }
-//        
-//    }
+    @Override
+    public void onStart() {
+      super.onStart();
+      // The rest of your onStart() code.
+      EasyTracker.getInstance(this).activityStart(this);  // Add this method.
+    }
+
+    @Override
+    public void onStop() {
+      super.onStop();
+      // The rest of your onStop() code.
+      EasyTracker.getInstance(this).activityStop(this);  // Add this method.
+    }
 }

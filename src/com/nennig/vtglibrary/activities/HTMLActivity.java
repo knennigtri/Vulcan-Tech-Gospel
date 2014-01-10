@@ -15,7 +15,6 @@ import com.nennig.vtglibrary.R;
  * Created by Kevin on 6/8/13.
  */
 public class HTMLActivity extends BaseActivity {
-    private final static int API_LEVEL = Integer.parseInt(Build.VERSION.SDK);
 //    private static String surveyURL = "https://docs.google.com/forms/d/1FgkWiiCRchB7MD398Fdr3vAP0jsGsHotYCt_Qjhl_f0/viewform";
     private static String surveyFrame = "<iframe src=\"";
     private static String last = "?embedded=true\" height=\"800\" frameborder=\"0\" marginheight=\"0\" marginwidth\"0\">" +
@@ -23,7 +22,7 @@ public class HTMLActivity extends BaseActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_survey_wv);
+        setContentView(R.layout.activity_webview);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         String html_url = getIntent().getExtras().getString(AppConstants.HTML_URL);

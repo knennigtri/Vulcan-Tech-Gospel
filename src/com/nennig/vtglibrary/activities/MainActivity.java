@@ -66,7 +66,7 @@ public class MainActivity extends DrawerActivity{
 		tipOfTheWeek.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new VTGToast(MainActivity.this).comingSoonFeature();
+				startActivity(new Intent(MainActivity.this, TipOfTheWkActivity.class));
 			}
 		});
 		Button oneThreeButton = (Button) findViewById(R.id.main_button_13);
@@ -105,8 +105,10 @@ public class MainActivity extends DrawerActivity{
 	             }
 	             else
 	             {
-					saveCurSet(Set.ONEFIVE.toSetID());
-		            startActivity(new Intent(MainActivity.this, SelectorActivity.class));
+	            	 //TODO unlock 1:5
+	            	new VTGToast(MainActivity.this).comingSoonProFeature();
+//					saveCurSet(Set.ONEFIVE.toSetID());
+//		            startActivity(new Intent(MainActivity.this, SelectorActivity.class));
 	             }
 			}
 		});

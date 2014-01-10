@@ -38,7 +38,6 @@ public class VideoActivity extends BaseActivity {
     
     int videoPropIndex = 0;
     MatrixID _curMatrixID;
-
     
     @SuppressLint("NewApi")
 	@Override
@@ -63,10 +62,17 @@ public class VideoActivity extends BaseActivity {
         //Set Video Name
         TextView tvName = (TextView) findViewById(R.id.video_moveName);
         tvName.setText(pMove.getName(_curSet));
-        TextView tvMove = (TextView) findViewById(R.id.video_move_hand_prop);
-        tvMove.setText("Hand: " + MatrixID.MCategory.getStringAbbrFromIndex(_curMatrixID.getHandID()) +
-        		"  Prop: " + MatrixID.MCategory.getStringAbbrFromIndex(_curMatrixID.getPropID())
-        		);
+        
+        //The following code sets up all of the text details for the move
+        TextView propText = (TextView) findViewById(R.id.video_poiText);
+        TextView handText = (TextView)findViewById(R.id.video_handText);
+
+        int pInt = _curMatrixID.getPropID();
+        int hInt = _curMatrixID.getHandID();
+        String pText = MatrixID.MCategory.getStringLongFromIndex(pInt);
+        String hText = MatrixID.MCategory.getStringLongFromIndex(hInt);
+        propText.setText(pText);
+        handText.setText(hText);
         
         
         //Setup Video
@@ -156,8 +162,6 @@ public class VideoActivity extends BaseActivity {
 //		String path = "android.resource://"+getPackageName()+"/" + videoID;
 //
 //		vView.setVideoURI(Uri.parse(path));
-
-        //TODO FIX!
         return new VideoManager(this,_curSet,
                 _curMatrixID, AppConstants.PropType.getPropType(videoPropIndex));
 

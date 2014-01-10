@@ -7,22 +7,24 @@ import java.io.InputStream;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.TextureView;
 import android.view.View;
-import android.widget.TextView;
 
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.Dlog;
 import com.nennig.vtglibrary.R;
-//import com.nennig.vtglibrary.custobjs.Pin;
 import com.nennig.vtglibrary.custobjs.PropMove;
 import com.nennig.vtglibrary.custobjs.VTGMoveAxis;
-import com.nennig.vtglibrary.custobjs.VTGToast;
 import com.nennig.vtglibrary.custobjs.VTGMoveAxis.Orientation;
+//import com.nennig.vtglibrary.custobjs.Pin;
 
 /**
  * @author Kevin Nennig (knennig213@gmail.com)
@@ -35,13 +37,9 @@ public class VTGMove extends View {
 	private static final boolean ENABLEDEBUG = true;
     
     private int primColor;
-//    private int secColor;
-
     
     private Paint primCirclePaint;
-//    private Paint secCirclePaint;
     private Paint primLinePaint;
-//    private Paint secLinePaint;
     private Paint proPaint;
     
     RectF drawAreaBounds = new RectF();
@@ -150,21 +148,16 @@ public class VTGMove extends View {
 	private void init() {
         // Force the background to software rendering because otherwise the Blur
         // filter won't work.
-//        setLayerToSW(this);
         int lineWidth = 5;
-
-//        BitmapShader bitmapShader = new BitmapShader(, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
 		
         primCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         primCirclePaint.setStyle(Paint.Style.FILL);
         primCirclePaint.setColor(primColor);
-//        primCirclePaint.setAlpha(0);
-        
+    
         primLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         primLinePaint.setStyle(Paint.Style.STROKE);
         primLinePaint.setColor(primColor);
         primLinePaint.setStrokeWidth(lineWidth);
-//        primLinePaint.setAlpha(0);
 
         proPaint = new Paint();
 		proPaint.setColor(Color.BLACK);
@@ -427,38 +420,26 @@ public class VTGMove extends View {
 			cx = boxRightCX(direction, pinBox);
 			cy = pinBox.top + pinBox.height() * oneHalf;
 			cRad = pinBox.width() * oneEigth;
-//			cxHand=boxLeftCX(direction, pinBox);
-//			cyHand=cy;
 			break;
 		case TOP:
 			cx = pinBox.left + pinBox.width() * oneHalf;
 			cy = boxTopCY(direction, pinBox);
 			cRad = pinBox.height() * oneEigth;
-//			cxHand=cx;
-//			cyHand=boxBottomCY(direction, pinBox);
 			break;
 		case LEFT:
 			cx = boxLeftCX(direction, pinBox);
 			cy = pinBox.top + pinBox.height() * oneHalf;
 			cRad = pinBox.width() * oneEigth;
-//			cxHand = boxRightCX(direction, pinBox);
-//			cyHand = cy;
 			break;
 		case BOTTOM:
 			cx = pinBox.left + pinBox.width() * oneHalf;
 			cy = boxBottomCY(direction, pinBox);
 			cRad = pinBox.height() * oneEigth;
-//			cxHand = cx;
-//			cyHand = boxTopCY(direction, pinBox);
 			break;
 		default:
 			break;
 		}
 		canvas.drawCircle(cx, cy, cRad, curCirclePaint);	
-		
-//		calculates and draws the center point of the line
-//		cRad = pinBox.width() * oneSixteenth;
-//		canvas.drawCircle(cxHand, cyHand, cRad, curCirclePaint);
 	}
 
 	/**
@@ -548,7 +529,7 @@ public class VTGMove extends View {
 	 * @return - box that will contain the pin(s) in that area
 	 */
 	private RectF makePinBox(PinBoxPos boxPos){
-		Log.d(TAG, "Drawing single Pin. w=" + drawAreaBounds.width() + " h=" + drawAreaBounds.height());
+		Dlog.d(TAG, "Drawing single Pin. w=" + drawAreaBounds.width() + " h=" + drawAreaBounds.height(),ENABLEDEBUG);
 		
 		//Get the origin for each box
 		float boxX=0, boxY=0;		
@@ -573,14 +554,14 @@ public class VTGMove extends View {
 				break;
 		}
 		
-		Log.d(TAG, boxPos + " boxX=" + boxX + " boxY=" + boxY);
+		Dlog.d(TAG, boxPos + " boxX=" + boxX + " boxY=" + boxY, ENABLEDEBUG);
 		
 		RectF pinBox = new RectF(boxX + pinBoxPadding, 
 				boxY + pinBoxPadding,
 				boxX + (drawAreaBounds.width() / 4) - pinBoxPadding,
 				boxY + (drawAreaBounds.height() / 4) - pinBoxPadding
 				);
-		Log.d(TAG, "Box is: " + pinBox);
+		Dlog.d(TAG, "Box is: " + pinBox,ENABLEDEBUG);
 
 		return pinBox;
 	}
@@ -700,7 +681,7 @@ public class VTGMove extends View {
 	}
 	
 	private static Bitmap getBitmapImage(InputStream iStream, float reqWidth) {
-		Log.d(TAG, "ReqSize: " + reqWidth);
+		Dlog.d(TAG, "ReqSize: " + reqWidth, ENABLEDEBUG);
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -712,12 +693,12 @@ public class VTGMove extends View {
         
         final int height = options.outHeight;
         final int width = options.outWidth;
-        Log.d(TAG, "H: " + height + " W: " + width);
+        Dlog.d(TAG, "H: " + height + " W: " + width,ENABLEDEBUG);
        
         int newHeight = (int) Math.round((reqWidth / (float) width)*height);
         int newWidth= Math.round(reqWidth);
        
-        Log.d(TAG, "nH: " + newHeight + " nW: " + newWidth);
+        Dlog.d(TAG, "nH: " + newHeight + " nW: " + newWidth,ENABLEDEBUG);
     	newBitmap = Bitmap.createScaledBitmap(newBitmap, newWidth, newHeight, true);
         
         return newBitmap;

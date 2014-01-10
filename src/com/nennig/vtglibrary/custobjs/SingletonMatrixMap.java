@@ -21,7 +21,7 @@ public class SingletonMatrixMap {
 	private static final String DB_FILE = "detail_matrix_db.csv";
 	private static final String TAG = AppConfig.APP_TITLE_SHORT
 			+ ".SingletonMatrixMap";
-	private static boolean ENABLE_DEBUG = true;
+	private static boolean ENABLE_DEBUG = false;
 
 	private static SingletonMatrixMap ref;
 	/**

@@ -169,7 +169,7 @@ public class DrawerActivity extends BaseActivity {
 	             }
 	             else
 	             {
-	            	 //TODO Pro - Unlock 15
+	            	 //TODO Unlock 1:5
 	                 new VTGToast(a).comingSoonProFeature();
 //	                 saveCurSet(Set.ONEFIVE.toSetID());
 //	                 intent = new Intent(a,
@@ -218,6 +218,7 @@ public class DrawerActivity extends BaseActivity {
 		 /**
 		 * 
 		 */
+		//TODO cache videos
 		private void viewDownloadsList() {	
 			if(isLiteVersion()){
 				new VTGToast(this).proOnlyFeature();

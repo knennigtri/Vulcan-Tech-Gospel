@@ -94,14 +94,10 @@ public class DetailViewActivity extends BaseActivity{
 
     private void setupMove(){
         setTitle(_curSet.toLabel());
-		
-		//Get the singleton to create the move view for this matrixID
-//  		SingletonMovePinMap sMovePins = SingletonMovePinMap.getSingletonMovePinMap(this);
-//  		MovePins pMovePins = sMovePins.getMovePins(_curMatrixID.toString());
-		
 		//Set the move pins to the move view
   		VTGMove drawnMove = (VTGMove) findViewById(R.id.detail_customMoveDraw);
         drawnMove.setBackgroundResource(R.color.trans);
+        TextView detailTV = (TextView) findViewById(R.id.detail_moveName);
 
   		if(isLiteVersion() && !_curSet.equals(Set.ONETHREE)){ //Lite Statement
   			drawnMove.removePinsAndIcon();
@@ -121,6 +117,7 @@ public class DetailViewActivity extends BaseActivity{
                     return false;
                 }
             });
+            detailTV.setText("");
   		}
   		else //Pro Statement
   		{
@@ -143,6 +140,11 @@ public class DetailViewActivity extends BaseActivity{
 				drawnMove.addPins(pMove);
 			}
 
+    		//Set the Image Name
+    		if(pMove.getName(_curSet).length()>57)
+    			detailTV.setTextSize(15);
+    		detailTV.setText(pMove.getName(_curSet));
+			
 			drawnMove.setOnTouchListener(new OnTouchListener() {
 				@Override
 				public boolean onTouch(View v, MotionEvent event) {
@@ -210,12 +212,6 @@ public class DetailViewActivity extends BaseActivity{
         propText.setText(pText);
         handText.setText(hText);
         
-				
-		//Set the Image Name
-		TextView detailTV = (TextView) findViewById(R.id.detail_moveName);
-		if(pMove.getName(_curSet).length()>57)
-			detailTV.setTextSize(15);
-		detailTV.setText(pMove.getName(_curSet));
 	}
 	
     /*

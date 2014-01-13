@@ -4,8 +4,10 @@
 package com.nennig.vtglibrary.activities;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,7 +36,7 @@ import com.nennig.vtglibrary.R;
 
 /**
  * @author Kevin Nennig (knennig213@gmail.com)
- *
+ * TODO Create previous tips in tip of the week.
  */
 public class TipOfTheWkActivity extends BaseActivity{
 	private static final String TIPS_FILE = "Tip of the Week - Sheet1.csv";
@@ -42,7 +44,7 @@ public class TipOfTheWkActivity extends BaseActivity{
 	private static final boolean ENABLE_DEBUG = true;
 	private WebView wv;
 	private ArrayList<Tip> list;
-	ListIterator<Tip> iterator;
+	private int curTipIndex;
 	
 	private class Tip{
 		private String date, tip, writer;
@@ -61,16 +63,16 @@ public class TipOfTheWkActivity extends BaseActivity{
 	        setContentView(R.layout.activity_webview);
 	        getActionBar().setDisplayHomeAsUpEnabled(true);
 	
+//	        mViewFlipper = (ViewFlipper) findViewById(R.id.html_flipper);
+//	        initAnimations();
+	
 	        parseTips();
-	        
 	        String htmlCode = "";
-//	        date = "Dec 12, 2013";
-//	        quote = "1:3 stands for hand rotation: prop rotation of one arm.  Hand rotation is often called arm rotation.";
-//	        writer = "Noer";
 	        
-	        if(iterator.hasNext())
+	        if(!list.isEmpty())
 	        {
-	        	Tip t = iterator.next();
+	        	curTipIndex = list.size()-1;
+	        	Tip t = list.get(curTipIndex);
 	    		htmlCode = htmlString(t.getDate(), t.getTip(), t.getWriter());
 	        }
 	        
@@ -89,31 +91,44 @@ public class TipOfTheWkActivity extends BaseActivity{
 			InputStream iS = this.getAssets().open(TIPS_FILE);
 			InputStreamReader iSR = new InputStreamReader(iS);
 			BufferedReader bR = new BufferedReader(iSR);
-			String nextLineStr;
-			Date today = new Date();
-			Date tipRelease;
+			parseTips(bR);
+		} catch (Exception e) {
+			Dlog.d(TAG, "Pasring Error: " + e.getMessage() + "**Type: " + e.toString(), ENABLE_DEBUG);
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	private void parseTips(BufferedReader bR){
+		String nextLineStr;
+		Date today = new Date();
+		Date tipRelease;
+		String lineZero = "";
+		try {
 			while ((nextLineStr = bR.readLine()) != null) {
 				String[] line = nextLineStr.split(",");
 				if(line.length == 3)
 				{
-					tipRelease = new SimpleDateFormat("MM/dd/YYYY").parse(line[0]);
+					lineZero = line[0];
+					Dlog.d(TAG, "Adding Tip for Date: " + lineZero , ENABLE_DEBUG);
+					tipRelease = new SimpleDateFormat("mm/dd/yy").parse(lineZero);
 					if(tipRelease.before(today) || tipRelease.equals(today)){
-						list.add(new Tip(line[0],line[1],line[2]));
-						Dlog.d(TAG, "Adding Tip for Date: " + line[0] , ENABLE_DEBUG);
+						list.add(new Tip(lineZero,line[1],line[2]));
 					}
 				}
 				else
 				{
-					Dlog.d(TAG, "Error parsing Tip File", ENABLE_DEBUG);
+					Dlog.d(TAG, "Line does not have 3 identifiers", ENABLE_DEBUG);
 				}
 			
 			}
-		} catch (Exception e) {
-			//TODO Figure out why this is being displayed!! Debug it.
-			Dlog.d(TAG, "Pasring Error: " + e.getMessage() + "**Type: " + e.toString(), ENABLE_DEBUG);
+		} catch (IOException e) {			
+			Dlog.d(TAG, "IOException in Parsing: " + e.getMessage() + "**Type: " + e.toString(), ENABLE_DEBUG);
+		} catch (ParseException e) {
+			Dlog.d(TAG, "ParseException in Parsing: " + e.getMessage() + "**Type: " + e.toString(), ENABLE_DEBUG);
 		}
-		
-		iterator = list.listIterator();
+		Dlog.d(TAG, "List: " + list.toString(), ENABLE_DEBUG);
 	}
 	
     /**
@@ -121,6 +136,7 @@ public class TipOfTheWkActivity extends BaseActivity{
 	 */
 	private void refreshTip(String htmlCode) {
         wv.loadData(htmlCode,"text/html", "UTF-8");
+		Dlog.d(TAG, "Refreshing Tip", ENABLE_DEBUG);
 	}
 
 	/**
@@ -128,7 +144,8 @@ public class TipOfTheWkActivity extends BaseActivity{
 	 */
 	private String getOlderTip() {
 		Dlog.d(TAG, "Getting Older Tip", ENABLE_DEBUG);
-		Tip t = iterator.next();
+		curTipIndex--;
+		Tip t = list.get(curTipIndex);
 		String str = htmlString(t.getDate(), t.getTip(), t.getWriter());
 		return str;
 	}
@@ -138,7 +155,8 @@ public class TipOfTheWkActivity extends BaseActivity{
 	 */
 	private String getNewerTip() {
 		Dlog.d(TAG, "Getting newer Tip", ENABLE_DEBUG);
-		Tip t = iterator.previous();
+		curTipIndex++;
+		Tip t = list.get(curTipIndex);
 		String str = htmlString(t.getDate(), t.getTip(), t.getWriter());
 		return str;
 	}
@@ -163,7 +181,7 @@ public class TipOfTheWkActivity extends BaseActivity{
     private Animation mInFromLeft;
     private Animation mOutToRight;
     private ViewFlipper mViewFlipper;
-	   private void initAnimations() {
+	private void initAnimations() {
 	        mInFromRight = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
 	                +1.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
 	                Animation.RELATIVE_TO_PARENT, 0.0f,
@@ -195,7 +213,7 @@ public class TipOfTheWkActivity extends BaseActivity{
 
 	        final GestureDetector gestureDetector;
 	        gestureDetector = new GestureDetector(new MyGestureDetector());
-
+	        Dlog.d(TAG, "Gesture Created", ENABLE_DEBUG);
 	        mViewFlipper.setOnTouchListener(new OnTouchListener() {
 
 	            public boolean onTouch(View v, MotionEvent event) {
@@ -221,10 +239,11 @@ public class TipOfTheWkActivity extends BaseActivity{
                 return false;
             if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
                     && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-            	if(iterator.hasNext())
+                mViewFlipper.setInAnimation(mInFromRight);
+                mViewFlipper.setOutAnimation(mOutToLeft);
+            	if(curTipIndex != (list.size()-1))
             	{
-	                mViewFlipper.setInAnimation(mInFromRight);
-	                mViewFlipper.setOutAnimation(mOutToLeft);
+            		Dlog.d(TAG, "Going to newer Tip.", ENABLE_DEBUG);
 	                String code = getNewerTip();
 	                refreshTip(code);
 	                mViewFlipper.showNext();
@@ -233,13 +252,13 @@ public class TipOfTheWkActivity extends BaseActivity{
             	{
             		Toast.makeText(TipOfTheWkActivity.this, "This is the newest tip.", Toast.LENGTH_SHORT).show();
             	}
-                
             } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
                     && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-            	if(iterator.hasPrevious())
+                mViewFlipper.setInAnimation(mInFromLeft);
+                mViewFlipper.setOutAnimation(mOutToRight);
+            	if(curTipIndex != 0)
             	{
-	                mViewFlipper.setInAnimation(mInFromLeft);
-	                mViewFlipper.setOutAnimation(mOutToRight);
+            		Dlog.d(TAG, "Going to older Tip.", ENABLE_DEBUG);
 	                String code = getOlderTip();
 	                refreshTip(code);
 	                mViewFlipper.showPrevious();		

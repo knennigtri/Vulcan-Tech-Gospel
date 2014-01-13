@@ -29,6 +29,7 @@ import com.nennig.constants.AppConstants.Set;
 import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
 import com.nennig.vtglibrary.custobjs.VTGToast;
+import com.nennig.vtglibrary.managers.AppUpgradeManager;
 
 public class MainActivity extends DrawerActivity{
 	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".MainActivity";
@@ -39,8 +40,9 @@ public class MainActivity extends DrawerActivity{
 		setContentView(R.layout.activity_main);
 
 		createDrawer(MainActivity.this, R.id.main_left_drawer, R.id.main_drawer_wrapper);
-		
         AppManager.app_launched(MainActivity.this);
+        AppUpgradeManager aUM = new AppUpgradeManager(this);
+        aUM.CheckForUpgrades();
 
         /*Sets up the Main Image*/
         ImageView mainImage = (ImageView) findViewById(R.id.main_image);

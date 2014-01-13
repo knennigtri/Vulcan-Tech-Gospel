@@ -84,7 +84,8 @@ public class DrawerActivity extends BaseActivity {
         drawerList.add(Set.ONEFIVE.toLabel());       //2
         drawerList.add(mGenerator);       //3
         drawerList.add(mFacebook);      //4
-        drawerList.add(mLearn);           //5
+        //TODO implement Learn about VTG
+//        drawerList.add(mLearn);           //5
         drawerList.add(mDownloadVideos); //6
 //        drawerList.add(mPdfs);    //6
         drawerList.add(mSuggestion); 			 //7

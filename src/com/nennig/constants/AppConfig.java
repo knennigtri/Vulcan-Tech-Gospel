@@ -8,6 +8,8 @@ package com.nennig.constants;
 
 import java.util.ArrayList;
 
+import android.os.Environment;
+
 public class AppConfig {
 
 	public final static String APP_TITLE = "Vulcan Tech Gospel";
@@ -15,6 +17,8 @@ public class AppConfig {
 	public final static String APP_PRO = "Pro";
 	public final static String APP_LITE = "Lite";
     public final static String APP_PNAME = "nennig.com.VTG";
+    public final static String APP_DIR = Environment.getExternalStorageDirectory() +
+            "/Android/data/"+ AppConfig.APP_PNAME;
 
     public static final String ABOUT_MESSAGE = "Vulcan Tech Gospel was created by David Cantor and Noel Yee." +
     		"Vulcan Tech Gospel Writers:  " +

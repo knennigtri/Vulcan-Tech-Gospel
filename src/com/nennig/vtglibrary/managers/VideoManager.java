@@ -30,8 +30,7 @@ import java.net.URLConnection;
 
 public class VideoManager extends AsyncTask<Void, Void, Boolean>{
 	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".VideoManager";
-    private static String videosDir = Environment.getExternalStorageDirectory() +
-            "/Android/data/"+ AppConfig.APP_PNAME +"/videos/";
+    private static String videosDir = AppConfig.APP_DIR +"/videos/";
     private Activity activity;
     Class destClass;
     private ProgressDialog pd;

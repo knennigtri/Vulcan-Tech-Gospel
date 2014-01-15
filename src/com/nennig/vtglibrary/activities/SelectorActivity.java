@@ -199,7 +199,7 @@ public class SelectorActivity extends DrawerActivity {
         {
             AppManager.share(this, "Checking out the " + _curSet + " set for Prop: " + MatrixID.MCategory.getStringAbbrFromLong(_propType) +
              " and Hand: " + MatrixID.MCategory.getStringAbbrFromLong(_handType) +
-                    " in the new Vulcan Tech Gospel App. " + AppConfig.appOnGPlayURL);
+                    " in the new Vulcan Tech Gospel App. " + AppConfig.LITE_GOOGLEPLAYURL_SHORT);
             return true;
         }
         else

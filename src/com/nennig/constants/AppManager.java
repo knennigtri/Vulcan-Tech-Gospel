@@ -80,26 +80,6 @@ public class AppManager {
         
         editor.commit();
     }
-
-    /**
-     * Inflater to show updates to the app.
-     * @param c
-     * @param version
-     */
-    public static void showVersionUpdateDialog(Context c,long version){
-        String lastLogEntry = AppConfig.CHANGE_LOG.get(AppConfig.CHANGE_LOG.size()-1);
-        AlertDialog.Builder alert = new AlertDialog.Builder(c); 
-
-        alert.setTitle(AppConfig.APP_TITLE + " Version " + version);
-        alert.setMessage(lastLogEntry);
-        
-        alert.setPositiveButton("Okay", new DialogInterface.OnClickListener() { 
-            public void onClick(DialogInterface dialog, int whichButton) { 
-            	
-            } 
-        });   
-      alert.show();
-    }
     
     /**
      * Inflater to ask the user if they would like to rate this app 
@@ -123,7 +103,7 @@ public class AppManager {
         b1.setText("Rate " + AppConfig.APP_TITLE);
         b1.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                c.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + c.getPackageName())));
+                c.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(AppConfig.MARKET_URI + c.getPackageName())));
                 dialog.dismiss();
             }
         });        
@@ -154,41 +134,6 @@ public class AppManager {
         dialog.setContentView(ll);        
         dialog.show();        
     }
-    
-    /**
-     * This is a simple about inflater to show information about me and my work.
-     * @param c
-     */
-    public static void aboutAlert(final Context c){
-    	AlertDialog.Builder alert = new AlertDialog.Builder(c); 
-
-        alert.setTitle("About"); 
-        alert.setMessage(AppConfig.ABOUT_MESSAGE);
-        
-        alert.setPositiveButton("Website", new DialogInterface.OnClickListener() { 
-            public void onClick(DialogInterface dialog, int whichButton) { 
-            	String url = DevConstants.MY_WEBSITE;
-            	Intent i = new Intent(Intent.ACTION_VIEW);
-            	i.setData(Uri.parse(url));
-            	c.startActivity(i);
-            } 
-        }); 
-        
-        alert.setNeutralButton("Rate this app", new DialogInterface.OnClickListener() { 
-            public void onClick(DialogInterface dialog, int whichButton) { 
-            	c.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + c.getPackageName())));
-            } 
-        }); 
-        
-        alert.setNegativeButton("Donate!", new DialogInterface.OnClickListener() { 
-            public void onClick(DialogInterface dialog, int whichButton) { 
-            	Intent i = new Intent(Intent.ACTION_VIEW);
-            	i.setData(Uri.parse(AppConstants.PAYPAL));
-            	c.startActivity(i);
-            } 
-      }); 
-      alert.show();
-    }
 
     public static void getAboutDialog(final Context context) {
         WebView wv = new WebView(context);
@@ -212,7 +157,7 @@ public class AppManager {
                 })
                 .setNeutralButton("Rate this app", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + context.getPackageName())));
+                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(AppConfig.MARKET_URI + context.getPackageName())));
                     }
                 })
                 .setPositiveButton("Website", new DialogInterface.OnClickListener() {
@@ -240,14 +185,12 @@ public class AppManager {
     public static void proVersionAlert(final Context c){
     	AlertDialog.Builder alert = new AlertDialog.Builder(c);
     	
-    	alert.setTitle(AppConfig.PRO_TITLE);
-    	alert.setMessage(AppConfig.PRO_MESSAGE);
+    	alert.setTitle("VTG Pro Only");
+    	alert.setMessage("Get this feature and more in the Pro version.");
     	
-    	//TODO Update this Pro version inflator
-    	
-    	alert.setPositiveButton("Detials", new DialogInterface.OnClickListener() { 
+    	alert.setPositiveButton("Details", new DialogInterface.OnClickListener() { 
             public void onClick(DialogInterface dialog, int whichButton) { 
-            	String url = DevConstants.GOOGLE_PLAY + "." + AppConfig.PRO_PACKAGE;
+            	String url = AppConfig.MARKET_URI + AppConfig.PRO_PACKAGE;
             	Intent i = new Intent(Intent.ACTION_VIEW);
             	i.setData(Uri.parse(url));
             	c.startActivity(i);

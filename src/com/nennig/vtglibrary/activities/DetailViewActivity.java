@@ -326,7 +326,7 @@ public class DetailViewActivity extends BaseActivity{
         {
             String name = pMove.getName(_curSet);
             AppManager.share(this, "Checking out the " + name +
-                    " move in the new Vulcan Tech Gospel App. " + AppConfig.appOnGPlayURL);
+                    " move in the new Vulcan Tech Gospel App. " + AppConfig.LITE_GOOGLEPLAYURL_SHORT);
             return true;
         }
         else if(item.getItemId() == android.R.id.home)

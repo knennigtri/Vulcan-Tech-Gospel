@@ -20,14 +20,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import com.nennig.vtglibrary.R;
+import com.nennig.vtglibrary.managers.VTGLibraryApplication;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -40,6 +43,7 @@ public class ChangeLog {
 
         private final Context context;
         private String lastVersion, thisVersion;
+        private boolean isLiteVersion = false;
         
         // this is API Level 3 code
         // if you use higher APIs anyway, you can use the field SDK_INT instead
@@ -74,7 +78,7 @@ public class ChangeLog {
          */
         public ChangeLog(Context context, SharedPreferences sp) {
                 this.context = context;
-
+                isLiteVersion = !context.getPackageName().toLowerCase().contains("pro"); 
                 // get version numbers
                 this.lastVersion = sp.getString(VERSION_KEY, NO_VERSION);
                 Log.d(TAG, "lastVersion: " + lastVersion);
@@ -165,6 +169,15 @@ public class ChangeLog {
                                                                 updateVersionInPreferences();
                                                         }
                                                 });
+                if(isLiteVersion)
+                {
+	                builder.setNeutralButton("Get Pro!", new DialogInterface.OnClickListener() {
+		                    public void onClick(DialogInterface dialog,int which) {
+		                    	context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(AppConfig.MARKET_URI + AppConfig.PRO_PACKAGE)));
+		                        dialog.dismiss();
+		                    }
+		            });
+                }
 
                 if (!full) {
                         // "more ..." button
@@ -228,12 +241,13 @@ public class ChangeLog {
                         BufferedReader br = new BufferedReader(new InputStreamReader(ins));
 
                         String line = null;
-                        boolean advanceToEOVS = false; // if true: ignore further version
-                                                                                        // sections
+                        boolean advanceToEOVS = false; // if true: ignore further version sections
                         while ((line = br.readLine()) != null) {
                                 line = line.trim();
                                 char marker = line.length() > 0 ? line.charAt(0) : 0;
-                                if (marker == '$') {
+                                if((marker == '~') && isLiteVersion){
+                                	sb.append("<h2><a href='"+AppConfig.MARKET_URI+AppConfig.PRO_PACKAGE+"'>"+line.substring(1).trim()+"</a></h2>");
+                                } else if (marker == '$') {
                                         // begin of a version section
                                         this.closeList();
                                         String version = line.substring(1).trim();
@@ -245,7 +259,7 @@ public class ChangeLog {
                                                         advanceToEOVS = false;
                                                 }
                                         }
-                                } else if (!advanceToEOVS) {
+                                } else if (!advanceToEOVS && (marker != '~')) {
                                         switch (marker) {
                                         case '%':
                                                 // line contains version title

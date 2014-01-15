@@ -40,7 +40,7 @@ public class HTMLActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.menu_share)
         {
-            AppManager.share(this, "Vulcan Tech Gospel is now on Android! Check it out: " + AppConfig.appOnGPlayURL);
+            AppManager.share(this, "Vulcan Tech Gospel is now on Android! Check it out: " + AppConfig.LITE_GOOGLEPLAYURL_SHORT);
             return true;
         }
         else if(item.getItemId() == android.R.id.home)

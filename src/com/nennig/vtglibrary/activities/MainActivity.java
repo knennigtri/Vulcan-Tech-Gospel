@@ -42,7 +42,7 @@ public class MainActivity extends DrawerActivity{
 		createDrawer(MainActivity.this, R.id.main_left_drawer, R.id.main_drawer_wrapper);
         AppManager.app_launched(MainActivity.this);
         AppUpgradeManager aUM = new AppUpgradeManager(this);
-        aUM.CheckForUpgrades();
+        aUM.CheckForUpgrades(getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE));
 
         /*Sets up the Main Image*/
         ImageView mainImage = (ImageView) findViewById(R.id.main_image);
@@ -64,7 +64,7 @@ public class MainActivity extends DrawerActivity{
 		SingletonMatrixMap.getSingletonPoiMoveMap(this);
 		
 		Button tipOfTheWeek = (Button) findViewById(R.id.main_button_tip);
-		tipOfTheWeek.setText("Tip of the Week");
+		tipOfTheWeek.setText("Snapshot of Insight");
 		tipOfTheWeek.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -120,7 +120,7 @@ public class MainActivity extends DrawerActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.menu_share)
         {
-            AppManager.share(this, "Vulcan Tech Gospel is now on Android! Check it out: " + AppConfig.appOnGPlayURL);
+            AppManager.share(this, "Vulcan Tech Gospel is now on Android! Check it out: " + AppConfig.LITE_GOOGLEPLAYURL_SHORT);
             return true;
         }
         else

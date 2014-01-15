@@ -30,10 +30,6 @@ public class AppUpgradeManager {
             File mDownloadRootDir;
             // http://developer.android.com/guide/topics/data/data-storage.html#filesExternal
             mDownloadRootDir = new File(upgradeFile);
-            if (!mDownloadRootDir.isDirectory()) {
-                // this must be the first time we've attempted to download files, so create the proper external directories
-                mDownloadRootDir.mkdirs();
-            }
             return mDownloadRootDir;
         }
         return null;

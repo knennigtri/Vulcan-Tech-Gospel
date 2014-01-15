@@ -33,6 +33,7 @@ import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppManager;
 import com.nennig.constants.Dlog;
 import com.nennig.vtglibrary.R;
+import com.nennig.vtglibrary.managers.TipOfTheWeekManager;
 
 /**
  * @author Kevin Nennig (knennig213@gmail.com)
@@ -43,20 +44,11 @@ public class TipOfTheWkActivity extends BaseActivity{
 	private static final String TAG = "TipOfTheWkActivity";
 	private static final boolean ENABLE_DEBUG = true;
 	private WebView wv;
-	private ArrayList<Tip> list;
-	private int curTipIndex;
+
 	
-	private class Tip{
-		private String date, tip, writer;
-		public Tip(String d, String t, String w){
-			date = d;
-			tip = t;
-			writer = w;
-		}
-		public String getDate(){ return date;}
-		public String getTip(){ return tip;}
-		public String getWriter(){ return writer;}
-	}
+	TipOfTheWeekManager towManager;
+	
+
 	
 	public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
@@ -66,15 +58,14 @@ public class TipOfTheWkActivity extends BaseActivity{
 //	        mViewFlipper = (ViewFlipper) findViewById(R.id.html_flipper);
 //	        initAnimations();
 	
-	        parseTips();
-	        String htmlCode = "";
+	        try {
+				towManager = new TipOfTheWeekManager(this.getAssets().open(TIPS_FILE));
+			} catch (IOException e) {
+				Dlog.d(TAG, "IOException in Parsing: " + e.getMessage() + "**Type: " + e.toString(), ENABLE_DEBUG);
+			}
 	        
-	        if(!list.isEmpty())
-	        {
-	        	curTipIndex = list.size()-1;
-	        	Tip t = list.get(curTipIndex);
-	    		htmlCode = htmlString(t.getDate(), t.getTip(), t.getWriter());
-	        }
+	        towManager.parseTips();
+	        String htmlCode = towManager.getInitialTip();
 	        
 	        wv = (WebView) findViewById(R.id.survey_webView);
 	        wv.setBackgroundColor(0); // transparent
@@ -82,96 +73,14 @@ public class TipOfTheWkActivity extends BaseActivity{
 	        refreshTip(htmlCode);
 	 }
 	
-	/**
-	 * 
-	 */
-	private void parseTips() {
-		list = new ArrayList<Tip>();		
-		try {
-			InputStream iS = this.getAssets().open(TIPS_FILE);
-			InputStreamReader iSR = new InputStreamReader(iS);
-			BufferedReader bR = new BufferedReader(iSR);
-			parseTips(bR);
-		} catch (Exception e) {
-			Dlog.d(TAG, "Pasring Error: " + e.getMessage() + "**Type: " + e.toString(), ENABLE_DEBUG);
-		}
-	}
-	
-	/**
-	 * 
-	 */
-	private void parseTips(BufferedReader bR){
-		String nextLineStr;
-		Date today = new Date();
-		Date tipRelease;
-		String lineZero = "";
-		try {
-			while ((nextLineStr = bR.readLine()) != null) {
-				String[] line = nextLineStr.split(",");
-				if(line.length == 3)
-				{
-					lineZero = line[0];
-					Dlog.d(TAG, "Adding Tip for Date: " + lineZero , ENABLE_DEBUG);
-					tipRelease = new SimpleDateFormat("mm/dd/yy").parse(lineZero);
-					if(tipRelease.before(today) || tipRelease.equals(today)){
-						list.add(new Tip(lineZero,line[1],line[2]));
-					}
-				}
-				else
-				{
-					Dlog.d(TAG, "Line does not have 3 identifiers", ENABLE_DEBUG);
-				}
-			
-			}
-		} catch (IOException e) {			
-			Dlog.d(TAG, "IOException in Parsing: " + e.getMessage() + "**Type: " + e.toString(), ENABLE_DEBUG);
-		} catch (ParseException e) {
-			Dlog.d(TAG, "ParseException in Parsing: " + e.getMessage() + "**Type: " + e.toString(), ENABLE_DEBUG);
-		}
-		Dlog.d(TAG, "List: " + list.toString(), ENABLE_DEBUG);
-	}
-	
     /**
 	 * @param htmlCode
 	 */
-	private void refreshTip(String htmlCode) {
+	public void refreshTip(String htmlCode) {
         wv.loadData(htmlCode,"text/html", "UTF-8");
 		Dlog.d(TAG, "Refreshing Tip", ENABLE_DEBUG);
 	}
 
-	/**
-	 * @return
-	 */
-	private String getOlderTip() {
-		Dlog.d(TAG, "Getting Older Tip", ENABLE_DEBUG);
-		curTipIndex--;
-		Tip t = list.get(curTipIndex);
-		String str = htmlString(t.getDate(), t.getTip(), t.getWriter());
-		return str;
-	}
-
-	/**
-	 * @return
-	 */
-	private String getNewerTip() {
-		Dlog.d(TAG, "Getting newer Tip", ENABLE_DEBUG);
-		curTipIndex++;
-		Tip t = list.get(curTipIndex);
-		String str = htmlString(t.getDate(), t.getTip(), t.getWriter());
-		return str;
-	}
-	
-	private String htmlString(String date, String tip, String writer){
-		String code = "<!DOCTYPE html><html>" +
-        		"<h1>Tip of the Week:</h1>" +
-        		"<h2>" + date + "</h2>" +
-        		"<body>" +
-        		"<p>\"" + tip + "\"</p>" +
-        		"<div align='right'><i>-" + writer + "</i></div>"+
-        		"</body>";
-		Dlog.d(TAG, "New Code: \n" +code, ENABLE_DEBUG);
-		return code;
-	}
 
 	/*
      * Animation for Switching between Sets
@@ -241,10 +150,10 @@ public class TipOfTheWkActivity extends BaseActivity{
                     && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                 mViewFlipper.setInAnimation(mInFromRight);
                 mViewFlipper.setOutAnimation(mOutToLeft);
-            	if(curTipIndex != (list.size()-1))
+            	if(towManager.isNewerTip())
             	{
             		Dlog.d(TAG, "Going to newer Tip.", ENABLE_DEBUG);
-	                String code = getNewerTip();
+	                String code = towManager.getNewerTip();
 	                refreshTip(code);
 	                mViewFlipper.showNext();
             	}
@@ -256,10 +165,10 @@ public class TipOfTheWkActivity extends BaseActivity{
                     && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                 mViewFlipper.setInAnimation(mInFromLeft);
                 mViewFlipper.setOutAnimation(mOutToRight);
-            	if(curTipIndex != 0)
+            	if(towManager.isOlderTip())
             	{
             		Dlog.d(TAG, "Going to older Tip.", ENABLE_DEBUG);
-	                String code = getOlderTip();
+	                String code = towManager.getOlderTip();
 	                refreshTip(code);
 	                mViewFlipper.showPrevious();		
 	            }
@@ -276,7 +185,7 @@ public class TipOfTheWkActivity extends BaseActivity{
 	    public boolean onOptionsItemSelected(MenuItem item) {
 	        if(item.getItemId() == R.id.menu_share)
 	        {
-	            AppManager.share(this, "Vulcan Tech Gospel is now on Android! Check it out: " + AppConfig.appOnGPlayURL);
+	            AppManager.share(this, "Vulcan Tech Gospel is now on Android! Check it out: " + AppConfig.LITE_GOOGLEPLAYURL_SHORT);
 	            return true;
 	        }
 	        else if(item.getItemId() == android.R.id.home)

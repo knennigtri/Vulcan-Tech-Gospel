@@ -19,13 +19,18 @@
     </style>
   </head>
   <body>
-    $ 2.2
-      % Version 2.3
-      _ 11-01-2013
-        * Pro version release
+  	~ Check out Pro!
+    $ 3.0
+      % Version 3.0
+      _ 01-15-2013
+        * Pro version release!!!
         * Pro Only - 1:1 added to app
         * Pro Only - 1:1 videos released
         * VTG App - New VTG Logo
+        * New Icons
+        * Check out "Snapshot of Insight"
+        * Draw implementation to app
+        * VTG Generator v1 added
     $ 2.2
       % Version 2.2
       _ 06-19-2013

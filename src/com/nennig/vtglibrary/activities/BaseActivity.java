@@ -9,7 +9,6 @@ package com.nennig.vtglibrary.activities;
 import java.io.InputStream;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -20,13 +19,13 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.nennig.constants.AppConfig;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.constants.ChangeLog;
@@ -43,8 +42,9 @@ public class BaseActivity extends Activity {
     public static int displayHeight = 0;
 	public static final String ROOT_FOLDER = Environment.getExternalStorageDirectory().toString();
 	private static final String TAG = "BaseActivity";
+	
+	
     @SuppressLint("NewApi")
-    
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,9 +61,9 @@ public class BaseActivity extends Activity {
 		} else{
 	        displayWidth = display.getWidth();             
 	        displayHeight = display.getHeight();  
-		}
+		}		
     }
-    
+	
     /**
      * This method is built for displaying an icon in this app. It takes in the dimensions of the phone and then resizes 
      * the bitmap to fit the screen.
@@ -123,7 +123,7 @@ public class BaseActivity extends Activity {
         
         return matrix;
     }
-    
+	
 	/**
 	 * This is a generalized menu for all activities in this app. This allows users to access the most important information
 	 * about this app and it's market and social capabilities.
@@ -131,7 +131,7 @@ public class BaseActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	Intent i;
-    	String url;
+    	String url;    	
     	if(item.getItemId() == R.id.menu_about)
     	{
 //    		AppManager.aboutAlert(this);
@@ -167,7 +167,12 @@ public class BaseActivity extends Activity {
             cl.getFullLogDialog().show();
             return true;
 		}
-		else
+		else if( item.getItemId() == android.R.id.home)
+		{
+			NavUtils.navigateUpFromSameTask(this);
+	        return true;
+		}	
+    	else
 		{
     		return super.onOptionsItemSelected(item);
     	}
@@ -182,15 +187,17 @@ public class BaseActivity extends Activity {
     public boolean isLiteVersion()  {
     	return ((VTGLibraryApplication)getApplication()).isLiteVersion(); 
     }
-    
-//    @SuppressLint("NewApi")
-//	@Override
-//    protected void onStart() {
-//        super.onStart();
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-//        	ActionBar actionBar = this.getActionBar();
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//       }
-//        
-//    }
+    @Override
+    public void onStart() {
+      super.onStart();
+      // The rest of your onStart() code.
+      EasyTracker.getInstance(this).activityStart(this);  // Add this method.
+    }
+
+    @Override
+    public void onStop() {
+      super.onStop();
+      // The rest of your onStop() code.
+      EasyTracker.getInstance(this).activityStop(this);  // Add this method.
+    }
 }

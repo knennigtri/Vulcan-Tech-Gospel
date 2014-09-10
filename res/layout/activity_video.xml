@@ -2,16 +2,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    <Spinner
-        android:id="@+id/video_prop_selector"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:entries="@array/prop_selector"
-        android:dropDownWidth="wrap_content"
-		android:layout_alignParentTop="true"
-		/>
-   <TextView
+  	<TextView
+	        android:id="@+id/video_handLabel"
+	        android:text="@string/text_hand"
+	        style="@style/ListItem_white"
+	        android:layout_marginRight="3dp"
+	        />
+	    <TextView
+	        android:id="@+id/video_poiLabel"
+	        android:text="@string/text_prop"
+	        style="@style/ListItem_white"
+	        android:layout_marginRight="3dp"
+	        android:layout_below="@id/video_handLabel"
+	        />
+	   		
+	    <TextView
+	        android:id="@+id/video_handText"
+	        android:text="description2"
+	        android:layout_alignBaseline="@id/video_handLabel"
+	        android:layout_toRightOf="@id/video_handLabel"
+	        android:maxLines="1"
+	        style="@style/DescText_white"
+	        android:gravity="center_horizontal"
+	        android:layout_width="match_parent"
+	        />
+	   	<TextView
+	        android:id="@+id/video_poiText"
+	        android:text="description1"
+			android:layout_alignBaseline="@id/video_poiLabel"
+	        android:layout_toRightOf="@id/video_poiLabel"
+	        android:maxLines="1"
+	        style="@style/DescText_white"
+	        android:gravity="center_horizontal"
+	        android:layout_below="@id/video_handText"
+	        android:layout_width="match_parent"
+	   		/>
+    <!-- TextView
 	       android:id="@+id/video_move_hand_prop"
 	       android:layout_width="match_parent"
 	       android:layout_height="wrap_content"
@@ -21,12 +47,21 @@
 	       android:text="Hand:   Prop:   "
 	       android:layout_below="@id/video_prop_selector"
 	       style="@style/DescText_white">
-		</TextView> 
+		</TextView--> 
    <VideoView
        android:id="@+id/videoView"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:layout_centerInParent="true" />
+   <Spinner
+        android:id="@+id/video_prop_selector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:entries="@array/prop_selector"
+        android:dropDownWidth="wrap_content"
+		android:layout_below="@id/videoView"
+		/>
    <TextView
 	       android:id="@+id/video_moveName"
 	       android:layout_width="match_parent"

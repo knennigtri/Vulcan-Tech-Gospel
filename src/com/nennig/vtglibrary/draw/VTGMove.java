@@ -7,19 +7,24 @@ import java.io.InputStream;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.TextureView;
 import android.view.View;
-import android.widget.TextView;
 
 import com.nennig.constants.AppConfig;
+import com.nennig.constants.Dlog;
 import com.nennig.vtglibrary.R;
-import com.nennig.vtglibrary.custobjs.MovePins;
-import com.nennig.vtglibrary.custobjs.Pin;
-import com.nennig.vtglibrary.custobjs.Pin.pinDirection;
+import com.nennig.vtglibrary.custobjs.PropMove;
+import com.nennig.vtglibrary.custobjs.VTGMoveAxis;
+import com.nennig.vtglibrary.custobjs.VTGMoveAxis.Orientation;
+//import com.nennig.vtglibrary.custobjs.Pin;
 
 /**
  * @author Kevin Nennig (knennig213@gmail.com)
@@ -29,15 +34,12 @@ import com.nennig.vtglibrary.custobjs.Pin.pinDirection;
  */
 public class VTGMove extends View {
 	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".VTGMove";
+	private static final boolean ENABLEDEBUG = true;
     
     private int primColor;
-    private int secColor;
-
     
     private Paint primCirclePaint;
-    private Paint secCirclePaint;
     private Paint primLinePaint;
-    private Paint secLinePaint;
     private Paint proPaint;
     
     RectF drawAreaBounds = new RectF();
@@ -57,6 +59,8 @@ public class VTGMove extends View {
 	float twoEigths = 2.0f/8.0f;
 	float threeEigths = 3.0f/8.0f;
 	float sevenEigths = 7.0f/8.0f;
+	
+	float oneSixteenth = 1.0f/16.0f;
 	
 	/*
 	 * Enum to determine which box we are calculating
@@ -89,8 +93,7 @@ public class VTGMove extends View {
 //	}
 //	static MovePins curMove = testMove;
 //	
-	
-	private MovePins curMove; 	//holds the current move pins to create the view
+	private PropMove _pMove; //holds current move object
 	
 	/**
 	 * @param context
@@ -112,7 +115,6 @@ public class VTGMove extends View {
         
         try {
         	primColor = a.getColor(R.styleable.VTGMove_primaryColor, Color.BLACK);
-        	secColor = a.getColor(R.styleable.VTGMove_secondaryColor, Color.BLUE);
         } finally {
         	a.recycle();
         }
@@ -146,32 +148,16 @@ public class VTGMove extends View {
 	private void init() {
         // Force the background to software rendering because otherwise the Blur
         // filter won't work.
-//        setLayerToSW(this);
         int lineWidth = 5;
-
-//        BitmapShader bitmapShader = new BitmapShader(, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
 		
         primCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         primCirclePaint.setStyle(Paint.Style.FILL);
         primCirclePaint.setColor(primColor);
-//        primCirclePaint.setAlpha(0);
-        
+    
         primLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         primLinePaint.setStyle(Paint.Style.STROKE);
         primLinePaint.setColor(primColor);
         primLinePaint.setStrokeWidth(lineWidth);
-//        primLinePaint.setAlpha(0);
-        
-        secCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        secCirclePaint.setStyle(Paint.Style.FILL);
-        secCirclePaint.setColor(secColor);
-//        secCirclePaint.setAlpha(0);
-        
-        secLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        secLinePaint.setStyle(Paint.Style.STROKE);
-        secLinePaint.setColor(secColor);
-        secLinePaint.setStrokeWidth(lineWidth);
-//        secLinePaint.setAlpha(0);
 
         proPaint = new Paint();
 		proPaint.setColor(Color.BLACK);
@@ -188,8 +174,8 @@ public class VTGMove extends View {
 	 * This adds the move pins to the view so that they can be drawn
 	 * @param mp
 	 */
-	public void addPins(MovePins mp){
-		curMove = mp;
+	public void addPins(PropMove mp){
+		_pMove = mp;
 		moveIcon = null;
 		invalidate();
 	}
@@ -197,8 +183,8 @@ public class VTGMove extends View {
 	 * This adds the move pins to the view so that they can be drawn
 	 * @param mp
 	 */
-	public void addPinsAndIcon(MovePins mp, InputStream isIcon){
-		curMove = mp;
+	public void addPinsAndIcon(PropMove mp, InputStream isIcon){
+		_pMove = mp;
 		moveIcon = isIcon;
 		invalidate();
 	}
@@ -207,7 +193,7 @@ public class VTGMove extends View {
 	 * 
 	 */
 	public void removePinsAndIcon() {
-		curMove = null;
+		_pMove = null;
 		moveIcon = null;
 		invalidate();
 	}
@@ -236,67 +222,102 @@ public class VTGMove extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);  
         
-        RectF primRec, secRec;
-        if(curMove != null){
+        if(_pMove != null){
 	        //This checks to see if one of two pins should be drawn
-	        if(curMove.pin0 == null){
-	        	primRec = makePinBox(PinBoxPos.RIGHT);
-	        	drawOnePin(canvas, PinBoxPos.RIGHT, curMove.pin7, primRec);
-	        	iconR = primRec.left;
+	        if(_pMove.getXAxis().getHandOrientation().equals(VTGMoveAxis.Orientation.SPLIT)){
+	        	RectF rightRec = makePinBox(PinBoxPos.RIGHT);
+	        	RectF leftRec = makePinBox(PinBoxPos.LEFT);
+	        	
+	        	switch(_pMove.getXAxis().getPropOrientation()){
+	        	case IN: //Shows Double Pin!
+		        	drawOnePin(canvas, PinBoxPos.RIGHT, Orientation.IN, rightRec);
+		        	drawOnePin(canvas, PinBoxPos.LEFT, Orientation.IN, leftRec);
+		        	break;
+	        	case OUT: // Only one side works
+		        	drawOnePin(canvas, PinBoxPos.RIGHT, Orientation.OUT, rightRec);
+		        	drawOnePin(canvas, PinBoxPos.LEFT, Orientation.OUT, leftRec);
+		        	break;
+	        	case TOG: // Case Works!
+		        	drawOnePin(canvas, PinBoxPos.RIGHT, Orientation.IN, rightRec);
+		        	drawOnePin(canvas, PinBoxPos.LEFT, Orientation.OUT, leftRec);
+		        	break;
+	        	default:
+					Dlog.d(TAG, "prop orientation wrong: " + _pMove.getXAxis().getPropOrientation(), ENABLEDEBUG);
+	        	}
+	        	iconR = rightRec.left; //determines the right of the icon based on the left of the right pin box
+	        	iconL = leftRec.right; //determines the left of the icon based on the right of the left pin box
 	        }
-	        else
-	        {
-	        	RectF[] arr = makeHalfPinBoxes(PinBoxPos.RIGHT, makePinBox(PinBoxPos.RIGHT));
-	        	primRec = arr[0];
-	        	secRec = arr[1];
-	        	drawTwoPins(canvas, PinBoxPos.RIGHT, curMove.pin7, primRec, curMove.pin0, secRec);
-	        	iconR = primRec.left;
+	        if(_pMove.getYAxis().getHandOrientation().equals(VTGMoveAxis.Orientation.SPLIT)){
+	        	RectF topRec = makePinBox(PinBoxPos.TOP);
+	        	RectF bottomRec = makePinBox(PinBoxPos.BOTTOM);
+	        	
+	        	switch(_pMove.getYAxis().getPropOrientation()){
+	        	case IN:
+		        	drawOnePin(canvas, PinBoxPos.TOP, Orientation.IN, topRec);
+		        	drawOnePin(canvas, PinBoxPos.BOTTOM, Orientation.IN, bottomRec);
+		        	break;
+	        	case OUT: // Only one side works
+		        	drawOnePin(canvas, PinBoxPos.TOP, Orientation.OUT, topRec);
+		        	drawOnePin(canvas, PinBoxPos.BOTTOM, Orientation.OUT, bottomRec);
+		        	break;
+	        	case TOG: // Case Works!
+		        	drawOnePin(canvas, PinBoxPos.TOP, Orientation.OUT, topRec);
+		        	drawOnePin(canvas, PinBoxPos.BOTTOM, Orientation.IN, bottomRec);
+		        	break;
+	        	default:
+					Dlog.d(TAG, "prop orientation wrong: " + _pMove.getYAxis().getPropOrientation(), ENABLEDEBUG);
+					break;
+	        	}
+	        	iconT = topRec.bottom; //determines the top of the icon based on the bottom of the top pin box
+	        	iconB = bottomRec.top; //determines the bottom of the icon based on the top of the bottom pin box
 	        }
-	        
-	        if (curMove.pin2 == null)
-	        {
-	        	primRec = makePinBox(PinBoxPos.TOP);
-	        	drawOnePin(canvas, PinBoxPos.TOP, curMove.pin1, primRec);
-	        	iconT = primRec.bottom;
+	        if(_pMove.getXAxis().getHandOrientation().equals(VTGMoveAxis.Orientation.TOG)){
+	        	RectF rightRec = makePinBox(PinBoxPos.RIGHT);
+	        	RectF leftRec = makePinBox(PinBoxPos.LEFT);
+	        	
+	        	switch (_pMove.getXAxis().getPropOrientation()) {
+				case IN:
+					drawTwoPins(canvas, PinBoxPos.RIGHT, Orientation.IN, rightRec);
+					drawTwoPins(canvas, PinBoxPos.LEFT, Orientation.IN, leftRec);
+					break;
+				case OUT:
+					drawTwoPins(canvas, PinBoxPos.RIGHT, Orientation.OUT, rightRec);
+					drawTwoPins(canvas, PinBoxPos.LEFT, Orientation.OUT, leftRec);
+					break;
+				case SPLIT:
+					drawSplitPins(canvas, _pMove.getXAxis().getAxis(), rightRec);
+					drawSplitPins(canvas, _pMove.getXAxis().getAxis(), leftRec);
+					break;
+				default:
+					Dlog.d(TAG, "prop orientation wrong: " + _pMove.getXAxis().getPropOrientation(), ENABLEDEBUG);
+					break;
+				}
+	        	iconR = rightRec.left; //determines the right of the icon based on the left of the right pin box
+	        	iconL = leftRec.right; //determines the left of the icon based on the right of the left pin box
 	        }
-	        else
-	        {
-	        	RectF[] arr = makeHalfPinBoxes(PinBoxPos.TOP, makePinBox(PinBoxPos.TOP));
-	        	primRec = arr[0];
-	        	secRec = arr[1];
-	        	drawTwoPins(canvas, PinBoxPos.TOP, curMove.pin1, primRec, curMove.pin2, secRec);
-	        	iconT = primRec.bottom;
-	        }
-	        
-	        
-	        if(curMove.pin4 == null)
-	        {
-	        	primRec = makePinBox(PinBoxPos.LEFT);
-	        	drawOnePin(canvas, PinBoxPos.LEFT, curMove.pin3, primRec);
-	        	iconL = primRec.right;
-	        }
-	        else
-	        {
-	        	RectF[] arr = makeHalfPinBoxes(PinBoxPos.LEFT, makePinBox(PinBoxPos.LEFT));
-	        	primRec = arr[0];
-	        	secRec = arr[1];
-	        	drawTwoPins(canvas, PinBoxPos.LEFT, curMove.pin3, primRec, curMove.pin4, secRec);
-	        	iconL = primRec.right;
-	        }
-	        
-	        if(curMove.pin6 == null)
-	        {
-	        	primRec = makePinBox(PinBoxPos.BOTTOM);
-	        	drawOnePin(canvas, PinBoxPos.BOTTOM, curMove.pin5, primRec);
-	        	iconB = primRec.top;
-	        }
-	        else
-	        {
-	        	RectF[] arr = makeHalfPinBoxes(PinBoxPos.BOTTOM, makePinBox(PinBoxPos.BOTTOM));
-	        	primRec = arr[0];
-	        	secRec = arr[1];
-	        	drawTwoPins(canvas, PinBoxPos.BOTTOM, curMove.pin5, primRec, curMove.pin6, secRec);
-	        	iconB = primRec.top;
+	        if(_pMove.getYAxis().getHandOrientation().equals(VTGMoveAxis.Orientation.TOG)){
+	        	RectF topRec = makePinBox(PinBoxPos.TOP);
+	        	RectF bottomRec = makePinBox(PinBoxPos.BOTTOM);
+	        	
+	        	switch (_pMove.getYAxis().getPropOrientation()) {
+				case IN:
+					drawTwoPins(canvas, PinBoxPos.TOP, Orientation.IN, topRec);
+					drawTwoPins(canvas, PinBoxPos.BOTTOM, Orientation.IN, bottomRec);
+					break;
+				case OUT:
+					drawTwoPins(canvas, PinBoxPos.TOP, Orientation.OUT, topRec);
+					drawTwoPins(canvas, PinBoxPos.BOTTOM, Orientation.OUT, bottomRec);
+					break;
+				case SPLIT:
+					drawSplitPins(canvas, _pMove.getYAxis().getAxis(), topRec);
+					drawSplitPins(canvas, _pMove.getYAxis().getAxis(), bottomRec);
+					break;
+				default:
+					Dlog.d(TAG, "prop orientation wrong: " + _pMove.getYAxis().getPropOrientation(), ENABLEDEBUG);
+					break;
+				}
+	        	iconT = topRec.bottom; //determines the top of the icon based on the bottom of the top pin box
+	        	iconB = bottomRec.top; //determines the bottom of the icon based on the top of the bottom pin box
 	        }
 	        
 	        if(moveIcon != null){
@@ -327,13 +348,188 @@ public class VTGMove extends View {
 	}
 	
 	/**
+	 * This method takes in the parameters for two pins and then draws each pin according the the parameters
+	 * @param canvas - the drawable area
+	 * @param boxPos - The area which the pin box is located
+	 * @param primPin - the primary pin that will be drawn
+	 * @param primPinBox - the primary box where the primary pin will be drawn
+	 * @param secPin - the secondary pin that will be drawn
+	 * @param secPinBox - the secondary box where the secondary pin will be drawn
+	 */
+	private void drawTwoPins(Canvas canvas, PinBoxPos boxPos, Orientation dir, RectF pinBox ) {
+		RectF[] halves = makeHalfPinBoxes(boxPos, pinBox);
+		if(halves.length == 2){
+			drawOnePin(canvas, boxPos, dir, halves[0]); //primary
+			drawOnePin(canvas, boxPos, dir, halves[1]); //secondary
+		}
+		else
+			Dlog.d(TAG, "half rectangles not calculated correctly", ENABLEDEBUG);
+	}
+
+	/**
+	 * This is the main method for drawing the pins. This takes the position pf the pin box, the box size, and the 
+	 * details of the pin and draws it onto the view.
+	 * @param canvas - the drawable area
+	 * @param boxPos - The area which the pin box is located
+	 * @param pin - the pin that will be drawn
+	 * @param pinBox - the box where the pin will be drawn
+	 */
+	private void drawOnePin(Canvas canvas, PinBoxPos boxPos, Orientation direction, RectF pinBox) {
+		//Setup the Paint for the current pin
+		Paint curCirclePaint = null;
+		Paint curLinePaint = null;
+		curCirclePaint = primCirclePaint;
+		curLinePaint = primLinePaint;
+	
+		//calculates the points for the line of the pin
+		float lStartX=0,lStartY=0,lStopX=0,lStopY=0;
+		switch(boxPos){
+		case RIGHT:
+			lStartY = pinBox.top + (pinBox.height() * oneHalf);
+			lStopY =  lStartY;
+			lStartX = pinBox.left;
+			lStopX = pinBox.right;
+			break;
+		case TOP:
+			lStartX = pinBox.left + (pinBox.width() * oneHalf);
+			lStopX = lStartX;
+			lStartY = pinBox.top;
+			lStopY = pinBox.bottom;
+			break;
+		case LEFT:
+			lStartY = pinBox.top + (pinBox.height() * oneHalf);
+			lStopY =  lStartY;
+			lStartX = pinBox.left;
+			lStopX = pinBox.right;
+			break;
+		case BOTTOM:
+			lStartX = pinBox.left + (pinBox.width() * oneHalf);
+			lStopX = lStartX;
+			lStartY = pinBox.top;
+			lStopY = pinBox.bottom;
+			break;
+		default:
+			break;
+		}
+		canvas.drawLine(lStartX,lStartY,lStopX,lStopY, curLinePaint);
+			
+		//calculates the center and radius for the pin head
+		float cx=0, cy=0, cRad=0, cxHand=0, cyHand=0;
+		switch(boxPos){
+		case RIGHT:
+			cx = boxRightCX(direction, pinBox);
+			cy = pinBox.top + pinBox.height() * oneHalf;
+			cRad = pinBox.width() * oneEigth;
+			break;
+		case TOP:
+			cx = pinBox.left + pinBox.width() * oneHalf;
+			cy = boxTopCY(direction, pinBox);
+			cRad = pinBox.height() * oneEigth;
+			break;
+		case LEFT:
+			cx = boxLeftCX(direction, pinBox);
+			cy = pinBox.top + pinBox.height() * oneHalf;
+			cRad = pinBox.width() * oneEigth;
+			break;
+		case BOTTOM:
+			cx = pinBox.left + pinBox.width() * oneHalf;
+			cy = boxBottomCY(direction, pinBox);
+			cRad = pinBox.height() * oneEigth;
+			break;
+		default:
+			break;
+		}
+		canvas.drawCircle(cx, cy, cRad, curCirclePaint);	
+	}
+
+	/**
+	 * This creates the Tog Split pin. This is a pin with a head on both sides of the line 
+	 * and then a center point in the line to distinguish where the hands are.
+	 * @param canvas - The drawable area
+	 * @param pos - the identifier where the pin box is located
+	 * @param boxRec - the box where the pin will be drawn
+	 */
+	private void drawSplitPins(Canvas canvas, VTGMoveAxis.axis axis, RectF pinBox) {
+		//Setup the Paint for the current pin
+		Paint curCirclePaint = null;
+		Paint curLinePaint = null;
+		curCirclePaint = primCirclePaint;
+		curLinePaint = primLinePaint;
+	
+		//calculates the points for the line of the pin
+		float lStartX=0,lStartY=0,lStopX=0,lStopY=0;
+		switch(axis){
+		case X:
+			lStartY = pinBox.top + (pinBox.height() * oneHalf);
+			lStopY =  lStartY;
+			lStartX = pinBox.left;
+			lStopX = pinBox.right;
+			break;
+		case Y:
+			lStartX = pinBox.left + (pinBox.width() * oneHalf);
+			lStopX = lStartX;
+			lStartY = pinBox.top;
+			lStopY = pinBox.bottom;
+			break;
+		default:
+			break;
+		}
+		canvas.drawLine(lStartX,lStartY,lStopX,lStopY, curLinePaint);
+		
+		float cx,cy,cRad;
+		//Calculates and draws the right/top circle
+		cx=0; cy=0; cRad=0;
+		switch(axis){
+		case X:
+			cx = boxRightCX(Orientation.OUT, pinBox);
+			cy = pinBox.top + pinBox.height() * oneHalf;
+			cRad = pinBox.width() * oneEigth;
+			break;
+		case Y:
+			cx = pinBox.left + pinBox.width() * oneHalf;
+			cy = boxTopCY(Orientation.OUT, pinBox);
+			cRad = pinBox.height() * oneEigth;
+			break;
+		default:
+			break;
+		}
+		canvas.drawCircle(cx, cy, cRad, curCirclePaint);
+		
+		//Calculates and draws the left/bottom circle
+		cx=0; cy=0; cRad=0;
+		switch(axis){
+		case X:
+			cx = boxRightCX(Orientation.IN, pinBox);
+			cy = pinBox.top + pinBox.height() * oneHalf;
+			cRad = pinBox.width() * oneEigth;
+			break;
+		case Y:
+			cx = pinBox.left + pinBox.width() * oneHalf;
+			cy = boxTopCY(Orientation.IN, pinBox);
+			cRad = pinBox.height() * oneEigth;
+			break;
+		default:
+			break;
+		}
+		canvas.drawCircle(cx, cy, cRad, curCirclePaint);
+		
+		//calculates and draws the center point of the line
+		cx=0; cy=0; cRad=0;
+		cx = pinBox.centerX();
+		cy = pinBox.centerY();
+		cRad = pinBox.width() * oneSixteenth;
+		canvas.drawCircle(cx, cy, cRad, curCirclePaint);
+		
+	}
+	
+	/**
 	 * This method takes in the PinBoxPos enum and then calculates the box in that position. The box returned will
 	 * be the drawable area for the pins
 	 * @param boxPos - enum to determine what area box is being created
 	 * @return - box that will contain the pin(s) in that area
 	 */
 	private RectF makePinBox(PinBoxPos boxPos){
-		Log.d(TAG, "Drawing single Pin. w=" + drawAreaBounds.width() + " h=" + drawAreaBounds.height());
+		Dlog.d(TAG, "Drawing single Pin. w=" + drawAreaBounds.width() + " h=" + drawAreaBounds.height(),ENABLEDEBUG);
 		
 		//Get the origin for each box
 		float boxX=0, boxY=0;		
@@ -358,14 +554,14 @@ public class VTGMove extends View {
 				break;
 		}
 		
-		Log.d(TAG, boxPos + " boxX=" + boxX + " boxY=" + boxY);
+		Dlog.d(TAG, boxPos + " boxX=" + boxX + " boxY=" + boxY, ENABLEDEBUG);
 		
 		RectF pinBox = new RectF(boxX + pinBoxPadding, 
 				boxY + pinBoxPadding,
 				boxX + (drawAreaBounds.width() / 4) - pinBoxPadding,
 				boxY + (drawAreaBounds.height() / 4) - pinBoxPadding
 				);
-		Log.d(TAG, "Box is: " + pinBox);
+		Dlog.d(TAG, "Box is: " + pinBox,ENABLEDEBUG);
 
 		return pinBox;
 	}
@@ -431,113 +627,15 @@ public class VTGMove extends View {
 		return new RectF[] {primBox,secBox};
 	}
 	
-	/**
-	 * This method takes in the parameters for two pins and then draws each pin according the the parameters
-	 * @param canvas - the drawable area
-	 * @param boxPos - The area which the pin box is located
-	 * @param primPin - the primary pin that will be drawn
-	 * @param primPinBox - the primary box where the primary pin will be drawn
-	 * @param secPin - the secondary pin that will be drawn
-	 * @param secPinBox - the secondary box where the secondary pin will be drawn
-	 */
-	private void drawTwoPins(Canvas canvas, PinBoxPos boxPos, Pin primPin, RectF primPinBox, Pin secPin, RectF secPinBox ) {
-		drawOnePin(canvas, boxPos, primPin, primPinBox);
-		drawOnePin(canvas, boxPos, secPin, secPinBox);
-	}
-	
-	/**
-	 * This is the main method for drawing the pins. This takes the position pf the pin box, the box size, and the 
-	 * details of the pin and draws it onto the view.
-	 * @param canvas - the drawable area
-	 * @param boxPos - The area which the pin box is located
-	 * @param pin - the pin that will be drawn
-	 * @param pinBox - the box where the pin will be drawn
-	 */
-	private void drawOnePin(Canvas canvas, PinBoxPos boxPos, Pin pin, RectF pinBox) {
-		//Setup the Paint for the current pin
-		Paint curCirclePaint = null;
-		Paint curLinePaint = null;
-		if(pin.getColor().equals(Pin.pinColor.PRIMARY)){
-			curCirclePaint = primCirclePaint;
-			curLinePaint = primLinePaint;
-		}else if(pin.getColor().equals(Pin.pinColor.SECONDARY)){
-			curCirclePaint = secCirclePaint;
-			curLinePaint = secLinePaint;
-		}
-	
-		//calculates the points for the line of the pin
-		float lStartX=0,lStartY=0,lStopX=0,lStopY=0;
-		switch(boxPos){
-		case RIGHT:
-			lStartY = pinBox.top + (pinBox.height() * oneHalf);
-			lStopY =  lStartY;
-			lStartX = pinBox.left;
-			lStopX = pinBox.right;
-			break;
-		case TOP:
-			lStartX = pinBox.left + (pinBox.width() * oneHalf);
-			lStopX = lStartX;
-			lStartY = pinBox.top;
-			lStopY = pinBox.bottom;
-			break;
-		case LEFT:
-			lStartY = pinBox.top + (pinBox.height() * oneHalf);
-			lStopY =  lStartY;
-			lStartX = pinBox.left;
-			lStopX = pinBox.right;
-			break;
-		case BOTTOM:
-			lStartX = pinBox.left + (pinBox.width() * oneHalf);
-			lStopX = lStartX;
-			lStartY = pinBox.top;
-			lStopY = pinBox.bottom;
-			break;
-		default:
-			break;
-		}
 		
-		Log.d(TAG, "LINE: " + lStartX +" "+lStartY+" "+lStopX+" "+lStopY);
-		canvas.drawLine(lStartX,lStartY,lStopX,lStopY, curLinePaint);
-			
-		//calculates the center and radius for the pin head
-		float cx=0, cy=0, cRad=0;
-		switch(boxPos){
-		case RIGHT:
-			cx = boxRightCX(pin.getDirection(), pinBox);
-			cy = pinBox.top + pinBox.height() * oneHalf;
-			cRad = pinBox.width() * twoEigths;
-			break;
-		case TOP:
-			cx = pinBox.left + pinBox.width() * oneHalf;
-			cy = boxTopCY(pin.getDirection(), pinBox);
-			cRad = pinBox.height() * twoEigths;
-			break;
-		case LEFT:
-			cx = boxLeftCX(pin.getDirection(), pinBox);
-			cy = pinBox.top + pinBox.height() * oneHalf;
-			cRad = pinBox.width() * twoEigths;
-			break;
-		case BOTTOM:
-			cx = pinBox.left + pinBox.width() * oneHalf;
-			cy = boxBottomCY(pin.getDirection(), pinBox);
-			cRad = pinBox.height() * twoEigths;
-			break;
-		default:
-			break;
-		}
-
-		canvas.drawCircle(cx, cy, cRad, curCirclePaint);
-		
-	}
-	
 	/**
 	 * Calculates the y coordinate for the bottom pin box according to the pin direction
 	 * @param direction - direction of the pin
 	 * @param pinBox - the box where the pin is being drawn
 	 * @return - the y coordinate for the bottom pin box
 	 */
-	private float boxBottomCY(pinDirection direction, RectF pinBox) {
-		if(direction.equals(pinDirection.INSIDE))
+	private float boxBottomCY(Orientation direction, RectF pinBox) {
+		if(direction.equals(Orientation.IN))
 			return pinBox.top + pinBox.height() * oneEigth;
 		else
 			return pinBox.top + pinBox.height() * sevenEigths;
@@ -549,8 +647,8 @@ public class VTGMove extends View {
 	 * @param pinBox - the box where the pin is being drawn
 	 * @return - the y coordinate for the top pin box
 	 */
-	private float boxTopCY(pinDirection direction, RectF pinBox) {
-		if(direction.equals(pinDirection.INSIDE))
+	private float boxTopCY(Orientation direction, RectF pinBox) {
+		if(direction.equals(Orientation.IN))
 			return pinBox.top + pinBox.height() * sevenEigths;
 		else
 			return pinBox.top + pinBox.height() * oneEigth;
@@ -562,8 +660,8 @@ public class VTGMove extends View {
 	 * @param pinBox - the box where the pin is being drawn
 	 * @return - the x coordinate for the right pin box
 	 */
-	private float boxRightCX(pinDirection direction, RectF pinBox) {
-		if(direction.equals(pinDirection.INSIDE))
+	private float boxRightCX(Orientation direction, RectF pinBox) {
+		if(direction.equals(Orientation.IN))
 			return pinBox.left + pinBox.width() * oneEigth;
 		else
 			return pinBox.left + pinBox.width() * sevenEigths;
@@ -575,15 +673,15 @@ public class VTGMove extends View {
 	 * @param pinBox - the box where the pin is being drawn
 	 * @return - the x coordinate for the left pin box
 	 */
-	private float boxLeftCX(pinDirection direction, RectF pinBox) {
-		if(direction.equals(pinDirection.INSIDE))
+	private float boxLeftCX(Orientation direction, RectF pinBox) {
+		if(direction.equals(Orientation.IN))
 			return pinBox.left + pinBox.width() * sevenEigths;
 		else
 			return pinBox.left + pinBox.width() * oneEigth;
 	}
 	
 	private static Bitmap getBitmapImage(InputStream iStream, float reqWidth) {
-		Log.d(TAG, "ReqSize: " + reqWidth);
+		Dlog.d(TAG, "ReqSize: " + reqWidth, ENABLEDEBUG);
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -595,12 +693,12 @@ public class VTGMove extends View {
         
         final int height = options.outHeight;
         final int width = options.outWidth;
-        Log.d(TAG, "H: " + height + " W: " + width);
+        Dlog.d(TAG, "H: " + height + " W: " + width,ENABLEDEBUG);
        
         int newHeight = (int) Math.round((reqWidth / (float) width)*height);
         int newWidth= Math.round(reqWidth);
        
-        Log.d(TAG, "nH: " + newHeight + " nW: " + newWidth);
+        Dlog.d(TAG, "nH: " + newHeight + " nW: " + newWidth,ENABLEDEBUG);
     	newBitmap = Bitmap.createScaledBitmap(newBitmap, newWidth, newHeight, true);
         
         return newBitmap;
@@ -660,8 +758,4 @@ public class VTGMove extends View {
 		return false;
 		
 	}
-
-
-
-
 }

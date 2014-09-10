@@ -1,49 +1,54 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_drawer_wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    
-    <ImageView
-		    android:id="@+id/main_image"
-		    android:layout_centerHorizontal="true"
-		    style="@style/IconView"
-		    />
-    
-    
-     <!--Button
-        android:id="@+id/main_3113_button"
-        style="@style/ButtonText"
-        android:layout_below="@id/main_image"
-        android:layout_centerHorizontal="true"
-		android:layout_margin="5dp"
-        android:background="@drawable/black_button"
-        android:text="@string/main_3113_button" 
-        android:minHeight="35dp"/>
-     <Button
-        android:id="@+id/main_button2"
-        style="@style/ButtonText"
-        android:layout_below="@id/main_3113_button"
-        android:layout_centerHorizontal="true"
-		android:layout_margin="5dp"
-        android:background="@drawable/black_button"
-        android:text="@string/main_1111_button" 
-        android:minHeight="35dp"/>
-     <Button
-        android:id="@+id/main_button3"
-        style="@style/ButtonText"
-        android:layout_below="@id/main_button2"
-        android:layout_centerHorizontal="true"
-		android:layout_margin="5dp"
-        android:background="@drawable/black_button"
-        android:text="@string/main_download_button" 
-        android:minHeight="35dp"/-->
-     
-     <ListView
-             android:id="@+id/main_listview"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-               android:layout_below="@id/main_image"
-             >
-     </ListView>
+    <!-- The main content view -->
+    <FrameLayout
+    	android:id="@+id/main_content"
+    	android:layout_width="match_parent"
+    	android:layout_height="match_parent">
+    	<RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent">   
+	    	<ImageView
+			    android:id="@+id/main_image"
+			    style="@style/IconView" 
+			    android:layout_centerHorizontal="true"/>
+		     <Button
+		         android:id="@+id/main_button_tip"
+		         style="@style/ButtonText"
+		         android:background="@drawable/black_button"
+		         android:layout_below="@id/main_image" />
+		     <Button
+		         android:id="@+id/main_button_13"
+		         style="@style/ButtonText"
+		         android:background="@drawable/black_button"
+		         android:layout_below="@id/main_button_tip" />
+		     <Button
+		         android:id="@+id/main_button_11"
+		         style="@style/ButtonText"
+		         android:background="@drawable/black_button"
+		         android:layout_below="@id/main_button_13" />
+		     <Button
+		         android:id="@+id/main_button_15"
+		         style="@style/ButtonText"
+		         android:background="@drawable/black_button"
+		         android:layout_below="@id/main_button_11" />
+	     </RelativeLayout>
+	</FrameLayout>
 
-</RelativeLayout>
+    <!-- The navigation drawer -->
+    <ListView android:id="@+id/main_left_drawer"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:background="#FFF"/>
+</android.support.v4.widget.DrawerLayout>
+
+
+
+

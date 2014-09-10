@@ -38,6 +38,8 @@ public class AppManager {
     private final static int DAYS_UNTIL_PROMPT = 3;
     private final static int LAUNCHES_UNTIL_PROMPT = 7;
 	private static String TAG = AppConfig.APP_TITLE_SHORT + ".AppManager";
+	
+	private static String _rateText = "If you enjoy using " + AppConfig.APP_TITLE + ", please take a moment to rate it. Thanks for your support!";
 
     /**
      * Method to initialize the AppManager. Checks for amount of times used and current version
@@ -78,26 +80,6 @@ public class AppManager {
         
         editor.commit();
     }
-
-    /**
-     * Inflater to show updates to the app.
-     * @param c
-     * @param version
-     */
-    public static void showVersionUpdateDialog(Context c,long version){
-        String lastLogEntry = AppConfig.CHANGE_LOG.get(AppConfig.CHANGE_LOG.size()-1);
-        AlertDialog.Builder alert = new AlertDialog.Builder(c); 
-
-        alert.setTitle(AppConfig.APP_TITLE + " Version " + version);
-        alert.setMessage(lastLogEntry);
-        
-        alert.setPositiveButton("Okay", new DialogInterface.OnClickListener() { 
-            public void onClick(DialogInterface dialog, int whichButton) { 
-            	
-            } 
-        });   
-      alert.show();
-    }
     
     /**
      * Inflater to ask the user if they would like to rate this app 
@@ -112,7 +94,7 @@ public class AppManager {
         ll.setOrientation(LinearLayout.VERTICAL);
         
         TextView tv = new TextView(c);
-        tv.setText("If you enjoy using " + AppConfig.APP_TITLE + ", please take a moment to rate it. Thanks for your support!");
+        tv.setText(_rateText);
         tv.setWidth(240);
         tv.setPadding(4, 0, 4, 10);
         ll.addView(tv);
@@ -121,7 +103,7 @@ public class AppManager {
         b1.setText("Rate " + AppConfig.APP_TITLE);
         b1.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                c.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + c.getPackageName())));
+                c.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(AppConfig.MARKET_URI + c.getPackageName())));
                 dialog.dismiss();
             }
         });        
@@ -152,41 +134,6 @@ public class AppManager {
         dialog.setContentView(ll);        
         dialog.show();        
     }
-    
-    /**
-     * This is a simple about inflater to show information about me and my work.
-     * @param c
-     */
-    public static void aboutAlert(final Context c){
-    	AlertDialog.Builder alert = new AlertDialog.Builder(c); 
-
-        alert.setTitle("About"); 
-        alert.setMessage(AppConfig.ABOUT_MESSAGE);
-        
-        alert.setPositiveButton("Website", new DialogInterface.OnClickListener() { 
-            public void onClick(DialogInterface dialog, int whichButton) { 
-            	String url = DevConstants.MY_WEBSITE;
-            	Intent i = new Intent(Intent.ACTION_VIEW);
-            	i.setData(Uri.parse(url));
-            	c.startActivity(i);
-            } 
-        }); 
-        
-        alert.setNeutralButton("Rate this app", new DialogInterface.OnClickListener() { 
-            public void onClick(DialogInterface dialog, int whichButton) { 
-            	c.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + c.getPackageName())));
-            } 
-        }); 
-        
-        alert.setNegativeButton("Donate!", new DialogInterface.OnClickListener() { 
-            public void onClick(DialogInterface dialog, int whichButton) { 
-            	Intent i = new Intent(Intent.ACTION_VIEW);
-            	i.setData(Uri.parse(AppConstants.PAYPAL));
-            	c.startActivity(i);
-            } 
-      }); 
-      alert.show();
-    }
 
     public static void getAboutDialog(final Context context) {
         WebView wv = new WebView(context);
@@ -210,7 +157,7 @@ public class AppManager {
                 })
                 .setNeutralButton("Rate this app", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + context.getPackageName())));
+                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(AppConfig.MARKET_URI + context.getPackageName())));
                     }
                 })
                 .setPositiveButton("Website", new DialogInterface.OnClickListener() {
@@ -238,31 +185,23 @@ public class AppManager {
     public static void proVersionAlert(final Context c){
     	AlertDialog.Builder alert = new AlertDialog.Builder(c);
     	
-    	alert.setTitle(AppConfig.PRO_TITLE);
-    	alert.setMessage(AppConfig.PRO_MESSAGE);
+    	alert.setTitle("VTG Pro Only");
+    	alert.setMessage("Get this feature and more in the Pro version.");
     	
-    	//TODO Update this Pro version inflator
-    	
-      alert.setNeutralButton("Okay", new DialogInterface.OnClickListener() { 
-      public void onClick(DialogInterface dialog, int whichButton) { 
-        // Canceled. 
-      } 
-      });
-    	
-//    	alert.setPositiveButton("Go Pro", new DialogInterface.OnClickListener() { 
-//            public void onClick(DialogInterface dialog, int whichButton) { 
-//            	String url = DevConstants.GOOGLE_PLAY + "." + AppConfig.APP_PNAME + ".pro";
-//            	Intent i = new Intent(Intent.ACTION_VIEW);
-//            	i.setData(Uri.parse(url));
-//            	c.startActivity(i);
-//            } 
-//        }); 
-//        
-//        alert.setNegativeButton("No Thanks", new DialogInterface.OnClickListener() { 
-//            public void onClick(DialogInterface dialog, int whichButton) { 
-//              // Canceled. 
-//            } 
-//      }); 
+    	alert.setPositiveButton("Details", new DialogInterface.OnClickListener() { 
+            public void onClick(DialogInterface dialog, int whichButton) { 
+            	String url = AppConfig.MARKET_URI + AppConfig.PRO_PACKAGE;
+            	Intent i = new Intent(Intent.ACTION_VIEW);
+            	i.setData(Uri.parse(url));
+            	c.startActivity(i);
+            } 
+        }); 
+        
+        alert.setNegativeButton("No Thanks", new DialogInterface.OnClickListener() { 
+            public void onClick(DialogInterface dialog, int whichButton) { 
+              // Canceled. 
+            } 
+      }); 
       alert.show();
     }
     

@@ -1,7 +1,12 @@
 package com.nennig.vtglibrary.managers;
 
+import android.R;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -11,18 +16,21 @@ import android.widget.Toast;
 import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.vtglibrary.custobjs.MatrixID;
+import com.nennig.vtglibrary.custobjs.VTGToast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
 
 public class VideoManager extends AsyncTask<Void, Void, Boolean>{
 	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".VideoManager";
-    private String videosDir = "";
+    private static String videosDir = AppConfig.APP_DIR +"/videos/";
     private Activity activity;
     Class destClass;
     private ProgressDialog pd;
@@ -58,8 +66,6 @@ public class VideoManager extends AsyncTask<Void, Void, Boolean>{
         activity = a;
         destClass = destC;
         _set = set;
-        videosDir = Environment.getExternalStorageDirectory() +
-                "/Android/data/" + activity.getPackageName() + "/files/";
         videoFile = "v" + set.toSetID() + "_" + id.toString() + "_" + propID.toPropID() + "." + videoExt;
 
         downloadSite = "http://noelyee.com/vtg%20videos/" + videoFile;
@@ -105,7 +111,7 @@ public class VideoManager extends AsyncTask<Void, Void, Boolean>{
         File f = getDownloadRootDir();
         boolean response = true;
         if(!new File(f.getPath(), videoFile).exists()){
-            response = downloadVideo();
+            response = downloadVideo(videoFile);
             pd.dismiss();
         }
         return response;
@@ -131,7 +137,7 @@ public class VideoManager extends AsyncTask<Void, Void, Boolean>{
         if(result)
         {
             Intent i = new Intent(activity, destClass);
-            i.putExtra(AppConstants.CUR_SET, _set);
+            i.putExtra(AppConstants.CUR_SET, _set.toString());
             activity.startActivity(i);
             if(destroyActivity)
                 activity.finish();
@@ -140,16 +146,21 @@ public class VideoManager extends AsyncTask<Void, Void, Boolean>{
             Toast.makeText(activity, "Could not retrieve from server", Toast.LENGTH_LONG).show();
     }
 
+    public static void downloadAllVideos(Context c){
+    	//TODO Create DownloadAllFeature!
+    	new VTGToast(c).comingSoonProFeature();
+    }
+    
     /**
      * This is a helper method to download and save the video file from the internet.
      */
-    private final int TIMEOUT_CONNECTION = 5000;//5sec
-    private final int TIMEOUT_SOCKET = 30000;//30sec
-    private boolean downloadVideo(){
+    private static final int TIMEOUT_CONNECTION = 5000;//5sec
+    private static final int TIMEOUT_SOCKET = 30000;//30sec
+    private static boolean downloadVideo(String _videoFile){
         try{
             URL url = new URL(downloadSite);
             long startTime = System.currentTimeMillis();
-            Log.d(TAG, "image download beginning: "+videoFile);
+            Log.d(TAG, "image download beginning: "+ _videoFile);
 
             //Open a connection to that URL.
             URLConnection ucon = url.openConnection();
@@ -163,7 +174,7 @@ public class VideoManager extends AsyncTask<Void, Void, Boolean>{
             // uses 3KB download buffer
             InputStream is = ucon.getInputStream();
             BufferedInputStream inStream = new BufferedInputStream(is, 1024 * 5);
-            FileOutputStream outStream = new FileOutputStream(videosDir + videoFile);
+            FileOutputStream outStream = new FileOutputStream(videosDir + _videoFile);
             byte[] buff = new byte[5 * 1024];
 
             //Read bytes (and store them) until there is nothing more to read(-1)
@@ -186,6 +197,5 @@ public class VideoManager extends AsyncTask<Void, Void, Boolean>{
             return false;
         }
         return true;
-
     }
 }

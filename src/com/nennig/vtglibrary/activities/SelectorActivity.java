@@ -1,11 +1,13 @@
 package com.nennig.vtglibrary.activities;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,16 +23,15 @@ import com.nennig.constants.AppConfig;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppConstants.Set;
 import com.nennig.constants.AppManager;
+import com.nennig.constants.Dlog;
 import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.custobjs.MatrixID;
 import com.nennig.vtglibrary.custobjs.PropMove;
 import com.nennig.vtglibrary.custobjs.SingletonMatrixMap;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-public class SelectorActivity extends BaseActivity {
+public class SelectorActivity extends DrawerActivity {
 	private static final String TAG = AppConfig.APP_TITLE_SHORT + ".SelectorActivity";
+	private boolean ENABLE_DEBUG = false;
 	Spinner _propSinner, _handSpinner;
 	ImageView[] _posIvMatrix = new ImageView[4];
 	String[] iconList;
@@ -47,14 +48,16 @@ public class SelectorActivity extends BaseActivity {
         setContentView(R.layout.activity_selector);
         mainLayout = (RelativeLayout) findViewById(R.layout.activity_selector);
         
+        createDrawer(SelectorActivity.this, R.id.selector_left_drawer, R.id.selector_drawer_wrapper);
+                
         //Create the singleton and get the information for the detail view
 		sPoiMap = SingletonMatrixMap.getSingletonPoiMoveMap(this);
-		Log.d(TAG, "sPropMap: " + sPoiMap.toString());
+		Dlog.d(TAG, "sPropMap: " + sPoiMap.toString(), ENABLE_DEBUG);
 		
 		SharedPreferences sP = getSharedPreferences(AppConstants.VTG_PREFS, MODE_PRIVATE);
 		_curSet = Set.getSet(sP.getString(AppConstants.CUR_SET, Set.ONETHREE.toSetID()));
         
-		setTitle(AppConstants.setTitleString(isLiteVersion(), _curSet));
+		setTitle(_curSet.toLabel());
 		
         _propSinner = (Spinner) findViewById(R.id.prop_poi_spinner);
         _handSpinner = (Spinner) findViewById(R.id.prop_hand_spinner);
@@ -81,10 +84,10 @@ public class SelectorActivity extends BaseActivity {
         _propSinner.setOnItemSelectedListener(new OnItemSelectedListener() 
         {    
          @Override
-         public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
+         public void onItemSelected(AdapterView<?> adapter, View v, int i, long lng) {
         	 _prevPoiType = _propType;
         	 _propType = adapter.getItemAtPosition(i).toString();
-        	 Log.d(TAG,"Poi Changed to "+ _propType);
+        	 Dlog.d(TAG,"Poi Changed to "+ _propType, ENABLE_DEBUG);
         	 
         	 if(!_prevPoiType.equals(_propType)){
         		 refreshIcons();
@@ -102,10 +105,10 @@ public class SelectorActivity extends BaseActivity {
         _handSpinner.setOnItemSelectedListener(new OnItemSelectedListener() 
         {    
          @Override
-         public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
+         public void onItemSelected(AdapterView<?> adapter, View v, int i, long lng) {
         	 _prevHandType = _handType;
         	 _handType = adapter.getItemAtPosition(i).toString();
-        	 Log.d(TAG,"Hand Changed to "+ _handType);
+        	 Dlog.d(TAG,"Hand Changed to "+ _handType, ENABLE_DEBUG);
         	 
         	 if(!_prevHandType.equals(_handType)){
         		 refreshIcons();
@@ -124,7 +127,7 @@ public class SelectorActivity extends BaseActivity {
      * This refreshes the icons on the screen in correlation with the identifiers selected.
      */
     public void refreshIcons(){
-    	Log.d(TAG, "Refreshing icons with Poi: '" + _propType + "' Hand: '" + _handType + "'");
+    	Dlog.d(TAG, "Refreshing icons with Poi: '" + _propType + "' Hand: '" + _handType + "'", ENABLE_DEBUG);
 
     	Bitmap[] posMatrix = new Bitmap[4];
     	String iconName = "";
@@ -153,7 +156,7 @@ public class SelectorActivity extends BaseActivity {
 			//If the position is real, then load the icon, else load the default icon
 			if(positionExists){
 				iconName = pm.getImageFileName(_curSet) + "." + pm.get_fileExt(_curSet);
-                Log.d(TAG,"FName: " + iconName);
+                Dlog.d(TAG,"FName: " + iconName, ENABLE_DEBUG);
 			}
 			else
 			{
@@ -161,13 +164,13 @@ public class SelectorActivity extends BaseActivity {
 			}
 			try{
 				//Get Bitmap for position icon
-    			Log.d(TAG, "iconName: " + iconName);
+    			Dlog.d(TAG, "iconName: " + iconName, ENABLE_DEBUG);
 	    		iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + iconName);
 	    		
 	    		posMatrix[posIndex] = getBitmapImage(iStream, Math.round((float)(displayWidth / 2.5)));
 			} catch (IOException e) {
-				Log.d(TAG, "SelectorActivity IOException");
-				Log.d(TAG, e.toString());
+				Dlog.d(TAG, "SelectorActivity IOException", ENABLE_DEBUG);
+				Dlog.d(TAG, e.toString(), ENABLE_DEBUG);
 			}
 			
 			//Set the position icon and listener
@@ -196,15 +199,7 @@ public class SelectorActivity extends BaseActivity {
         {
             AppManager.share(this, "Checking out the " + _curSet + " set for Prop: " + MatrixID.MCategory.getStringAbbrFromLong(_propType) +
              " and Hand: " + MatrixID.MCategory.getStringAbbrFromLong(_handType) +
-                    " in the new Vulcan Tech Gospel App. " + AppConfig.appOnGPlayURL);
-            return true;
-        }
-        else if(item.getItemId() == android.R.id.home)
-        {
-            // app icon in Action Bar clicked; go home
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+                    " in the new Vulcan Tech Gospel App. " + AppConfig.LITE_GOOGLEPLAYURL_SHORT);
             return true;
         }
         else

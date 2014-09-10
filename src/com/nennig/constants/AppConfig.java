@@ -8,27 +8,25 @@ package com.nennig.constants;
 
 import java.util.ArrayList;
 
+import android.os.Environment;
+
 public class AppConfig {
 
 	public final static String APP_TITLE = "Vulcan Tech Gospel";
 	public final static String APP_TITLE_SHORT = "VTG";
-   // public final static String APP_PNAME = "com.nennig.vtglibrary";
-
-    public static final String ABOUT_MESSAGE = "Vulcan Tech Gospel was created by David Cantor and Noel Yee." +
-    		"Vulcan Tech Gospel Writers:  " +
-    		"Brian Thompson, Lorq Nichols, David Cantor, and Noel Yee. " +
-    		"App Developer: Kevin Nennig. Video Creation: David Everett.";
-    public static final String PRO_TITLE = "VTG Pro Only";
-    //TODO Update Pro Message with Pro release
-    public static final String PRO_MESSAGE = "VTG Pro WILL be available by July 1. " +
-            "There will be an update to the Lite version with a notification announcing it.";
+	public final static String APP_PRO = "Pro";
+	public final static String APP_LITE = "Lite";
+    public final static String APP_PNAME_VIRTUAL = "nennig.com.VTG";
     
-	public static final ArrayList<String> CHANGE_LOG = new ArrayList<String>();
-	public static final String appOnGPlayURL = "http://goo.gl/motWI";
+	public static final String LITE_GOOGLEPLAYURL_SHORT = "http://goo.gl/motWI";
+	public static final String PRO_GOOGLEPLAYURL_SHORT = "";
+	protected static final String PRO_PACKAGE = "com.nennig.vtglibrary.Pro";
+	protected static final String LITE_PACKAGE = "com.nennig.vulcan.tech.gospel";
+	protected static final String MARKET_URI = "market://details?id=";
 	
-	static{
-		CHANGE_LOG.add("No New Updates");
-	}
+    
+    public final static String APP_DIR = Environment.getExternalStorageDirectory() +
+            "/Android/data/"+ AppConfig.APP_PNAME_VIRTUAL;
 }
 
 

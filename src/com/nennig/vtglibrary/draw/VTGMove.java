@@ -3,6 +3,8 @@
  */
 package com.nennig.vtglibrary.draw;
 
+import java.io.FileDescriptor;
+import java.io.IOException;
 import java.io.InputStream;
 
 import android.content.Context;
@@ -71,11 +73,17 @@ public class VTGMove extends View {
 	
 	private InputStream moveIcon;
 	private InputStream defaultIcon;
+	
+	private String moveIconPath;
+	private String defaultIconPath;
+	
     float iconL=0;
     float iconT=0;
     float iconB=0;
     float iconR=0;
 	
+    static Context context;
+    
 	/*
 	 * This is Test Data
 	 */
@@ -126,7 +134,6 @@ public class VTGMove extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // Try for a width based on our minimum
         int minw = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth();
-
         int w = Math.max(minw, MeasureSpec.getSize(widthMeasureSpec));
         
         // Whatever the width ends up being, ask for a height that would let the pie
@@ -168,6 +175,8 @@ public class VTGMove extends View {
         drawAreaBounds = new RectF(0.0f +drawAreaPadding,0.0f +drawAreaPadding,
         		getMeasuredWidth()-drawAreaPadding,getMeasuredHeight()-drawAreaPadding);
         drawAreaBounds.offsetTo(getPaddingLeft(), getPaddingTop());
+        
+        context = getContext();
 	}
 	
 	/**
@@ -190,11 +199,22 @@ public class VTGMove extends View {
 	}
 	
 	/**
+	 * This adds the move pins to the view so that they can be drawn
+	 * @param mp
+	 */
+	public void addPinsAndIcon(PropMove mp, String isIcon){
+		_pMove = mp;
+		moveIconPath = isIcon;
+		invalidate();
+	}
+	
+	/**
 	 * 
 	 */
 	public void removePinsAndIcon() {
 		_pMove = null;
 		moveIcon = null;
+		moveIconPath = "";
 		invalidate();
 	}
 	
@@ -205,12 +225,20 @@ public class VTGMove extends View {
 		defaultIcon = dIcon;
 		invalidate();
 	}
+	/**
+	 * 
+	 */
+	public void addDefaultIcon(String dIcon) {
+		defaultIconPath = dIcon;
+		invalidate();
+	}
 
 	/**
 	 * 
 	 */
 	public void removeDefaultIcon() {
 		defaultIcon = null;
+		defaultIconPath = "";
 		invalidate();
 	}
 	
@@ -320,9 +348,12 @@ public class VTGMove extends View {
 	        	iconB = bottomRec.top; //determines the bottom of the icon based on the top of the bottom pin box
 	        }
 	        
-	        if(moveIcon != null){
+//	        if(moveIcon != null){
+	        if(!moveIconPath.isEmpty()){
 	        	float size = Math.min(Math.abs(iconL-iconR), Math.abs(iconT-iconB)) * (9.0f/10.0f);
-	        	Bitmap bm = getBitmapImage(moveIcon, size);
+	        	Dlog.d(TAG, "moveIcon size: "+size+ "and icon is " +moveIcon, ENABLEDEBUG);
+//	        	Bitmap bm = getBitmapImage(moveIcon, size);
+	        	Bitmap bm = getBitmapImage(moveIconPath, size);
 	        	float left = (getWidth() / 2.0f) - (size / 2.0f);
 	        	float top =  (getHeight() / 2.0f) - (size / 2.0f);
 	        	canvas.drawBitmap(bm, left, top, null);
@@ -338,9 +369,11 @@ public class VTGMove extends View {
 //        	drawMultilineText(proMessage,x,y, proPaint,canvas,2,new Rect(x,y,x+(2*x), y+(2*y)));
 //        	Log.d(TAG, "Text displayed");
 //        }
-        if(defaultIcon != null){
+//        if(defaultIcon != null){
+        if(!defaultIconPath.isEmpty()){
         	float size = Math.min(drawAreaBounds.width() * (3.0f/4.0f),drawAreaBounds.height() * (3.0f/4.0f));
-        	Bitmap bm = getBitmapImage(defaultIcon, size);
+//        	Bitmap bm = getBitmapImage(defaultIcon, size);
+        	Bitmap bm = getBitmapImage(defaultIconPath, size);
         	float left = (getWidth() / 2.0f) - (size / 2.0f);
         	float top =  (getHeight() / 2.0f) - (size / 2.0f);
         	canvas.drawBitmap(bm, left, top, null);
@@ -680,16 +713,29 @@ public class VTGMove extends View {
 			return pinBox.left + pinBox.width() * oneEigth;
 	}
 	
-	private static Bitmap getBitmapImage(InputStream iStream, float reqWidth) {
+	private static Bitmap getBitmapImage(String path, float reqWidth) {
 		Dlog.d(TAG, "ReqSize: " + reqWidth, ENABLEDEBUG);
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(iStream, null, options);
+    //    options.inJustDecodeBounds = true;
         
         // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        Bitmap newBitmap = BitmapFactory.decodeStream(iStream, null, options);
+   //     options.inJustDecodeBounds = false;
+        InputStream iStream;
+        Bitmap newBitmap = null;
+		try {
+			iStream = context.getAssets().open(path);
+			newBitmap = BitmapFactory.decodeStream(iStream, null, options);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+//        try {
+//			iStream.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
         
         final int height = options.outHeight;
         final int width = options.outWidth;

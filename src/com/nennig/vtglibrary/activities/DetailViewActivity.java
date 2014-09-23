@@ -101,13 +101,15 @@ public class DetailViewActivity extends BaseActivity{
 
   		if(isLiteVersion() && !_curSet.equals(Set.ONETHREE)){ //Lite Statement
   			drawnMove.removePinsAndIcon();
-  			InputStream iStream;
-			try {
-				iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.PRO_ONLY_IMAGE);
-				drawnMove.addDefaultIcon(iStream);
-			} catch (IOException e) {
-				Dlog.d(TAG,e.getMessage(), ENABLE_DEBUG);
-			}
+  			drawnMove.addDefaultIcon(AppConstants.LOGO_FOLDER + "/" + AppConstants.PRO_ONLY_IMAGE);
+//  			InputStream iStream;
+//			try {
+//				iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.PRO_ONLY_IMAGE);
+//				drawnMove.addDefaultIcon(iStream);
+//				
+//			} catch (IOException e) {
+//				Dlog.d(TAG,e.getMessage(), ENABLE_DEBUG);
+//			}
             drawnMove.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -123,22 +125,25 @@ public class DetailViewActivity extends BaseActivity{
   		{
   			drawnMove.removeDefaultIcon();
 	  		InputStream iStream;
-			try {
+//			try {
                 if(_curSet.equals(Set.ONEFIVE))//TODO Unlock 1:5
                 {
                     drawnMove.removePinsAndIcon();
-                    iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.COMING_SOON_IMAGE);
-                    drawnMove.addDefaultIcon(iStream);
+//                    iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.COMING_SOON_IMAGE);
+//                    drawnMove.addDefaultIcon(iStream);
+                    drawnMove.addDefaultIcon(AppConstants.LOGO_FOLDER + "/" + AppConstants.COMING_SOON_IMAGE);
                 }
                 else
                 {
-				    iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet) +
-                           "." + pMove.get_fileExt(_curSet));
-				    drawnMove.addPinsAndIcon(pMove, iStream);
+//				    iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet) +
+//                           "." + pMove.get_fileExt(_curSet));
+//				    drawnMove.addPinsAndIcon(pMove, iStream);
+                	drawnMove.addPinsAndIcon(pMove, AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet) +
+                          "." + pMove.get_fileExt(_curSet));
                 }
-			} catch (IOException e) {
-				drawnMove.addPins(pMove);
-			}
+//			} catch (IOException e) {
+//				drawnMove.addPins(pMove);
+//			}
 
     		//Set the Image Name
     		if(pMove.getName(_curSet).length()>57)

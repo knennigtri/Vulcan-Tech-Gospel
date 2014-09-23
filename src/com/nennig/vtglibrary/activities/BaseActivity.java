@@ -25,13 +25,16 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+//import com.google.analytics.tracking.android.EasyTracker;
 import com.nennig.constants.AppConstants;
 import com.nennig.constants.AppManager;
 import com.nennig.constants.ChangeLog;
 import com.nennig.constants.DevConstants;
 import com.nennig.vtglibrary.R;
 import com.nennig.vtglibrary.managers.VTGLibraryApplication;
+import com.nennig.vtglibrary.managers.VTGLibraryApplication.TrackerName;
 
 
 public class BaseActivity extends Activity {
@@ -74,19 +77,21 @@ public class BaseActivity extends Activity {
 	public static Bitmap getBitmapImage(InputStream iStream, int reqWidth) {
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(iStream, null, options);
+  //      options.inJustDecodeBounds = true;
         
         // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
+  //      options.inJustDecodeBounds = false;
         Bitmap newBitmap = BitmapFactory.decodeStream(iStream, null, options);
         
         final int height = options.outHeight;
         final int width = options.outWidth;
        
-        int newHeight = (int) Math.round(((float) reqWidth / (float) width)*height);
+        int newHeight = (int) Math.round(((float) reqWidth / (float) width) * (float) height);
+        
         int newWidth= reqWidth;
        
+        Log.d(TAG, "{H:W}: {" + height+":"+width+"} "+"NewHeight: " + newHeight + "NewWidth: "+newWidth);
+        
     	newBitmap = Bitmap.createScaledBitmap(newBitmap, newWidth, newHeight, true);
         
         return newBitmap;
@@ -187,17 +192,25 @@ public class BaseActivity extends Activity {
     public boolean isLiteVersion()  {
     	return ((VTGLibraryApplication)getApplication()).isLiteVersion(); 
     }
+    
     @Override
     public void onStart() {
       super.onStart();
-      // The rest of your onStart() code.
-      EasyTracker.getInstance(this).activityStart(this);  // Add this method.
+      
+      // Get tracker.
+      Tracker t = ((VTGLibraryApplication) getApplication()).getTracker(
+          TrackerName.APP_TRACKER, this);
+
+      // Set screen name.
+      // Where path is a String representing the screen name.
+      t.setScreenName(getClass().getName());
+
+      // Send a screen view.
+      t.send(new HitBuilders.AppViewBuilder().build());
     }
 
     @Override
     public void onStop() {
       super.onStop();
-      // The rest of your onStop() code.
-      EasyTracker.getInstance(this).activityStop(this);  // Add this method.
     }
 }

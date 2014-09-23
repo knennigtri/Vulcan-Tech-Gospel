@@ -49,14 +49,16 @@ public class MainActivity extends DrawerActivity{
         InputStream iStream = null;
         try {
             iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.MAIN_IMAGE);
+            Bitmap image = getBitmapImage(iStream,
+                    Math.round((float) (displayWidth * .8)));
+            mainImage.setImageBitmap(image);
+            iStream.close();
         } catch (IOException e) {
             Log.d(TAG, "MainActivity IOException");
             Log.d(TAG, e.toString());
         }
 
-        Bitmap image = getBitmapImage(iStream,
-                Math.round((float) (displayWidth * .8)));
-        mainImage.setImageBitmap(image);
+        
         
 		/*
 		 * Parse the db file so that the objects are ready when needed.

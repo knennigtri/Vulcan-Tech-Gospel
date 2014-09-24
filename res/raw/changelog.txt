@@ -19,11 +19,15 @@
     </style>
   </head>
   <body>
-  	~ Check out Pro!
+	$ 3.0.1
+      % Version 3.0.1
+      _ 09-23-2014
+        * Bug Fix for Android Kitkat 4.4
+        * Please update your ratings for this app!
     $ 3.0
       % Version 3.0
-      _ 01-15-2013
-        * Pro version release!!!
+      _ 01-15-2014
+        * Pro version release
         * Pro Only - 1:1 added to app
         * Pro Only - 1:1 videos released
         * VTG App - New VTG Logo

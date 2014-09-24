@@ -1,8 +1,5 @@
 package com.nennig.vtglibrary.activities;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -102,14 +99,6 @@ public class DetailViewActivity extends BaseActivity{
   		if(isLiteVersion() && !_curSet.equals(Set.ONETHREE)){ //Lite Statement
   			drawnMove.removePinsAndIcon();
   			drawnMove.addDefaultIcon(AppConstants.LOGO_FOLDER + "/" + AppConstants.PRO_ONLY_IMAGE);
-//  			InputStream iStream;
-//			try {
-//				iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.PRO_ONLY_IMAGE);
-//				drawnMove.addDefaultIcon(iStream);
-//				
-//			} catch (IOException e) {
-//				Dlog.d(TAG,e.getMessage(), ENABLE_DEBUG);
-//			}
             drawnMove.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -124,26 +113,16 @@ public class DetailViewActivity extends BaseActivity{
   		else //Pro Statement
   		{
   			drawnMove.removeDefaultIcon();
-	  		InputStream iStream;
-//			try {
-                if(_curSet.equals(Set.ONEFIVE))//TODO Unlock 1:5
-                {
-                    drawnMove.removePinsAndIcon();
-//                    iStream = getAssets().open(AppConstants.LOGO_FOLDER + "/" + AppConstants.COMING_SOON_IMAGE);
-//                    drawnMove.addDefaultIcon(iStream);
-                    drawnMove.addDefaultIcon(AppConstants.LOGO_FOLDER + "/" + AppConstants.COMING_SOON_IMAGE);
-                }
-                else
-                {
-//				    iStream = getAssets().open(AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet) +
-//                           "." + pMove.get_fileExt(_curSet));
-//				    drawnMove.addPinsAndIcon(pMove, iStream);
-                	drawnMove.addPinsAndIcon(pMove, AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet) +
-                          "." + pMove.get_fileExt(_curSet));
-                }
-//			} catch (IOException e) {
-//				drawnMove.addPins(pMove);
-//			}
+            if(_curSet.equals(Set.ONEFIVE))//TODO Unlock 1:5
+            {
+                drawnMove.removePinsAndIcon();
+                drawnMove.addDefaultIcon(AppConstants.LOGO_FOLDER + "/" + AppConstants.COMING_SOON_IMAGE);
+            }
+            else
+            {
+            	drawnMove.addPinsAndIcon(pMove, AppConstants.ICON_VIEW_FOLDER + "/" + pMove.getImageFileName(_curSet) +
+                      "." + pMove.get_fileExt(_curSet));
+            }
 
     		//Set the Image Name
     		if(pMove.getName(_curSet).length()>57)
@@ -199,9 +178,6 @@ public class DetailViewActivity extends BaseActivity{
 				}
 			});
   		}
-		
-//		final GestureDetector gestureDetector;
-//        gestureDetector = new GestureDetector(new MyGestureDetector());
         
         mViewFlipper = (ViewFlipper) findViewById(R.id.view_flipper);
         initAnimations();

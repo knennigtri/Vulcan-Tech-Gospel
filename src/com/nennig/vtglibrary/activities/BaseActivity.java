@@ -6,6 +6,7 @@
  */
 package com.nennig.vtglibrary.activities;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import android.annotation.SuppressLint;
@@ -77,10 +78,7 @@ public class BaseActivity extends Activity {
 	public static Bitmap getBitmapImage(InputStream iStream, int reqWidth) {
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
-  //      options.inJustDecodeBounds = true;
-        
-        // Decode bitmap with inSampleSize set
-  //      options.inJustDecodeBounds = false;
+
         Bitmap newBitmap = BitmapFactory.decodeStream(iStream, null, options);
         
         final int height = options.outHeight;
@@ -114,6 +112,7 @@ public class BaseActivity extends Activity {
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         Bitmap newBitmap = BitmapFactory.decodeStream(iStream, null, options);
+        
         
         final int height = options.outHeight;
         final int width = options.outWidth;
